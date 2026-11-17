@@ -67,4 +67,233 @@
     .stats-row { display: flex; justify-content: space-around; margin: 16px 0; }
     .stat-item { text-align: center; }
     .stat-num { font-size: 32px; font-weight: 800; color: #ec4899; }
-    .stat-num.dice { color: #4f
+    .stat-num.dice { color: #4f46e5; }
+    .stat-label { font-size: 12px; color: #64748b; margin-top: 4px; }
+    .log-text { font-size: 14px; color: #334155; font-weight: 500; }
+    .error-msg { color: #e11d48; font-size: 13px; margin-top: 10px; }
+
+    /* 双人在线状态栏样式 */
+    .presence-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .player-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #94a3b8;
+      transition: all 0.3s;
+    }
+    .player-pill.online {
+      background: #dcfce7;
+      color: #15803d;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+    .player-pill.online .dot {
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 登录界面 -->
+  <div id="login-view" class="card">
+    <div class="form-group">
+      <label for="player-select">选择你的角色</label>
+      <select id="player-select">
+        <option value="yc@play.game">YC</option>
+        <option value="ly@play.game">LY</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="password-input">通行密码</label>
+      <input type="password" id="password-input" placeholder="输入专属密码" />
+    </div>
+    <button id="login-btn" class="btn-primary">解锁进入</button>
+    <p id="login-error" class="error-msg"></p>
+  </div>
+
+  <!-- 游戏大厅界面 -->
+  <div id="game-view" class="card hidden">
+    <!-- 双人实时在线指示灯 -->
+    <div class="presence-bar">
+      <div id="pill-yc" class="player-pill"><span class="dot"></span>YC 离线</div>
+      <div id="pill-ly" class="player-pill"><span class="dot"></span>LY 离线</div>
+    </div>
+
+    <h1>双人实时同步测试大厅</h1>
+    <p class="subtitle" id="current-role-tip">任一方点击按钮，另一方手机屏幕秒级刷新</p>
+
+    <div class="status-box">
+      <div class="log-text" id="status-text">正在加载状态...</div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-num" id="heart-count">-</div>
+          <div class="stat-label">心动值</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num dice" id="dice-num">-</div>
+          <div class="stat-label">最新骰子 (D20)</div>
+        </div>
+      </div>
+    </div>
+
+    <button id="btn-heart" class="btn-pink">发送一颗心动 (+1)</button>
+    <button id="btn-dice" class="btn-indigo">投掷 20 面命运骰 (D20)</button>
+    <button id="logout-btn" class="btn-outline">退出登录</button>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://hciqpdghykrdctxbpwpc.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_gbR5IGXPz5n1kVTEpbq7pQ_R3dPPdud';
+
+    // 使用 sessionStorage：关闭标签页或浏览器自动销毁登录状态
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        storage: window.sessionStorage,
+        autoRefreshToken: true,
+        persistSession: true
+      }
+    });
+
+    const loginView = document.getElementById('login-view');
+    const gameView = document.getElementById('game-view');
+    const loginError = document.getElementById('login-error');
+    const statusText = document.getElementById('status-text');
+    const heartCountEl = document.getElementById('heart-count');
+    const diceNumEl = document.getElementById('dice-num');
+    const pillYc = document.getElementById('pill-yc');
+    const pillLy = document.getElementById('pill-ly');
+
+    let currentState = { heart_count: 0, last_dice: 6 };
+    let currentPlayerName = '';
+
+    function renderState(state) {
+      if (!state) return;
+      currentState = state;
+      heartCountEl.textContent = state.heart_count;
+      diceNumEl.textContent = state.last_dice;
+      statusText.textContent = `【${state.last_actor}】${state.status_text}`;
+    }
+
+    // 更新双人在线状态指示灯
+    function updatePresenceUI(presenceState) {
+      const onlinePlayers = new Set();
+      Object.values(presenceState).forEach((sessions) => {
+        sessions.forEach((s) => {
+          if (s.player) onlinePlayers.add(s.player);
+        });
+      });
+
+      if (onlinePlayers.has('YC')) {
+        pillYc.classList.add('online');
+        pillYc.innerHTML = '<span class="dot"></span>YC 在线';
+      } else {
+        pillYc.classList.remove('online');
+        pillYc.innerHTML = '<span class="dot"></span>YC 离线';
+      }
+
+      if (onlinePlayers.has('LY')) {
+        pillLy.classList.add('online');
+        pillLy.innerHTML = '<span class="dot"></span>LY 在线';
+      } else {
+        pillLy.classList.remove('online');
+        pillLy.innerHTML = '<span class="dot"></span>LY 离线';
+      }
+    }
+
+    async function initGameSync(userEmail) {
+      currentPlayerName = userEmail.startsWith('yc') ? 'YC' : 'LY';
+      document.getElementById('current-role-tip').textContent = `当前身份：${currentPlayerName}`;
+
+      const { data } = await db.from('game_state').select('*').eq('id', 1).single();
+      if (data) renderState(data);
+
+      // 建立包含 Presence 在线感知的房间频道
+      const roomChannel = db.channel('room-1', {
+        config: { presence: { key: currentPlayerName } }
+      });
+
+      roomChannel
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_state', filter: 'id=eq.1' }, (payload) => {
+          renderState(payload.new);
+        })
+        .on('presence', { event: 'sync' }, () => {
+          updatePresenceUI(roomChannel.presenceState());
+        })
+        .subscribe(async (status) => {
+          if (status === 'SUBSCRIBED') {
+            // 广播自己已上线
+            await roomChannel.track({ player: currentPlayerName, online_at: new Date().toISOString() });
+          }
+        });
+    }
+
+    db.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        loginView.classList.add('hidden');
+        gameView.classList.remove('hidden');
+        initGameSync(session.user.email);
+      }
+    });
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      loginError.textContent = '';
+      const email = document.getElementById('player-select').value;
+      const password = document.getElementById('password-input').value;
+      if (!password) {
+        loginError.textContent = '请输入密码';
+        return;
+      }
+
+      const { data, error } = await db.auth.signInWithPassword({ email, password });
+      if (error) {
+        loginError.textContent = '密码错误或账号未确认，请检查输入';
+      } else {
+        loginView.classList.add('hidden');
+        gameView.classList.remove('hidden');
+        initGameSync(data.user.email);
+      }
+    });
+
+    document.getElementById('btn-heart').addEventListener('click', async () => {
+      const nextHeart = (currentState.heart_count || 0) + 1;
+      await db.from('game_state').update({
+        heart_count: nextHeart,
+        last_actor: currentPlayerName,
+        status_text: `发送了一颗心动！当前累计 ${nextHeart} 颗`,
+        updated_at: new Date().toISOString()
+      }).eq('id', 1);
+    });
+
+    document.getElementById('btn-dice').addEventListener('click', async () => {
+      const roll = Math.floor(Math.random() * 20) + 1;
+      const comment = roll === 20 ? '大成功！！运气爆棚！' : (roll === 1 ? '大失败...快抱抱安慰一下' : `掷出了 ${roll} 点`);
+      await db.from('game_state').update({
+        last_dice: roll,
+        last_actor: currentPlayerName,
+        status_text: comment,
+        updated_at: new Date().toISOString()
+      }).eq('id', 1);
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await db.auth.signOut();
+      location.reload();
+    });
+  </script>
+</body>
+</html>
