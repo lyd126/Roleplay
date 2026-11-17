@@ -14,7 +14,6 @@
       display: flex; justify-content: center; padding: 14px;
     }
 
-    /* 响应式容器：手机窄屏单栏，电脑宽屏双栏 */
     .app-shell { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
     .main-layout { display: flex; flex-direction: column; gap: 12px; }
 
@@ -27,7 +26,7 @@
         align-items: start;
         gap: 18px;
       }
-      .story-feed { max-height: 64vh !important; }
+      .story-feed { max-height: 62vh !important; }
     }
 
     .card { background: #15151c; border: 1px solid #262634; border-radius: 14px; padding: 16px; }
@@ -59,30 +58,35 @@
     .dot { width: 6px; height: 6px; border-radius: 50%; background: #52525b; }
     .pill.on .dot { background: #ec4899; box-shadow: 0 0 6px #ec4899; }
 
-    /* 异地小开关 */
     .remote-chip {
       display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
       border-radius: 99px; font-size: 12px; background: #1c1c24; border: 1px solid #2e2e3e; cursor: pointer;
     }
     .remote-chip.active { border-color: #db2777; color: #f472b6; background: rgba(219, 39, 119, 0.12); }
 
-    /* 异地弹窗条 */
     .remote-banner {
       background: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(219, 39, 119, 0.25));
       border: 1px solid #ec4899; border-radius: 12px; padding: 12px 14px;
       display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
 
-    /* 仪表盘 */
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; margin-bottom: 12px; }
-    .dash-item { background: #1c1c26; border: 1px solid #2b2b3a; border-radius: 9px; padding: 8px; text-align: center; }
-    .dash-label { font-size: 11px; color: #a1a1aa; }
-    .dash-val { font-size: 17px; font-weight: 800; color: #f472b6; }
-    .progress-bar { width: 100%; height: 4px; background: #272734; border-radius: 99px; overflow: hidden; margin-top: 4px; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #9333ea, #ec4899); transition: width 0.3s; }
+    /* 可交互状态滑块仪表盘 */
+    .stats-panel { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+    .stat-row {
+      background: #1a1a23; border: 1px solid #2a2a38; border-radius: 10px; padding: 9px 12px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .stat-header { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; }
+    .stat-owner-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: 700; }
+    .owner-both { background: #2e1f3d; color: #d8b4fe; }
+    .owner-female { background: #3d1c2e; color: #f472b6; }
+    .owner-male { background: #1e293b; color: #818cf8; }
+    .stat-slider-wrap { display: flex; align-items: center; gap: 10px; }
+    .stat-slider-wrap input[type="range"] { flex: 1; padding: 0; accent-color: #ec4899; cursor: pointer; }
+    .stat-slider-wrap.male-slider input[type="range"] { accent-color: #6366f1; }
 
     /* 剧情流 */
-    .story-feed { display: flex; flex-direction: column; gap: 10px; max-height: 46vh; overflow-y: auto; padding-right: 4px; }
+    .story-feed { display: flex; flex-direction: column; gap: 10px; max-height: 44vh; overflow-y: auto; padding-right: 4px; }
     .msg-narrator { background: #211a2b; border-left: 3px solid #db2777; padding: 12px; border-radius: 9px; font-size: 14px; line-height: 1.65; }
     .msg-player { background: #1c1c25; padding: 9px 12px; border-radius: 9px; font-size: 13.5px; }
     .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 6px; }
@@ -96,12 +100,10 @@
     .btn-choice:disabled { opacity: 0.42; cursor: not-allowed; border-style: dashed; }
     .wait-tip { text-align: center; padding: 14px; background: #1b1b24; border-radius: 9px; font-size: 13px; color: #71717a; border: 1px dashed #2e2e3e; }
 
-    /* 嵌入式精简工具栏 */
+    /* 嵌入式工具 */
     .mini-tools { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #262634; padding-top: 12px; margin-top: 4px; }
     .tool-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
-    .beat-dot {
-      width: 14px; height: 14px; border-radius: 50%; background: #52525b; display: inline-block; transition: transform 0.08s;
-    }
+    .beat-dot { width: 14px; height: 14px; border-radius: 50%; background: #52525b; display: inline-block; transition: transform 0.08s; }
     .beat-dot.pulse { background: #ec4899; transform: scale(1.4); box-shadow: 0 0 10px #ec4899; }
 
     .modal-backdrop {
@@ -125,9 +127,8 @@
     </div>
   </div>
 
-  <!-- 主界面（剧本模式） -->
+  <!-- 主界面 -->
   <div id="app-view" class="app-shell hidden">
-    <!-- 顶部状态栏 -->
     <div class="top-bar">
       <div class="presence">
         <div id="pill-yc" class="pill"><span class="dot"></span>YC</div>
@@ -141,19 +142,18 @@
       </div>
     </div>
 
-    <!-- 异地实时指令提示条 -->
     <div id="remote-banner" class="remote-banner hidden">
       <div id="remote-banner-text" style="font-size: 13.5px; color: #fff; line-height: 1.4;"></div>
       <button class="btn-accent" style="padding: 6px 12px; font-size: 12px; white-space: nowrap;" onclick="ackRemoteAlert()">收到</button>
     </div>
 
-    <!-- 折叠：上传剧本面板 -->
+    <!-- 上传剧本 -->
     <div id="upload-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 8px;">
       <div style="display: flex; gap: 8px;">
         <input type="text" id="new-script-title" placeholder="剧本名称" style="flex: 2;" />
         <select id="new-script-type" style="flex: 1;">
-          <option value="edging">寸止</option>
           <option value="conquest">攻略</option>
+          <option value="edging">寸止</option>
           <option value="domsub">支配</option>
           <option value="story">剧情</option>
         </select>
@@ -163,14 +163,14 @@
       <button class="btn-accent" onclick="saveNewScript()">保存至云端</button>
     </div>
 
-    <!-- 折叠：历史存档面板 -->
+    <!-- 历史存档 -->
     <div id="archives-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 8px;">
       <div id="archives-list" style="font-size: 13px; color: #a1a1aa;"></div>
     </div>
 
-    <!-- 主内容双栏/单栏自适应区 -->
+    <!-- 双栏/单栏自适应 -->
     <div class="main-layout">
-      <!-- 左栏（手机端上方）：选本 + 仪表盘 + 剧情记录 -->
+      <!-- 左栏：选本 + 可交互状态滑块 + 剧情流 -->
       <div class="card" style="display: flex; flex-direction: column; gap: 10px;">
         <div style="display: flex; gap: 6px;">
           <select id="script-selector" style="flex: 1;"></select>
@@ -179,7 +179,8 @@
           <button class="btn-danger" onclick="deleteSelectedScript()">删</button>
         </div>
 
-        <div id="dashboard-grid" class="dashboard-grid hidden"></div>
+        <!-- 动态可交互状态滑块区 -->
+        <div id="stats-panel" class="stats-panel hidden"></div>
 
         <div>
           <div id="active-script-title" style="font-size: 15px; font-weight: 700; color: #f472b6;"></div>
@@ -189,7 +190,7 @@
         <div class="story-feed" id="story-feed"></div>
       </div>
 
-      <!-- 右栏（手机端下方）：分支抉择 + 自由台词 + 嵌入式精简工具 -->
+      <!-- 右栏：分支抉择 + 自由台词 + 精简工具 -->
       <div class="card" style="display: flex; flex-direction: column; gap: 12px;">
         <div class="choices-box" id="choices-box"></div>
 
@@ -198,9 +199,7 @@
           <button class="btn-accent" onclick="sendCustomMessage()">发送</button>
         </div>
 
-        <!-- 嵌入式辅助工具（倒计时 / 节拍器 / 惩罚抽取） -->
         <div class="mini-tools">
-          <!-- 倒计时 -->
           <div class="tool-row">
             <span style="font-size: 12px; color: #a1a1aa;">计时 <strong id="timer-display" style="color:#f472b6; margin-left:4px;">00:00</strong></span>
             <div style="display: flex; gap: 4px;">
@@ -211,7 +210,6 @@
             </div>
           </div>
 
-          <!-- 节拍器 -->
           <div class="tool-row">
             <div style="display:flex; align-items:center; gap:6px;">
               <span id="beat-dot" class="beat-dot"></span>
@@ -221,7 +219,6 @@
             <button id="btn-beat" class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="toggleBeat()">节拍开</button>
           </div>
 
-          <!-- 临时惩罚/指令抽取 -->
           <div class="tool-row">
             <button class="btn-ghost" style="flex:1; font-size:12px;" onclick="drawRandomPenalty()">⚡ 抽取临时惩罚 / 指令</button>
           </div>
@@ -318,6 +315,22 @@
       if (gameState && gameState.active_script_id) sel.value = gameState.active_script_id;
     }
 
+    // 兼容两种 initial_vars 格式：
+    // 1. 简写数字: { "心动值": 20 } -> 自动归一化为 { val: 20, max: 100, owner: 'both' }
+    // 2. 完整对象: { "射精临界值": { "val": 10, "max": 100, "owner": "male" } }
+    function normalizeVars(rawVars) {
+      const res = {};
+      if (!rawVars) return res;
+      Object.entries(rawVars).forEach(([k, v]) => {
+        if (typeof v === 'object' && v !== null) {
+          res[k] = { val: Number(v.val ?? 0), max: Number(v.max ?? 100), owner: v.owner || 'both' };
+        } else {
+          res[k] = { val: Number(v ?? 0), max: 100, owner: 'both' };
+        }
+      });
+      return res;
+    }
+
     window.startSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       const picked = allScripts.find(s => s.id === id);
@@ -326,7 +339,7 @@
       await db.from('game_state').update({
         active_script_id: picked.id,
         current_node_id: 'start',
-        variables: picked.initial_vars || {},
+        variables: normalizeVars(picked.initial_vars),
         story_log: startNode ? [{ type: 'narrator', text: startNode.text }] : [],
         remote_alert: { text: '', sender: '' }
       }).eq('id', 1);
@@ -367,10 +380,23 @@
       await loadScripts();
     };
 
+    // 手动拖动滑块同步状态数值
+    window.onSliderInput = function(key, val) {
+      const labelEl = document.getElementById(`stat-val-${key}`);
+      if (labelEl) labelEl.textContent = val;
+    };
+    window.onSliderCommit = async function(key, val) {
+      if (!gameState || !gameState.variables) return;
+      const nextVars = JSON.parse(JSON.stringify(gameState.variables));
+      if (nextVars[key]) {
+        nextVars[key].val = Number(val);
+        await db.from('game_state').update({ variables: nextVars }).eq('id', 1);
+      }
+    };
+
     function renderAll() {
       if (!gameState) return;
 
-      // 异地状态与横幅
       const isRemote = Boolean(gameState.is_remote);
       const chip = document.getElementById('remote-chip');
       chip.textContent = isRemote ? '异地：开' : '异地：关';
@@ -388,14 +414,14 @@
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
       const titleEl = document.getElementById('active-script-title');
       const subEl = document.getElementById('active-script-summary');
-      const dashGrid = document.getElementById('dashboard-grid');
+      const statsPanel = document.getElementById('stats-panel');
       const feedEl = document.getElementById('story-feed');
       const choicesEl = document.getElementById('choices-box');
 
       if (!activeScript) {
         titleEl.textContent = '未选择剧本';
         subEl.textContent = '';
-        dashGrid.classList.add('hidden');
+        statsPanel.classList.add('hidden');
         feedEl.innerHTML = '';
         choicesEl.innerHTML = '';
         return;
@@ -404,16 +430,34 @@
       titleEl.textContent = activeScript.title;
       subEl.textContent = activeScript.summary || '';
 
-      // 仪表盘
-      const vars = gameState.variables || {};
-      if (activeScript.type === 'story' || !Object.keys(vars).length) {
-        dashGrid.classList.add('hidden');
+      // 渲染可拖动状态滑块栏（支持共有 / 女方专属 / 男方专属）
+      const vars = normalizeVars(gameState.variables);
+      const varEntries = Object.entries(vars);
+      if (!varEntries.length) {
+        statsPanel.classList.add('hidden');
       } else {
-        dashGrid.classList.remove('hidden');
-        dashGrid.innerHTML = Object.entries(vars).map(([k, v]) => {
-          const isBar = k.includes('度') || k.includes('值');
-          const pct = Math.max(0, Math.min(100, Number(v) || 0));
-          return `<div class="dash-item"><div class="dash-label">${k}</div><div class="dash-val">${v}</div>${isBar ? `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}</div>`;
+        statsPanel.classList.remove('hidden');
+        statsPanel.innerHTML = varEntries.map(([k, item]) => {
+          const ownerTag = item.owner === 'female'
+            ? `<span class="stat-owner-tag owner-female">女方</span>`
+            : (item.owner === 'male'
+              ? `<span class="stat-owner-tag owner-male">男方</span>`
+              : `<span class="stat-owner-tag owner-both">双方</span>`);
+          const canDrag = item.owner === 'both' || item.owner === myRole;
+          const sliderClass = item.owner === 'male' ? 'stat-slider-wrap male-slider' : 'stat-slider-wrap';
+          return `
+            <div class="stat-row">
+              <div class="stat-header">
+                <div>${ownerTag}<strong>${k}</strong></div>
+                <div><strong id="stat-val-${k}" style="color:#f472b6;">${item.val}</strong> <span style="color:#71717a;">/ ${item.max}</span></div>
+              </div>
+              <div class="${sliderClass}">
+                <input type="range" min="0" max="${item.max}" value="${item.val}" ${canDrag ? '' : 'disabled'}
+                  oninput="onSliderInput('${k}', this.value)"
+                  onchange="onSliderCommit('${k}', this.value)" />
+              </div>
+            </div>
+          `;
         }).join('');
       }
 
@@ -427,7 +471,7 @@
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
-      // 各自角色分支选项
+      // 分支选项与阈值判断
       const node = activeScript.nodes[gameState.current_node_id];
       choicesEl.innerHTML = '';
       if (node && Array.isArray(node.choices) && node.choices.length > 0) {
@@ -437,25 +481,39 @@
         } else {
           myChoices.forEach(choice => {
             let passed = true, hint = '';
-            if (choice.condition) {
-              const cur = Number(vars[choice.condition.var] ?? 0);
-              const tgt = Number(choice.condition.val);
-              if (choice.condition.op === '>=') passed = cur >= tgt;
-              else if (choice.condition.op === '<=') passed = cur <= tgt;
-              else if (choice.condition.op === '>') passed = cur > tgt;
-              else if (choice.condition.op === '<') passed = cur < tgt;
-              hint = ` [${choice.condition.var}${choice.condition.op}${tgt}]`;
+            // 支持单个 condition 对象或 conditions 数组
+            const condList = Array.isArray(choice.conditions)
+              ? choice.conditions
+              : (choice.condition ? [choice.condition] : []);
+
+            if (condList.length > 0) {
+              const hints = [];
+              condList.forEach(cond => {
+                const cur = Number((vars[cond.var] || {}).val ?? 0);
+                const tgt = Number(cond.val);
+                let ok = false;
+                if (cond.op === '>=') ok = cur >= tgt;
+                else if (cond.op === '<=') ok = cur <= tgt;
+                else if (cond.op === '>') ok = cur > tgt;
+                else if (cond.op === '<') ok = cur < tgt;
+                else if (cond.op === '==') ok = cur == tgt;
+                if (!ok) passed = false;
+                hints.push(`${cond.var}${cond.op}${tgt}`);
+              });
+              hint = ` [${hints.join(' 且 ')}]`;
             }
+
             const btn = document.createElement('button');
             btn.className = 'btn-choice';
             btn.disabled = !passed;
             btn.textContent = (passed ? '' : '🔒 ') + choice.label + hint;
             btn.onclick = async () => {
-              const nextVars = { ...vars };
+              const nextVars = JSON.parse(JSON.stringify(vars));
               const effTxt = [];
               if (choice.effects) {
                 Object.entries(choice.effects).forEach(([k, d]) => {
-                  nextVars[k] = (Number(nextVars[k]) || 0) + Number(d);
+                  if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both' };
+                  nextVars[k].val = Math.max(0, Math.min(nextVars[k].max, nextVars[k].val + Number(d)));
                   effTxt.push(`${k}${d >= 0 ? '+' + d : d}`);
                 });
               }
@@ -485,7 +543,6 @@
       await db.from('game_state').update(payload).eq('id', 1);
     };
 
-    // 嵌入式小工具：倒计时
     let timerId = null;
     window.startTimer = function(sec) {
       clearInterval(timerId);
@@ -501,7 +558,6 @@
       timerId = setInterval(tick, 1000);
     };
 
-    // 嵌入式小工具：节拍器
     let audioCtx = null, beatId = null, beatOn = false, currentBpm = 60;
     function thump() {
       try {
@@ -531,7 +587,6 @@
       if (beatOn) runBeat(); else clearInterval(beatId);
     };
 
-    // 嵌入式小工具：临时惩罚抽取
     window.drawRandomPenalty = async function() {
       if (!gameState) return;
       const item = PENALTIES[Math.floor(Math.random() * PENALTIES.length)];
@@ -541,7 +596,6 @@
       await db.from('game_state').update(payload).eq('id', 1);
     };
 
-    // 退出与存档
     window.finishSession = async function(shouldSave) {
       clearInterval(beatId);
       if (shouldSave && gameState && Array.isArray(gameState.story_log) && gameState.story_log.length > 0) {
