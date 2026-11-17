@@ -39,6 +39,27 @@
     .btn-ghost { background: #1c1c26; border: 1px solid #2c2c3c; color: #cbd5e1; }
     .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; }
 
+    /* 本地文件拖拽上传区 */
+    .drop-zone {
+      border: 1.5px dashed #482b4e;
+      background: #0f0e15;
+      border-radius: 12px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #ec4899;
+      background: rgba(219, 39, 119, 0.08);
+    }
+    .drop-zone-title { font-size: 14.5px; color: #f4f4f5; font-weight: 600; }
+    .drop-zone-sub { font-size: 12.5px; color: #a1a1aa; }
+
     /* 登录页异地开关与在线提示 */
     .login-remote-row {
       display: flex; justify-content: space-between; align-items: center;
@@ -78,35 +99,13 @@
     /* 主屏幕活跃任务实时倒计时悬浮条 */
     .active-task-banner {
       background: linear-gradient(135deg, #24192e 0%, #1c1826 100%);
-      border: 1px solid #db2777;
-      border-radius: 12px;
-      padding: 13px 15px;
-      margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      box-shadow: 0 4px 16px rgba(219, 39, 119, 0.15);
+      border: 1px solid #db2777; border-radius: 12px; padding: 13px 15px; margin-bottom: 12px;
+      display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 16px rgba(219, 39, 119, 0.15);
     }
-    .task-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-    .task-countdown-num {
-      font-size: 22px;
-      font-weight: 800;
-      color: #f472b6;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 0.5px;
-    }
+    .task-top-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .task-countdown-num { font-size: 22px; font-weight: 800; color: #f472b6; font-variant-numeric: tabular-nums; }
     .task-settle-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      padding-top: 8px;
-      border-top: 1px dashed #3b2847;
-      flex-wrap: wrap;
+      display: flex; gap: 6px; align-items: center; padding-top: 8px; border-top: 1px dashed #3b2847; flex-wrap: wrap;
     }
 
     /* 背景引入页 */
@@ -131,53 +130,29 @@
     }
     .mood-pill .stage-dot { width: 7px; height: 7px; border-radius: 50%; background: #ec4899; }
 
-    /* 三级层级区分：1. 剧本正文（顶格全宽） -> 2. 玩家对话/回复（缩进气泡） -> 3. 选项区（进一步缩进） */
+    /* 三级层级区分 */
     .story-feed { display: flex; flex-direction: column; gap: 13px; max-height: 50vh; overflow-y: auto; padding-right: 4px; }
-
     .msg-narrator {
-      background: #1d1727;
-      border-left: 3.5px solid #db2777;
-      padding: 15px 18px;
-      border-radius: 10px;
-      font-size: 16px;
-      line-height: 1.85;
-      color: #f4f4f5;
+      background: #1d1727; border-left: 3.5px solid #db2777; padding: 15px 18px;
+      border-radius: 10px; font-size: 16px; line-height: 1.85; color: #f4f4f5;
     }
-
     .msg-player {
-      margin-left: 22px;
-      background: #191a24;
-      border: 1px solid #2a2c3d;
-      padding: 10px 14px;
-      border-radius: 12px 12px 12px 4px;
-      font-size: 15px;
-      line-height: 1.65;
-      color: #e4e4e7;
+      margin-left: 22px; background: #191a24; border: 1px solid #2a2c3d;
+      padding: 10px 14px; border-radius: 12px 12px 12px 4px; font-size: 15px; line-height: 1.65; color: #e4e4e7;
     }
     .msg-player.female-msg { border-left: 2.5px solid #f472b6; }
     .msg-player.male-msg { border-left: 2.5px solid #818cf8; }
     .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 7px; }
     .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 7px; }
-
     .msg-sys {
-      margin-left: 14px;
-      text-align: center;
-      font-size: 13px;
-      color: #c084fc;
-      background: rgba(168, 85, 247, 0.08);
-      padding: 6px 12px;
-      border-radius: 8px;
+      margin-left: 14px; text-align: center; font-size: 13px; color: #c084fc;
+      background: rgba(168, 85, 247, 0.08); padding: 6px 12px; border-radius: 8px;
     }
 
-    /* 选项区（明显缩进，与正文、回复层级彻底拉开） */
+    /* 选项区 */
     .choices-wrapper {
-      margin-top: 16px;
-      margin-left: 34px;
-      padding-left: 14px;
-      border-left: 2px dashed #443159;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      margin-top: 16px; margin-left: 34px; padding-left: 14px;
+      border-left: 2px dashed #443159; display: flex; flex-direction: column; gap: 10px;
     }
     .btn-choice {
       width: 100%; background: linear-gradient(135deg, #251f33 0%, #1d1b29 100%);
@@ -199,8 +174,8 @@
     .quick-replies { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
     .quick-chip {
       background: #1b1a24; border: 1px solid #322e42; color: #d4d4d8;
-      padding: 5px 12px; border-radius: 99px; font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: border-color 0.15s, color 0.15s;
+      padding: 5px 12px; border-radius: 16px; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: border-color 0.15s, color 0.15s; line-height: 1.4;
     }
     .quick-chip:hover { border-color: #db2777; color: #f472b6; }
 
@@ -293,10 +268,10 @@
       <button class="btn-danger" onclick="deleteSelectedScript()">删除</button>
     </div>
 
-    <!-- 上传剧本 -->
-    <div id="upload-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 8px;">
+    <!-- 本地拖拽 / 选择文件上传剧本面板 -->
+    <div id="upload-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 10px;">
       <div style="display: flex; gap: 8px;">
-        <input type="text" id="new-script-title" placeholder="剧本名称" style="flex: 2;" />
+        <input type="text" id="new-script-title" placeholder="剧本名称（选文件后自动填入，可修改）" style="flex: 2;" />
         <select id="new-script-type" style="flex: 1;">
           <option value="conquest">攻略</option>
           <option value="edging">节奏</option>
@@ -304,8 +279,14 @@
           <option value="story">剧情</option>
         </select>
       </div>
-      <textarea id="new-script-json" rows="5" placeholder="JSON 内容"></textarea>
-      <button class="btn-accent" onclick="saveNewScript()">保存至云端</button>
+
+      <input type="file" id="script-file-input" accept=".json,application/json" class="hidden" onchange="handleScriptFileSelect(this.files[0])" />
+      <div id="script-drop-zone" class="drop-zone" onclick="document.getElementById('script-file-input').click()">
+        <div class="drop-zone-title" id="drop-zone-title">📂 点击选择本地 .json 剧本文件，或直接拖拽至此</div>
+        <div class="drop-zone-sub" id="drop-zone-sub">支持标准多分支剧本 JSON 格式</div>
+      </div>
+
+      <button id="btn-save-uploaded-script" class="btn-accent" onclick="saveNewScript()" disabled style="opacity:0.45;">保存至云端</button>
     </div>
 
     <!-- 读档列表 -->
@@ -340,7 +321,6 @@
           </div>
         </div>
 
-        <!-- 任务结束或倒计时归零后展开：可直接填写数值提交（无需再输入文本） -->
         <div id="task-settle-row" class="task-settle-row hidden">
           <select id="task-var-key" style="flex: 1.2; padding: 7px 9px; font-size: 12.5px;"></select>
           <input type="number" id="task-var-val" min="0" max="100" placeholder="可选数值(0-100)" style="flex: 1; padding: 7px 9px; font-size: 12.5px;" />
@@ -348,10 +328,10 @@
         </div>
       </div>
 
-      <!-- 剧情记录流（含正文全宽 & 对话回复缩进） -->
+      <!-- 剧情记录流 -->
       <div class="story-feed" id="story-feed"></div>
 
-      <!-- 缩进式抉择区（进一步缩进与正文/对话拉开层次） -->
+      <!-- 缩进式抉择区 -->
       <div class="choices-wrapper" id="choices-wrapper">
         <div id="choices-box" style="display: flex; flex-direction: column; gap: 9px;"></div>
       </div>
@@ -381,16 +361,15 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
-    <!-- 1. 部位 × 动作 × 时间 三框联动惩罚/指令器 -->
+    <!-- 部位 × 动作 × 时间 三框联动惩罚/指令器 -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#f472b6; font-weight:700;">随机小惩罚 / 限时指令</span>
         <button class="btn-ghost" style="padding:3px 8px; font-size:11.5px;" onclick="randomizeThreeFields()">🎲 随机填充</button>
       </div>
 
-      <!-- 框1：部位 -->
       <div class="combo-field">
-        <input type="text" id="punish-part" placeholder="部位（可点下方快捷词或手填）" style="padding:7px 9px; font-size:12.5px;" />
+        <input type="text" id="punish-part" placeholder="部位（点下方快捷词或手填）" style="padding:7px 9px; font-size:12.5px;" />
         <div class="combo-chips">
           <span class="mini-chip" onclick="setField('punish-part','耳垂与颈侧')">耳垂颈侧</span>
           <span class="mini-chip" onclick="setField('punish-part','锁骨窝')">锁骨</span>
@@ -400,9 +379,8 @@
         </div>
       </div>
 
-      <!-- 框2：动作 -->
       <div class="combo-field">
-        <input type="text" id="punish-action" placeholder="动作（可点下方快捷词或手填）" style="padding:7px 9px; font-size:12.5px;" />
+        <input type="text" id="punish-action" placeholder="动作（点下方快捷词或手填）" style="padding:7px 9px; font-size:12.5px;" />
         <div class="combo-chips">
           <span class="mini-chip" onclick="setField('punish-action','轻吻并缓慢舔舐')">轻吻舔舐</span>
           <span class="mini-chip" onclick="setField('punish-action','用指腹打圈揉弄')">指腹打圈</span>
@@ -412,7 +390,6 @@
         </div>
       </div>
 
-      <!-- 框3：时间 -->
       <div class="combo-field">
         <input type="text" id="punish-time" placeholder="时间（如 60秒 / 2分钟）" style="padding:7px 9px; font-size:12.5px;" />
         <div class="combo-chips">
@@ -427,7 +404,6 @@
       <button class="btn-accent" style="font-size:12.5px; margin-top:2px;" onclick="dispatchThreeFieldTask()">下达并开始倒计时</button>
     </div>
 
-    <!-- 2. 独立快捷倒计时 -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#a1a1aa;">独立计时</span>
@@ -441,7 +417,6 @@
       </div>
     </div>
 
-    <!-- 3. 律动节拍器 -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
@@ -453,7 +428,6 @@
       <input type="range" id="bpm-slider" min="30" max="160" value="60" style="padding:0;" oninput="changeBpm(this.value)" />
     </div>
 
-    <!-- 4. 自定义文字指令 -->
     <div class="tool-box">
       <div style="display:flex; gap:6px;">
         <input type="text" id="custom-cmd-input" style="flex:1; min-width:0; font-size:12.5px; padding:8px;" placeholder="自定义文字指令..." />
@@ -461,7 +435,6 @@
       </div>
     </div>
 
-    <!-- 5. 红灯暂停 -->
     <button class="btn-danger" style="font-size:12.5px;" onclick="triggerSafeWord()">红灯暂停 · 抱抱喘息</button>
   </div>
 
@@ -495,8 +468,9 @@
     let userManuallyChangedSelect = false;
     let taskTickInterval = null;
     let lastRenderedTaskEndAt = 0;
+    let pendingParsedScriptJson = null; // 暂存拖拽或选择文件读取到的 JSON 对象
 
-    const SHORT_QUICK_REPLIES = {
+    const DEFAULT_QUICK_REPLIES = {
       female: ['好的', '不要', '继续', '慢一点', '过来', '随你', '再靠近些', '停一下'],
       male: ['好的', '遵命', '继续', '慢一点', '可以吗', '忍住了', '都听你的', '抱紧你']
     };
@@ -504,6 +478,60 @@
     const PRESET_PARTS = ['耳垂与颈侧', '锁骨窝', '胸前敏感点', '小腹与腰窝', '大腿内侧', '臀部'];
     const PRESET_ACTIONS = ['轻吻并缓慢舔舐', '用指腹打圈揉弄', '轻咬并呼出热气', '轻轻拍打并报数', '保持姿势静止不动'];
     const PRESET_TIMES = ['30秒', '60秒', '90秒', '2分钟'];
+
+    // 绑定拖拽上传事件
+    const dropZone = document.getElementById('script-drop-zone');
+    ['dragenter', 'dragover'].forEach(evtName => {
+      dropZone.addEventListener(evtName, e => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach(evtName => {
+      dropZone.addEventListener(evtName, e => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('dragover');
+      });
+    });
+    dropZone.addEventListener('drop', e => {
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) handleScriptFileSelect(files[0]);
+    });
+
+    window.handleScriptFileSelect = function(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          const nodes = parsed.nodes ? parsed.nodes : parsed;
+          if (!nodes.start) throw new Error('JSON 中缺少 "start" 节点');
+
+          pendingParsedScriptJson = parsed;
+          const nodeCount = Object.keys(nodes).filter(k => k !== '_meta').length;
+          document.getElementById('drop-zone-title').textContent = `✅ 已加载：${file.name}`;
+          document.getElementById('drop-zone-sub').textContent = `共解析到 ${nodeCount} 个剧情节点，点击下方保存即可`;
+
+          const titleInp = document.getElementById('new-script-title');
+          if (!titleInp.value.trim()) {
+            titleInp.value = parsed.title || file.name.replace(/\.json$/i, '');
+          }
+          const saveBtn = document.getElementById('btn-save-uploaded-script');
+          saveBtn.disabled = false;
+          saveBtn.style.opacity = '1';
+        } catch (err) {
+          pendingParsedScriptJson = null;
+          document.getElementById('drop-zone-title').textContent = `❌ 文件解析失败：${err.message}`;
+          document.getElementById('drop-zone-sub').textContent = '请检查 JSON 格式后重新拖入或选择';
+          const saveBtn = document.getElementById('btn-save-uploaded-script');
+          saveBtn.disabled = true;
+          saveBtn.style.opacity = '0.45';
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+    };
 
     document.getElementById('player-select').addEventListener('change', () => {
       userManuallyChangedSelect = true;
@@ -683,6 +711,12 @@
 
     function getFuzzyStageLabel(key, val, max) {
       const ratio = (Number(val) || 0) / (Number(max) || 100);
+      if (key.includes('猜忌') || key.includes('戒备')) {
+        if (ratio < 0.25) return '消融 · 信任';
+        if (ratio < 0.50) return '疑虑 · 试探';
+        if (ratio < 0.75) return '戒备 · 暗涌';
+        return '危局 · 杀机';
+      }
       const isDescending = key.includes('防线') || key.includes('克制') || key.includes('忍耐');
       const intensity = isDescending ? (1 - ratio) : ratio;
 
@@ -799,26 +833,33 @@
     window.saveNewScript = async function() {
       const title = document.getElementById('new-script-title').value.trim();
       const type = document.getElementById('new-script-type').value;
-      const rawJson = document.getElementById('new-script-json').value.trim();
-      if (!title || !rawJson) return alert('请填写剧本名称和 JSON 内容');
+      if (!title || !pendingParsedScriptJson) return alert('请先拖入或选择有效的 JSON 剧本文件并填写名称');
       try {
-        const parsed = JSON.parse(rawJson);
-        const nodes = parsed.nodes ? parsed.nodes : parsed;
+        const parsed = pendingParsedScriptJson;
+        const nodes = parsed.nodes ? JSON.parse(JSON.stringify(parsed.nodes)) : JSON.parse(JSON.stringify(parsed));
         const initialVars = parsed.initial_vars || {};
         const summary = parsed.background || parsed.summary || '';
-        if (!nodes.start) return alert('缺少 start 节点');
         nodes._meta = {
           background: parsed.background || '',
           female_role: parsed.female_role || '',
-          male_role: parsed.male_role || ''
+          male_role: parsed.male_role || '',
+          quick_replies: parsed.quick_replies || null
         };
         const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
         if (error) throw error;
+
+        // 重置上传表单状态
+        pendingParsedScriptJson = null;
         document.getElementById('new-script-title').value = '';
-        document.getElementById('new-script-json').value = '';
+        document.getElementById('script-file-input').value = '';
+        document.getElementById('drop-zone-title').textContent = '📂 点击选择本地 .json 剧本文件，或直接拖拽至此';
+        document.getElementById('drop-zone-sub').textContent = '支持标准多分支剧本 JSON 格式';
+        const saveBtn = document.getElementById('btn-save-uploaded-script');
+        saveBtn.disabled = true;
+        saveBtn.style.opacity = '0.45';
         document.getElementById('upload-panel').classList.add('hidden');
         await loadScripts();
-      } catch (e) { alert('JSON 格式有误：' + e.message); }
+      } catch (e) { alert('保存失败：' + e.message); }
     };
 
     // ==================== 主屏幕带时间任务倒计时 & 结束提交数值 ====================
@@ -838,7 +879,6 @@
       banner.classList.remove('hidden');
       document.getElementById('active-task-label').textContent = task.label;
 
-      // 填充任务结束时的可选数值指标下拉框
       const editableKeys = Object.entries(vars)
         .filter(([_, item]) => item.visible && (item.owner === 'both' || item.owner === myRole))
         .map(([k]) => k);
@@ -880,7 +920,6 @@
       document.getElementById('task-settle-row').classList.remove('hidden');
     };
 
-    // 任务结束提交（可选填写数值，无需再输文本，直接关闭横幅并静默更新状态）
     window.submitTaskCompletion = async function() {
       if (!gameState) return;
       let nextVars = normalizeVars(gameState.variables);
@@ -968,10 +1007,13 @@
         moodBadgesEl.classList.add('hidden');
       }
 
+      // 优先展示剧本专属 quick_replies，同时保留简短日常快捷词，点击均填入输入框不直接发送
       const qrBar = document.getElementById('quick-replies-bar');
-      const phrases = SHORT_QUICK_REPLIES[myRole] || SHORT_QUICK_REPLIES.female;
-      qrBar.innerHTML = phrases.map(p =>
-        `<span class="quick-chip" onclick="fillQuickReply('${p}')">${p}</span>`
+      const scriptQR = (meta.quick_replies && Array.isArray(meta.quick_replies[myRole])) ? meta.quick_replies[myRole] : [];
+      const fallbackQR = DEFAULT_QUICK_REPLIES[myRole] || DEFAULT_QUICK_REPLIES.female;
+      const combinedQR = scriptQR.length > 0 ? [...scriptQR, ...fallbackQR.slice(0, 4)] : fallbackQR;
+      qrBar.innerHTML = combinedQR.map(p =>
+        `<span class="quick-chip" onclick="fillQuickReply('${p.replace(/'/g, "&#39;")}')">${p}</span>`
       ).join('');
 
       const editableKeys = myVisibleVars.map(([k]) => k);
@@ -986,7 +1028,6 @@
         silentBar.classList.add('hidden');
       }
 
-      // 渲染三级缩进剧情记录流
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       const feedEl = document.getElementById('story-feed');
       feedEl.innerHTML = logs.map(item => {
@@ -998,7 +1039,6 @@
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
-      // 选项区
       const node = activeScript.nodes ? activeScript.nodes[gameState.current_node_id] : null;
       const choicesWrapper = document.getElementById('choices-wrapper');
       const choicesEl = document.getElementById('choices-box');
@@ -1257,7 +1297,6 @@
       document.getElementById('side-drawer').classList.remove('open');
     };
 
-    // 独立倒计时（同时同步到主屏幕任务栏显示剩余时间）
     let standaloneTimerId = null;
     window.startStandaloneTimer = async function(sec) {
       clearInterval(standaloneTimerId);
@@ -1300,7 +1339,6 @@
       }
     };
 
-    // 节拍器
     let audioCtx = null, beatId = null, beatOn = false, currentBpm = 60;
     function thump() {
       try {
