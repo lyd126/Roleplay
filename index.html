@@ -47,7 +47,6 @@
     .btn-ghost { background: #1c1c26; border: 1px solid #2c2c3c; color: #cbd5e1; }
     .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; }
 
-    /* 顶部极简状态栏 */
     .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
     .presence { display: flex; gap: 6px; align-items: center; }
     .pill {
@@ -70,7 +69,6 @@
       display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
 
-    /* 剧本杀式背景引入幕布 */
     .prologue-box {
       background: linear-gradient(180deg, #1b1624 0%, #14141b 100%);
       border: 1px solid #362542; border-radius: 16px; padding: 26px 22px;
@@ -83,7 +81,6 @@
       padding: 12px 14px; border-radius: 8px; font-size: 14px; line-height: 1.65; color: #d8b4fe;
     }
 
-    /* 剧情流与紧贴其下的选项区 */
     .story-feed { display: flex; flex-direction: column; gap: 11px; max-height: 46vh; overflow-y: auto; padding-right: 4px; }
     .msg-narrator {
       background: #1e1828; border-left: 3px solid #db2777; padding: 13px 15px;
@@ -94,7 +91,6 @@
     .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 6px; }
     .msg-sys { text-align: center; font-size: 12.5px; color: #c084fc; padding: 4px 0; }
 
-    /* 紧贴正文下方的醒目选项区 */
     .choices-box {
       display: flex; flex-direction: column; gap: 9px;
       margin-top: 14px; padding-top: 14px; border-top: 1px solid #262634;
@@ -112,7 +108,6 @@
       font-size: 13px; color: #71717a; border: 1px dashed #2e2e3e;
     }
 
-    /* 右上角/右栏 状态滑块面板 */
     .stats-panel { display: flex; flex-direction: column; gap: 10px; }
     .stat-row {
       background: #1a1a23; border: 1px solid #2a2a38; border-radius: 10px; padding: 10px 12px;
@@ -127,7 +122,6 @@
     .stat-slider-wrap input[type="range"] { flex: 1; padding: 0; accent-color: #ec4899; cursor: pointer; }
     .stat-slider-wrap.male-slider input[type="range"] { accent-color: #6366f1; }
 
-    /* 右侧悬浮侧边栏（工具 & 惩罚） */
     .drawer-tab {
       position: fixed; right: 0; top: 46%; transform: translateY(-50%);
       background: #222230; border: 1px solid #3b3b50; border-right: none;
@@ -167,7 +161,6 @@
 
   <!-- 主界面 -->
   <div id="app-view" class="app-shell hidden">
-    <!-- 顶部极简导航 -->
     <div class="top-bar">
       <div class="presence">
         <div id="pill-yc" class="pill"><span class="dot"></span>YC</div>
@@ -182,13 +175,12 @@
       </div>
     </div>
 
-    <!-- 异地实时弹窗条 -->
     <div id="remote-banner" class="remote-banner hidden">
       <div id="remote-banner-text" style="font-size: 13.5px; color: #fff; line-height: 1.4;"></div>
       <button class="btn-accent" style="padding: 6px 12px; font-size: 12px; white-space: nowrap;" onclick="ackRemoteAlert()">收到</button>
     </div>
 
-    <!-- 选本栏（选定开始后自动折叠隐藏，保证沉浸） -->
+    <!-- 选本栏 -->
     <div id="script-picker-card" class="card" style="display: flex; gap: 6px;">
       <select id="script-selector" style="flex: 1;"></select>
       <button class="btn-accent" onclick="startSelectedScript()">开始</button>
@@ -216,7 +208,7 @@
       <div id="archives-list" style="font-size: 13px; color: #a1a1aa;"></div>
     </div>
 
-    <!-- ==================== 阶段 0：剧本杀式背景引入幕布 ==================== -->
+    <!-- 阶段 0：背景引入页 -->
     <div id="prologue-view" class="prologue-box hidden">
       <div class="prologue-title" id="prologue-title"></div>
       <div class="prologue-text" id="prologue-bg"></div>
@@ -224,32 +216,25 @@
       <button class="btn-accent" style="padding: 13px; font-size: 15px; margin-top: 6px;" onclick="enterFirstScene()">进入角色 · 开启今夜</button>
     </div>
 
-    <!-- ==================== 阶段 1：沉浸式正戏双栏/单栏区 ==================== -->
+    <!-- 阶段 1：正戏舞台 -->
     <div id="stage-view" class="stage-grid hidden">
-      <!-- 左侧（手机端上方）：剧情正文 + 紧贴其下的抉择选项 + 自由台词 -->
       <div class="card" style="display: flex; flex-direction: column;">
         <div id="active-script-title" style="font-size: 14px; font-weight: 700; color: #f472b6; margin-bottom: 10px;"></div>
-
         <div class="story-feed" id="story-feed"></div>
-
-        <!-- 选项紧贴剧情下方，最醒目位置 -->
         <div class="choices-box" id="choices-box"></div>
-
-        <!-- 自由台词补充 -->
         <div style="display: flex; gap: 8px; margin-top: 12px;">
           <input type="text" id="custom-msg-input" placeholder="输入台词或动作..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
           <button class="btn-accent" onclick="sendCustomMessage()">发送</button>
         </div>
       </div>
 
-      <!-- 右侧（手机端下方）：渐进式解锁的生理/心理状态滑块 -->
       <div id="right-stats-card" class="card hidden">
         <div id="stats-panel" class="stats-panel"></div>
       </div>
     </div>
   </div>
 
-  <!-- 右侧悬浮侧边栏抽屉（惩罚 / 计时 / 节拍器） -->
+  <!-- 侧边栏抽屉 -->
   <button id="drawer-tab" class="drawer-tab hidden" onclick="document.getElementById('side-drawer').classList.add('open')">工具</button>
   <div id="side-drawer" class="side-drawer">
     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -257,7 +242,6 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
-    <!-- 倒计时 -->
     <div style="background:#1a1a24; padding:12px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#a1a1aa;">计时</span>
@@ -271,7 +255,6 @@
       </div>
     </div>
 
-    <!-- 节拍器 -->
     <div style="background:#1a1a24; padding:12px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
@@ -283,7 +266,6 @@
       <input type="range" id="bpm-slider" min="30" max="160" value="60" style="padding:0;" oninput="changeBpm(this.value)" />
     </div>
 
-    <!-- 随机惩罚 / 指令 -->
     <div style="background:#1a1a24; padding:12px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
       <button class="btn-accent" style="font-size:12.5px;" onclick="drawRandomPenalty()">随机惩罚 / 指令</button>
       <div style="display:flex; gap:6px;">
@@ -308,10 +290,15 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_gbR5IGXPz5n1kVTEpbq7pQ_R3dPPdud';
 
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { storage: window.sessionStorage, autoRefreshToken: true, persistSession: true }
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
+      }
     });
 
     let myRole = '', myName = '', allScripts = [], gameState = null;
+    let currentAccessToken = '';
+    let hasExplicitlyFinished = false;
 
     const PENALTIES = [
       '【指令】保持当前姿势静止 60 秒，不准发出声音。',
@@ -322,7 +309,37 @@
       '【指令】暂停所有动作深呼吸 30 秒，忍住不许越线。'
     ];
 
-    db.auth.getSession().then(({ data: { session } }) => { if (session) initSession(session); });
+    window.addEventListener('pagehide', () => {
+      if (!currentAccessToken || hasExplicitlyFinished || !gameState) return;
+      const headers = {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${currentAccessToken}`
+      };
+
+      if (Array.isArray(gameState.story_log) && gameState.story_log.length > 0) {
+        const autoTitle = `自动存档 ${new Date().toLocaleString()}`;
+        fetch(`${SUPABASE_URL}/rest/v1/session_archives`, {
+          method: 'POST',
+          keepalive: true,
+          headers,
+          body: JSON.stringify({ title: autoTitle, logs: gameState.story_log })
+        });
+      }
+
+      fetch(`${SUPABASE_URL}/rest/v1/game_state?id=eq.1`, {
+        method: 'PATCH',
+        keepalive: true,
+        headers,
+        body: JSON.stringify({
+          active_script_id: null,
+          story_log: [],
+          variables: {},
+          current_node_id: 'start',
+          remote_alert: { text: '', sender: '' }
+        })
+      });
+    });
 
     document.getElementById('login-btn').addEventListener('click', async () => {
       const email = document.getElementById('player-select').value;
@@ -333,6 +350,7 @@
     });
 
     async function initSession(session) {
+      currentAccessToken = session.access_token;
       const email = session.user.email;
       myName = email.startsWith('yc') ? 'YC' : 'LY';
       myRole = email.startsWith('yc') ? 'female' : 'male';
@@ -383,7 +401,6 @@
       if (gameState && gameState.active_script_id) sel.value = gameState.active_script_id;
     }
 
-    // 归一化变量，支持 visible: false 默认隐藏，到特定节点再解锁显示
     function normalizeVars(rawVars) {
       const res = {};
       if (!rawVars) return res;
@@ -402,7 +419,6 @@
       return res;
     }
 
-    // 选择剧本后，先进入 'prologue'（背景介绍页）
     window.startSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       const picked = allScripts.find(s => s.id === id);
@@ -423,7 +439,6 @@
       await startSelectedScript();
     };
 
-    // 看完背景介绍后，正式进入 start 节点
     window.enterFirstScene = async function() {
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
       if (!activeScript) return;
@@ -450,7 +465,6 @@
         const initialVars = parsed.initial_vars || {};
         const summary = parsed.background || parsed.summary || '';
         if (!nodes.start) return alert('缺少 start 节点');
-        // 把 background / female_role / male_role 存入 nodes._meta 方便读取
         if (parsed.background || parsed.female_role || parsed.male_role) {
           nodes._meta = {
             background: parsed.background || '',
@@ -510,7 +524,6 @@
       const prologueView = document.getElementById('prologue-view');
       const stageView = document.getElementById('stage-view');
 
-      // 未选剧本时，显示选本框
       if (!activeScript) {
         pickerCard.classList.remove('hidden');
         togglePickerBtn.classList.add('hidden');
@@ -519,17 +532,15 @@
         return;
       }
 
-      // 已选定剧本后，自动收起选本框，右上角出现“换本”按钮，实现沉浸式页面
       pickerCard.classList.add('hidden');
       togglePickerBtn.classList.remove('hidden');
 
-      // 阶段 0：剧本杀背景引入页
       if (gameState.current_node_id === 'prologue') {
         prologueView.classList.remove('hidden');
         stageView.classList.add('hidden');
         const meta = activeScript.nodes._meta || {};
         document.getElementById('prologue-title').textContent = activeScript.title;
-        document.getElementById('prologue-bg').textContent = meta.background || activeScript.summary || '夜幕降临，专属剧情即将展开……';
+        document.getElementById('prologue-bg').textContent = meta.background || activeScript.summary || '';
         const roleBox = document.getElementById('prologue-role');
         const myRoleDesc = myRole === 'female' ? meta.female_role : meta.male_role;
         if (myRoleDesc) {
@@ -541,12 +552,10 @@
         return;
       }
 
-      // 阶段 1：正戏舞台
       prologueView.classList.add('hidden');
       stageView.classList.remove('hidden');
       document.getElementById('active-script-title').textContent = activeScript.title;
 
-      // 渲染已解锁（visible: true）的数值滑块到右上角/右栏
       const vars = normalizeVars(gameState.variables);
       const visibleEntries = Object.entries(vars).filter(([_, item]) => item.visible);
       const rightStatsCard = document.getElementById('right-stats-card');
@@ -580,7 +589,6 @@
         }).join('');
       }
 
-      // 剧情记录流（纯剧情与对话，不刷数值加减播报）
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       const feedEl = document.getElementById('story-feed');
       feedEl.innerHTML = logs.map(item => {
@@ -591,7 +599,6 @@
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
-      // 紧贴剧情正下方的抉择按钮
       const node = activeScript.nodes[gameState.current_node_id];
       const choicesEl = document.getElementById('choices-box');
       choicesEl.innerHTML = '';
@@ -629,7 +636,6 @@
             btn.textContent = (passed ? '' : '🔒 ') + choice.label + hint;
             btn.onclick = async () => {
               const nextVars = normalizeVars(vars);
-              // 静默结算属性增减，不在剧情流里刷数值播报
               if (choice.effects) {
                 Object.entries(choice.effects).forEach(([k, d]) => {
                   if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both', visible: true };
@@ -637,7 +643,6 @@
                 });
               }
               const nextNode = activeScript.nodes[choice.next];
-              // 若下一节点解锁了新数值条（如射精临界值），将其设为 visible: true
               if (nextNode && Array.isArray(nextNode.unlock_vars)) {
                 nextNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
               }
@@ -666,7 +671,6 @@
       await db.from('game_state').update(payload).eq('id', 1);
     };
 
-    // 侧边栏工具
     let timerId = null;
     window.startTimer = function(sec) {
       clearInterval(timerId);
@@ -734,6 +738,7 @@
     };
 
     window.finishSession = async function(shouldSave) {
+      hasExplicitlyFinished = true;
       clearInterval(beatId);
       if (shouldSave && gameState && Array.isArray(gameState.story_log) && gameState.story_log.length > 0) {
         const title = document.getElementById('archive-title-input').value.trim() || new Date().toLocaleString();
