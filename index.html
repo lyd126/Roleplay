@@ -4,114 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Session</title>
+  <title>Private Room</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0c0c10;
-      color: #e4e4e7;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 14px;
-      overflow-x: hidden;
+      background: #0a0a0e; color: #e4e4e7; min-height: 100vh;
+      display: flex; justify-content: center; padding: 14px;
     }
     .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
-    .card { background: #16161d; border: 1px solid #262633; border-radius: 16px; padding: 18px; }
+    .card { background: #15151c; border: 1px solid #262634; border-radius: 16px; padding: 18px; }
     .hidden { display: none !important; }
     select, input, textarea {
-      width: 100%; padding: 11px 12px; border: 1px solid #2e2e3d; border-radius: 10px;
-      background: #0f0f14; color: #f4f4f5; font-size: 14px; outline: none;
+      width: 100%; padding: 11px 12px; border: 1px solid #2e2e3e; border-radius: 10px;
+      background: #0e0e13; color: #f4f4f5; font-size: 14px; outline: none;
     }
     select:focus, input:focus, textarea:focus { border-color: #db2777; }
     button {
       padding: 12px 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
       cursor: pointer; transition: transform 0.1s, opacity 0.15s;
     }
-    button:active { transform: scale(0.98); }
+    button:active { transform: scale(0.97); }
     .btn-accent { background: linear-gradient(135deg, #9333ea, #db2777); color: #fff; width: 100%; }
-    .btn-ghost { background: #1e1e28; border: 1px solid #2e2e3d; color: #cbd5e1; padding: 8px 11px; font-size: 12px; }
+    .btn-ghost { background: #1e1e28; border: 1px solid #2e2e3e; color: #cbd5e1; padding: 8px 11px; font-size: 12px; }
     .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; padding: 8px 11px; font-size: 12px; }
 
     /* 顶部栏 */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
     .presence { display: flex; gap: 6px; }
     .pill {
       display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
       border-radius: 99px; font-size: 12px; background: #1c1c24; color: #71717a;
     }
-    .pill.on { background: rgba(219, 39, 119, 0.16); color: #f472b6; }
+    .pill.on { background: rgba(219, 39, 119, 0.18); color: #f472b6; }
     .dot { width: 6px; height: 6px; border-radius: 50%; background: #52525b; }
     .pill.on .dot { background: #ec4899; box-shadow: 0 0 6px #ec4899; }
 
-    /* 动态仪表盘 */
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
-    .dash-item {
-      background: #1d1d26; border: 1px solid #2c2c3a; border-radius: 12px; padding: 10px; text-align: center;
+    /* 大厅模式选择卡片 */
+    .lobby-center { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mode-card {
+      background: linear-gradient(160deg, #1d1b29 0%, #15151c 100%);
+      border: 1.5px solid #322c44; border-radius: 18px; padding: 26px 16px;
+      text-align: center; cursor: pointer; transition: all 0.2s;
     }
-    .dash-label { font-size: 11px; color: #a1a1aa; margin-bottom: 4px; }
-    .dash-val { font-size: 20px; font-weight: 800; color: #f472b6; }
-    .progress-bar { width: 100%; height: 6px; background: #272734; border-radius: 99px; overflow: hidden; margin-top: 6px; }
+    .mode-card:hover { border-color: #db2777; transform: translateY(-2px); }
+    .mode-icon { font-size: 32px; margin-bottom: 10px; }
+    .mode-title { font-size: 17px; font-weight: 700; color: #f4f4f5; margin-bottom: 6px; }
+    .mode-desc { font-size: 12px; color: #a1a1aa; line-height: 1.4; }
+
+    /* 异地开关条 */
+    .remote-toggle-box {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #181822; border: 1px solid #2b2b3a; border-radius: 14px; padding: 14px 18px;
+    }
+    .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #2e2e3e; transition: .3s; border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
+      background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #db2777; }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    /* 异地实时指令横幅 */
+    .remote-banner {
+      background: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(219, 39, 119, 0.25));
+      border: 1px solid #ec4899; border-radius: 14px; padding: 14px;
+      animation: pulseBorder 2s infinite;
+    }
+    @keyframes pulseBorder { 0%, 100% { border-color: #ec4899; } 50% { border-color: #a855f7; } }
+
+    /* 仪表盘 & 剧情流 */
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; }
+    .dash-item { background: #1c1c26; border: 1px solid #2b2b3a; border-radius: 10px; padding: 9px; text-align: center; }
+    .dash-label { font-size: 11px; color: #a1a1aa; }
+    .dash-val { font-size: 18px; font-weight: 800; color: #f472b6; margin-top: 2px; }
+    .progress-bar { width: 100%; height: 5px; background: #272734; border-radius: 99px; overflow: hidden; margin-top: 5px; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, #9333ea, #ec4899); transition: width 0.3s; }
 
-    /* 剧情流 */
-    .story-feed {
-      display: flex; flex-direction: column; gap: 10px; max-height: 46vh; overflow-y: auto; padding-right: 4px;
-    }
-    .msg-narrator {
-      background: #211b2b; border-left: 3px solid #db2777; padding: 13px;
-      border-radius: 10px; font-size: 14.5px; line-height: 1.65; color: #f4f4f5;
-    }
-    .msg-player { background: #1c1c25; padding: 10px 13px; border-radius: 10px; font-size: 13.5px; color: #d4d4d8; }
+    .story-feed { display: flex; flex-direction: column; gap: 10px; max-height: 44vh; overflow-y: auto; padding-right: 4px; }
+    .msg-narrator { background: #211a2b; border-left: 3px solid #db2777; padding: 12px; border-radius: 10px; font-size: 14px; line-height: 1.65; }
+    .msg-player { background: #1c1c25; padding: 9px 12px; border-radius: 10px; font-size: 13.5px; }
     .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 6px; }
     .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 6px; }
-    .msg-sys { text-align: center; font-size: 12px; color: #a78bfa; padding: 4px 0; }
+    .msg-sys { text-align: center; font-size: 12px; color: #c084fc; padding: 3px 0; }
 
-    /* 分支按钮 */
-    .choices-box { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
-    .btn-choice {
-      width: 100%; background: #22222e; border: 1px solid #38384c; color: #f4f4f5;
-      text-align: left; padding: 13px 15px; line-height: 1.45;
-    }
+    .choices-box { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .btn-choice { width: 100%; background: #22222e; border: 1px solid #38384c; color: #f4f4f5; text-align: left; padding: 12px 14px; line-height: 1.4; }
     .btn-choice:hover:not(:disabled) { border-color: #db2777; background: #2b2236; }
     .btn-choice:disabled { opacity: 0.45; cursor: not-allowed; border-style: dashed; }
-    .wait-tip {
-      text-align: center; padding: 14px; background: #1b1b24; border-radius: 10px;
-      font-size: 13px; color: #a1a1aa; border: 1px dashed #323242;
-    }
+    .wait-tip { text-align: center; padding: 12px; background: #1b1b24; border-radius: 10px; font-size: 13px; color: #a1a1aa; border: 1px dashed #323242; }
 
-    /* 底部输入 */
-    .input-row { display: flex; gap: 8px; margin-top: 10px; }
-    .input-row input { flex: 1; }
-    .input-row button { width: auto; padding: 0 16px; }
+    /* 工具模式三阶段标签页 */
+    .phase-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #121218; padding: 5px; border-radius: 12px; }
+    .phase-tab { background: transparent; color: #a1a1aa; padding: 9px 6px; font-size: 13px; border-radius: 8px; }
+    .phase-tab.active { background: #262235; color: #f472b6; border: 1px solid #4c2a4d; }
 
-    /* 右侧边栏抽屉（惩罚与辅助工具） */
-    .drawer-toggle {
-      position: fixed; right: 0; top: 45%; transform: translateY(-50%);
-      background: #252533; border: 1px solid #3f3f54; border-right: none;
-      color: #f472b6; padding: 12px 8px; border-radius: 12px 0 0 12px;
-      writing-mode: vertical-rl; font-size: 12px; letter-spacing: 2px; z-index: 40;
+    /* 节拍器脉冲圆环 */
+    .beat-circle {
+      width: 90px; height: 90px; border-radius: 50%; margin: 12px auto;
+      background: radial-gradient(circle, #db2777 0%, #581c87 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: #fff;
+      box-shadow: 0 0 15px rgba(219, 39, 119, 0.3);
+      transition: transform 0.08s ease-out;
     }
-    .side-drawer {
-      position: fixed; right: 0; top: 0; bottom: 0; width: 280px;
-      background: #14141b; border-left: 1px solid #2e2e3e; padding: 20px 16px;
-      z-index: 50; display: flex; flex-direction: column; gap: 16px;
-      transform: translateX(100%); transition: transform 0.25s ease;
+    .beat-circle.pulse { transform: scale(1.22); box-shadow: 0 0 32px rgba(236, 72, 153, 0.85); }
+
+    /* 模态弹窗（退出时选择保存或删除） */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.82);
+      display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100;
     }
-    .side-drawer.open { transform: translateX(0); }
-    .timer-display { font-size: 32px; font-weight: 800; text-align: center; color: #f472b6; font-variant-numeric: tabular-nums; }
   </style>
 </head>
 <body>
 
-  <!-- 登录框 -->
+  <!-- 1. 登录界面 -->
   <div id="login-view" class="container" style="justify-content: center;">
     <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
       <select id="player-select">
-        <option value="yc@play.game">YC (女方视角)</option>
-        <option value="ly@play.game">LY (男方视角)</option>
+        <option value="yc@play.game">YC (女方)</option>
+        <option value="ly@play.game">LY (男方)</option>
       </select>
       <input type="password" id="password-input" placeholder="Password" />
       <button id="login-btn" class="btn-accent">Enter</button>
@@ -119,83 +139,219 @@
     </div>
   </div>
 
-  <!-- 主互动界面 -->
-  <div id="game-view" class="container hidden">
+  <!-- 2. 主界面容器 -->
+  <div id="app-view" class="container hidden">
+    <!-- 顶部状态与返回导航 -->
     <div class="top-bar">
       <div class="presence">
         <div id="pill-yc" class="pill"><span class="dot"></span>YC · 女</div>
         <div id="pill-ly" class="pill"><span class="dot"></span>LY · 男</div>
       </div>
-      <div style="display: flex; gap: 5px;">
-        <button id="btn-random-script" class="btn-ghost">随机剧本</button>
-        <button id="btn-toggle-upload" class="btn-ghost">+ 导入</button>
-        <button id="logout-btn" class="btn-danger">退出并清场</button>
+      <div style="display: flex; gap: 6px;">
+        <button id="btn-back-lobby" class="btn-ghost hidden">切换模式</button>
+        <button id="btn-open-exit-modal" class="btn-danger">结束 / 退出</button>
       </div>
     </div>
 
-    <!-- JSON 剧本导入面板 -->
-    <div id="upload-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 10px;">
-      <div style="font-size: 13px; font-weight: 600; color: #f472b6;">导入分支剧本 (JSON)</div>
-      <input type="text" id="new-script-title" placeholder="剧本名称" />
-      <select id="new-script-type">
-        <option value="edging">剧本类型：寸止 / 忍耐考验 (edging)</option>
-        <option value="conquest">剧本类型：攻略 / 心动养成 (conquest)</option>
-        <option value="domsub">剧本类型：支配 / 顺从调教 (domsub)</option>
-        <option value="story">剧本类型：纯剧情沉浸 (story)</option>
-      </select>
-      <input type="text" id="new-script-summary" placeholder="简介（可选）" />
-      <textarea id="new-script-json" rows="5" placeholder='粘贴完整 JSON（可包含 initial_vars 和 nodes，或直接粘贴 nodes 对象）'></textarea>
-      <button id="btn-save-script" class="btn-accent">保存到剧本库</button>
+    <!-- 异地模式实时指令接收横幅（仅开启异地且有新指令时展示） -->
+    <div id="remote-banner" class="remote-banner hidden">
+      <div style="font-size: 11px; color: #f9a8d4; font-weight: 700; margin-bottom: 4px;">📡 远程实时指令同步</div>
+      <div id="remote-banner-text" style="font-size: 14.5px; color: #fff; line-height: 1.5; margin-bottom: 10px;"></div>
+      <button id="btn-ack-remote" class="btn-accent" style="padding: 8px; font-size: 13px;">我已执行 / 收到回传</button>
     </div>
 
-    <!-- 动态场景仪表盘（按剧本类型自动展示） -->
-    <div id="dashboard-card" class="card hidden">
-      <div class="dashboard-grid" id="dashboard-grid"></div>
-    </div>
-
-    <!-- 剧情主舞台 -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-        <div style="font-size: 16px; font-weight: 700; color: #f472b6;" id="active-script-title">等待抽取剧本</div>
-        <span style="font-size: 11px; color: #a1a1aa;" id="active-script-type-badge"></span>
+    <!-- ==================== 视图 A：主大厅选择 ==================== -->
+    <div id="lobby-view" class="lobby-center">
+      <div class="mode-grid">
+        <div class="mode-card" onclick="switchAppMode('script')">
+          <div class="mode-icon">🎭</div>
+          <div class="mode-title">剧本模式</div>
+          <div class="mode-desc">云端剧本库、随机抽选、双视角分支与数值检定</div>
+        </div>
+        <div class="mode-card" onclick="switchAppMode('tool')">
+          <div class="mode-icon">🔥</div>
+          <div class="mode-title">工具模式</div>
+          <div class="mode-desc">前戏挑逗、节拍器、边缘计数、惩罚与事后温存</div>
+        </div>
       </div>
-      <div style="font-size: 12px; color: #a1a1aa; margin-bottom: 12px;" id="active-script-summary">点击上方「随机剧本」开始</div>
 
-      <div class="story-feed" id="story-feed"></div>
-      <div class="choices-box" id="choices-box"></div>
+      <!-- 是否异地开关 -->
+      <div class="remote-toggle-box">
+        <div>
+          <div style="font-size: 14px; font-weight: 600; color: #f4f4f5;">异地互动模式</div>
+          <div style="font-size: 12px; color: #a1a1aa; margin-top: 2px;" id="remote-mode-desc">关闭：同房共享控制台，无需弹窗推送</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="remote-checkbox" onchange="toggleRemoteMode(this.checked)">
+          <span class="slider"></span>
+        </label>
+      </div>
 
-      <div class="input-row">
-        <input type="text" id="custom-msg-input" placeholder="输入台词或动作..." />
-        <button id="btn-send-msg" class="btn-accent">发送</button>
+      <!-- 查看历史保存记录入口 -->
+      <button class="btn-ghost" style="width:100%; padding:11px;" onclick="toggleArchivesPanel()">📂 查看云端已保存的私密记录</button>
+      <div id="archives-panel" class="card hidden" style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:13px; font-weight:600; color:#f472b6;">已保存的记录列表</div>
+        <div id="archives-list" style="font-size:13px; color:#a1a1aa;">加载中...</div>
+      </div>
+    </div>
+
+    <!-- ==================== 视图 B：剧本模式 ==================== -->
+    <div id="script-view" class="hidden" style="display: flex; flex-direction: column; gap: 12px;">
+      <!-- 剧本库选择与导入栏 -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 8px;">
+          <select id="script-selector" style="flex: 1;"></select>
+          <button class="btn-accent" style="width: auto; padding: 0 14px;" onclick="startSelectedScript()">开始</button>
+          <button class="btn-ghost" onclick="startRandomScript()">🎲 随机</button>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <button class="btn-ghost" onclick="document.getElementById('upload-panel').classList.toggle('hidden')">+ 上传新剧本 (JSON)</button>
+          <button class="btn-danger" onclick="deleteSelectedScript()">删除选中剧本</button>
+        </div>
+
+        <!-- 折叠上传框 -->
+        <div id="upload-panel" class="hidden" style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #262634; padding-top: 10px;">
+          <input type="text" id="new-script-title" placeholder="剧本名称" />
+          <select id="new-script-type">
+            <option value="edging">类型：寸止 / 忍耐考验 (edging)</option>
+            <option value="conquest">类型：攻略 / 欲望养成 (conquest)</option>
+            <option value="domsub">类型：支配 / 绝对服从 (domsub)</option>
+            <option value="story">类型：纯剧情沉浸 (story)</option>
+          </select>
+          <input type="text" id="new-script-summary" placeholder="一句话简介" />
+          <textarea id="new-script-json" rows="4" placeholder='粘贴 JSON（包含 initial_vars 和 nodes）'></textarea>
+          <button class="btn-accent" onclick="saveNewScript()">保存到云端剧本库</button>
+        </div>
+      </div>
+
+      <!-- 动态仪表盘 -->
+      <div id="dashboard-card" class="card hidden">
+        <div class="dashboard-grid" id="dashboard-grid"></div>
+      </div>
+
+      <!-- 剧情主舞台 -->
+      <div class="card">
+        <div style="font-size: 16px; font-weight: 700; color: #f472b6; margin-bottom: 4px;" id="active-script-title">请在上方选择或随机抽取剧本</div>
+        <div style="font-size: 12px; color: #a1a1aa; margin-bottom: 12px;" id="active-script-summary"></div>
+        <div class="story-feed" id="story-feed"></div>
+        <div class="choices-box" id="choices-box"></div>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <input type="text" id="custom-msg-input" placeholder="输入台词或动作描写..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
+          <button class="btn-accent" style="width: auto; padding: 0 16px;" onclick="sendCustomMessage()">发送</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 视图 C：工具模式 ==================== -->
+    <div id="tool-view" class="hidden" style="display: flex; flex-direction: column; gap: 12px;">
+      <!-- 三阶段切换 -->
+      <div class="phase-tabs">
+        <button class="phase-tab active" id="tab-foreplay" onclick="switchToolPhase('foreplay')">1. 前戏升温</button>
+        <button class="phase-tab" id="tab-action" onclick="switchToolPhase('action')">2. 正戏掌控</button>
+        <button class="phase-tab" id="tab-aftercare" onclick="switchToolPhase('aftercare')">3. 惩罚 / 事后</button>
+      </div>
+
+      <!-- 阶段 1：前戏升温（调情抽卡 + 倒计时） -->
+      <div id="phase-foreplay" class="card" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <div style="font-size: 13px; color: #f472b6; font-weight: 700; margin-bottom: 8px;">🎲 感官挑逗与前戏指令抽取</div>
+          <div id="foreplay-card-box" style="background:#1c1c26; padding:16px; border-radius:12px; font-size:14.5px; line-height:1.6; min-height:72px; border:1px solid #2e2e3e;">
+            点击下方按钮抽取一条前戏挑逗指令...
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn-accent" onclick="drawToolCard('foreplay')">抽取前戏指令</button>
+            <button class="btn-ghost" onclick="drawToolCard('strip')">抽取脱衣/姿势指令</button>
+          </div>
+        </div>
+
+        <!-- 倒计时器 -->
+        <div style="border-top: 1px solid #262634; padding-top: 12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13px; color:#a1a1aa;">执行倒计时器</span>
+            <span id="timer-display" style="font-size:24px; font-weight:800; color:#f472b6; font-variant-numeric:tabular-nums;">00:00</span>
+          </div>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <button class="btn-ghost" style="flex:1" onclick="startTimer(30)">30秒</button>
+            <button class="btn-ghost" style="flex:1" onclick="startTimer(60)">60秒</button>
+            <button class="btn-ghost" style="flex:1" onclick="startTimer(120)">2分钟</button>
+            <button class="btn-danger" onclick="startTimer(0)">停止</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 阶段 2：正戏掌控（节拍器 + 阈值计数器） -->
+      <div id="phase-action" class="card hidden" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- 节拍器 -->
+        <div style="text-align: center;">
+          <div style="font-size: 13px; color: #f472b6; font-weight: 700;">💓 律动节拍器（视听同步）</div>
+          <div id="beat-circle" class="beat-circle">60</div>
+          <input type="range" id="bpm-slider" min="30" max="160" value="60" oninput="updateBpmUI(this.value)" onchange="syncMetronomeState()" />
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:#a1a1aa; margin:4px 0 10px;">
+            <span>30 慢磨深顶</span><span>90 稳定节奏</span><span>160 狂暴冲刺</span>
+          </div>
+          <button id="btn-toggle-beat" class="btn-accent" onclick="toggleMetronome()">启动节拍器</button>
+        </div>
+
+        <!-- 阈值计数器（达到目标解锁下一步） -->
+        <div style="border-top: 1px solid #262634; padding-top: 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:13px; color:#f472b6; font-weight:700;">🔢 边缘 / 次数阈值计数</span>
+            <div style="font-size:12px; color:#a1a1aa;">
+              目标阈值：<input type="number" id="counter-target-input" value="5" min="1" max="500" style="width:60px; padding:4px 6px; text-align:center;" onchange="updateCounterTarget(this.value)" />
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; background:#1c1c26; padding:12px 16px; border-radius:12px;">
+            <div>
+              <div style="font-size:26px; font-weight:800; color:#fff;"><span id="counter-val">0</span> <span style="font-size:14px; color:#71717a;">/ <span id="counter-target-display">5</span></span></div>
+              <div style="font-size:11px; color:#a1a1aa;" id="counter-status-hint">未达到阈值，继续忍耐或累计</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-ghost" onclick="changeCounter(-1)">-1</button>
+              <button class="btn-accent" style="width:auto; padding:10px 18px;" onclick="changeCounter(1)">+1 累计</button>
+            </div>
+          </div>
+          <button id="btn-counter-unlock" class="btn-accent" style="margin-top:10px; opacity:0.4;" disabled onclick="triggerThresholdUnlock()">🔒 达到目标阈值后解锁下一步/高潮许可</button>
+        </div>
+      </div>
+
+      <!-- 阶段 3：惩罚与事后温存 -->
+      <div id="phase-aftercare" class="card hidden" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <div style="font-size: 13px; color: #fb7185; font-weight: 700; margin-bottom: 8px;">⚡ 违禁惩罚 / 调教指令</div>
+          <div id="punish-card-box" style="background:#1c1c26; padding:14px; border-radius:12px; font-size:14px; line-height:1.6; min-height:64px; border:1px solid #3f1d2e;">
+            没忍住提前释放或违背指令？点击抽取惩罚...
+          </div>
+          <button class="btn-danger" style="width:100%; margin-top:8px;" onclick="drawToolCard('punish')">抽取成人向惩罚</button>
+        </div>
+
+        <div style="border-top: 1px solid #262634; padding-top: 12px;">
+          <div style="font-size: 13px; color: #c084fc; font-weight: 700; margin-bottom: 8px;">🌙 事后温存与余韵任务</div>
+          <div id="aftercare-card-box" style="background:#1c1c26; padding:14px; border-radius:12px; font-size:14px; line-height:1.6; min-height:64px; border:1px solid #2e2640;">
+            结束后的温柔时刻...
+          </div>
+          <button class="btn-ghost" style="width:100%; margin-top:8px;" onclick="drawToolCard('aftercare')">抽取事后温存任务</button>
+        </div>
+
+        <!-- 自定义即时发送指令 -->
+        <div style="display:flex; gap:8px; border-top:1px solid #262634; padding-top:12px;">
+          <input type="text" id="custom-tool-cmd" placeholder="输入自定义调情/惩罚指令..." />
+          <button class="btn-accent" style="width:auto; padding:0 14px;" onclick="sendCustomToolCmd()">下达</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 右侧边栏开关与抽屉（惩罚与倒计时） -->
-  <button id="drawer-toggle-btn" class="drawer-toggle hidden">⚡ 惩罚 / 计时</button>
-  <div id="side-drawer" class="side-drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-weight:700; color:#f472b6;">辅助工具箱</span>
-      <button id="drawer-close-btn" class="btn-ghost">收起</button>
-    </div>
-
-    <!-- 倒计时器 -->
-    <div style="background:#1c1c26; padding:12px; border-radius:12px;">
-      <div style="font-size:12px; color:#a1a1aa; margin-bottom:6px;">动作保持倒计时</div>
-      <div class="timer-display" id="timer-display">00:00</div>
-      <div style="display:flex; gap:6px; margin-top:10px;">
-        <button class="btn-ghost" style="flex:1" onclick="startTimer(30)">30秒</button>
-        <button class="btn-ghost" style="flex:1" onclick="startTimer(60)">60秒</button>
-        <button class="btn-ghost" style="flex:1" onclick="startTimer(180)">3分钟</button>
+  <!-- 退出时选择“保存”还是“彻底删除”的确认弹窗 -->
+  <div id="exit-modal" class="modal-backdrop hidden">
+    <div class="card" style="max-width: 380px; width: 100%; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 17px; font-weight: 700; color: #f472b6;">结束本次互动</div>
+      <div style="font-size: 13px; color: #a1a1aa; line-height: 1.5;">
+        请选择如何处理本次的对话与互动记录（云端剧本库不受影响）：
       </div>
-    </div>
-
-    <!-- 随机惩罚/指令抽取 -->
-    <div style="background:#1c1c26; padding:12px; border-radius:12px; display:flex; flex-direction:column; gap:8px;">
-      <div style="font-size:12px; color:#a1a1aa;">随机小惩罚 / 临时指令</div>
-      <button id="btn-draw-punishment" class="btn-accent">抽取并同步到剧情</button>
-      <input type="text" id="custom-punish-input" placeholder="输入自定义惩罚（直接发送）" />
-      <button id="btn-send-punishment" class="btn-ghost">发送自定义指令</button>
+      <input type="text" id="archive-title-input" placeholder="若需保存，可输入存档标题（如：周五深夜）" />
+      <button class="btn-accent" onclick="finishSession(true)">💾 保存记录到云端并退出</button>
+      <button class="btn-danger" style="width: 100%; padding: 12px;" onclick="finishSession(false)">🔥 彻底删除记录（不留痕迹）并退出</button>
+      <button class="btn-ghost" style="width: 100%;" onclick="document.getElementById('exit-modal').classList.add('hidden')">取消，继续互动</button>
     </div>
   </div>
 
@@ -207,329 +363,42 @@
       auth: { storage: window.sessionStorage, autoRefreshToken: true, persistSession: true }
     });
 
-    // 角色固定映射：YC = female，LY = male
     let myRole = ''; // 'female' | 'male'
     let myName = ''; // 'YC' | 'LY'
     let allScripts = [];
-    let activeScript = null;
     let gameState = null;
-    let currentAccessToken = '';
 
-    const TYPE_LABELS = {
-      edging: '寸止 / 忍耐模式',
-      conquest: '攻略 / 心动模式',
-      domsub: '支配 / 顺从模式',
-      story: '纯剧情模式'
+    // 成人向工具词库
+    const TOOL_DECKS = {
+      foreplay: [
+        '【前戏挑逗】蒙上被动方的眼睛，主导方用唇舌缓慢舔舐对方耳廓、脖颈与锁骨 60 秒，不准用手触碰下身。',
+        '【前戏挑逗】用指腹隔着内衣轻轻打圈揉弄敏感点，直到对方忍不住主动开口恳求才准许进一步动作。',
+        '【前戏挑逗】双方十指紧扣深吻 60 秒，呼吸交融，手掌缓慢游走抚摸对方腰臀曲线。',
+        '【前戏挑逗】主导方用冰水含一口或用微凉的指尖划过对方小腹与大腿内侧，感受肌肉的战栗。',
+        '【前戏挑逗】伏在对方耳边，用最低沉诱惑的声音详细描述等会儿准备怎么占有对方。'
+      ],
+      strip: [
+        '【姿势/脱衣】只脱掉下半身衣物，保留上衣，以跪姿或趴姿等待对方的检阅与进入。',
+        '【姿势/脱衣】面对面跨坐在对方腿上，缓缓褪去最后一件遮挡，贴紧彼此的体温。',
+        '【姿势/脱衣】背对对方站立或跪趴，双手扶住床沿/墙壁，主动抬高腰臀迎接从后方的探索。',
+        '【姿势/脱衣】仰躺并自己用双手抱住双腿膝盖向两侧分开，完全敞开最私密的部位。'
+      ],
+      punish: [
+        '【违禁惩罚】拍打臀部 10 下（力度由主导方决定），每打一下都要大声报数并说“谢谢主人/老公/老婆”。',
+        '【违禁惩罚】保持羞耻的敞开姿势静止 60 秒，不准遮挡，任由对方近距离观赏与挑逗。',
+        '【违禁惩罚】用嘴唇和舌头服侍对方 2 分钟，期间不准用手帮忙。',
+        '【违禁惩罚】立刻向对方坦白一个平时不好意思说出口的性幻想，否则继续追加惩罚。',
+        '【违禁惩罚】被剥夺视觉与双手自由（被按住手腕），承受一轮无休止的快感冲击直到求饶。'
+      ],
+      aftercare: [
+        '【事后温存】紧紧相拥 3 分钟，感受彼此逐渐平复的心跳与体温，轻吻对方的额头与脸颊。',
+        '【事后温存】拿温热的湿毛巾温柔地帮对方擦拭身体，动作轻柔地安抚敏感的肌肤。',
+        '【事后温存】枕在对方胸口，互相说出今晚最让自己感到兴奋、最爽的一个瞬间。',
+        '【事后温存】给对方倒一杯温水喂到嘴边，然后像树懒一样抱在一起赖床休息。'
+      ]
     };
 
-    const PUNISHMENTS = [
-      '【临时指令】保持当前姿势静止 60 秒，不许发出声音。',
-      '【临时指令】蒙上眼睛，接下来 2 分钟完全交由对方主导。',
-      '【小惩罚】主动向对方说出此刻最真实、最羞耻的一个想法。',
-      '【小惩罚】亲吻对方指定的任意一个部位 10 秒钟。',
-      '【临时指令】暂停所有动作，深呼吸 30 秒平复心跳。',
-      '【小惩罚】用最顺从的语气向对方提出一个请求。'
-    ];
-
-    // 双人在线状态
-    function updatePresenceUI(presenceState) {
-      const online = new Set();
-      Object.values(presenceState).forEach(arr => arr.forEach(s => s.player && online.add(s.player)));
-      ['YC', 'LY'].forEach(name => {
-        const el = document.getElementById(`pill-${name.toLowerCase()}`);
-        el.classList.toggle('on', online.has(name));
-      });
-    }
-
-    // 渲染场景化仪表盘
-    function renderDashboard(script, vars) {
-      const dashCard = document.getElementById('dashboard-card');
-      const dashGrid = document.getElementById('dashboard-grid');
-      if (!script || script.type === 'story' || !vars || Object.keys(vars).length === 0) {
-        dashCard.classList.add('hidden');
-        return;
-      }
-      dashCard.classList.remove('hidden');
-      dashGrid.innerHTML = Object.entries(vars).map(([key, val]) => {
-        const isPercent = key.includes('度') || key.includes('进度') || key.includes('值');
-        const clamped = Math.max(0, Math.min(100, Number(val) || 0));
-        return `
-          <div class="dash-item">
-            <div class="dash-label">${key}</div>
-            <div class="dash-val">${val}</div>
-            ${isPercent ? `<div class="progress-bar"><div class="progress-fill" style="width:${clamped}%"></div></div>` : ''}
-          </div>
-        `;
-      }).join('');
-    }
-
-    // 检查《博德之门》式分支条件
-    function checkCondition(cond, vars) {
-      if (!cond) return { passed: true, hint: '' };
-      const currentVal = Number((vars || {})[cond.var] ?? 0);
-      const targetVal = Number(cond.val);
-      let passed = false;
-      if (cond.op === '>=') passed = currentVal >= targetVal;
-      else if (cond.op === '<=') passed = currentVal <= targetVal;
-      else if (cond.op === '>') passed = currentVal > targetVal;
-      else if (cond.op === '<') passed = currentVal < targetVal;
-      else if (cond.op === '==') passed = currentVal == targetVal;
-      return { passed, hint: `[检定：${cond.var} ${cond.op} ${cond.val}，当前 ${currentVal}]` };
-    }
-
-    function renderGame() {
-      if (!gameState) return;
-      activeScript = allScripts.find(s => s.id === gameState.active_script_id) || null;
-
-      const titleEl = document.getElementById('active-script-title');
-      const typeBadge = document.getElementById('active-script-type-badge');
-      const subEl = document.getElementById('active-script-summary');
-      const feedEl = document.getElementById('story-feed');
-      const choicesEl = document.getElementById('choices-box');
-
-      if (!activeScript) {
-        titleEl.textContent = '等待抽取剧本';
-        typeBadge.textContent = '';
-        subEl.textContent = '点击上方「随机剧本」开启今晚的剧情';
-        feedEl.innerHTML = '';
-        choicesEl.innerHTML = '';
-        renderDashboard(null, null);
-        return;
-      }
-
-      titleEl.textContent = activeScript.title;
-      typeBadge.textContent = TYPE_LABELS[activeScript.type] || '';
-      subEl.textContent = activeScript.summary || '';
-      renderDashboard(activeScript, gameState.variables);
-
-      // 渲染历史记录流
-      const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
-      feedEl.innerHTML = logs.map(item => {
-        if (item.type === 'narrator') return `<div class="msg-narrator">${item.text}</div>`;
-        if (item.type === 'sys') return `<div class="msg-sys">${item.text}</div>`;
-        const tagClass = item.role === 'female' ? 'tag-f' : 'tag-m';
-        return `<div class="msg-player"><span class="${tagClass}">[${item.actor}]</span>${item.text}</div>`;
-      }).join('');
-      feedEl.scrollTop = feedEl.scrollHeight;
-
-      // 过滤当前节点中仅属于当前角色（YC女 / LY男）的选项
-      const currentNode = activeScript.nodes[gameState.current_node_id];
-      choicesEl.innerHTML = '';
-      if (currentNode && Array.isArray(currentNode.choices) && currentNode.choices.length > 0) {
-        const myChoices = currentNode.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
-        if (myChoices.length === 0) {
-          choicesEl.innerHTML = `<div class="wait-tip">当前回合由对方主导，等待对方做出选择...</div>`;
-        } else {
-          myChoices.forEach(choice => {
-            const { passed, hint } = checkCondition(choice.condition, gameState.variables);
-            const btn = document.createElement('button');
-            btn.className = 'btn-choice';
-            btn.disabled = !passed;
-            btn.textContent = passed ? `${choice.label} ${hint}` : `🔒 ${choice.label} ${hint}`;
-            btn.onclick = () => selectBranch(choice);
-            choicesEl.appendChild(btn);
-          });
-        }
-      }
-    }
-
-    // 选择分支并结算属性变化
-    async function selectBranch(choice) {
-      if (!activeScript || !gameState) return;
-      const nextVars = { ...(gameState.variables || {}) };
-      const effectTexts = [];
-      if (choice.effects) {
-        Object.entries(choice.effects).forEach(([k, delta]) => {
-          nextVars[k] = (Number(nextVars[k]) || 0) + Number(delta);
-          effectTexts.push(`${k} ${delta >= 0 ? '+' + delta : delta}`);
-        });
-      }
-
-      const nextNode = activeScript.nodes[choice.next];
-      const newLogs = [...(gameState.story_log || [])];
-      newLogs.push({ type: 'player', actor: myName, role: myRole, text: `选择了：${choice.label}` });
-      if (effectTexts.length > 0) {
-        newLogs.push({ type: 'sys', text: `状态变化：${effectTexts.join('，')}` });
-      }
-      if (nextNode) {
-        newLogs.push({ type: 'narrator', text: nextNode.text });
-      }
-
-      await db.from('game_state').update({
-        current_node_id: choice.next,
-        variables: nextVars,
-        story_log: newLogs,
-        updated_at: new Date().toISOString()
-      }).eq('id', 1);
-    }
-
-    // 随机抽取剧本
-    document.getElementById('btn-random-script').addEventListener('click', async () => {
-      const { data } = await db.from('scripts').select('*');
-      allScripts = data || [];
-      if (allScripts.length === 0) return alert('剧本库为空');
-      let candidates = allScripts.length > 1 && activeScript
-        ? allScripts.filter(s => s.id !== activeScript.id)
-        : allScripts;
-      const picked = candidates[Math.floor(Math.random() * candidates.length)];
-      const startNode = picked.nodes['start'];
-      const initialLog = startNode ? [{ type: 'narrator', text: startNode.text }] : [];
-
-      await db.from('game_state').update({
-        active_script_id: picked.id,
-        current_node_id: 'start',
-        variables: picked.initial_vars || {},
-        story_log: initialLog,
-        updated_at: new Date().toISOString()
-      }).eq('id', 1);
-    });
-
-    // 发送自由对话/动作
-    async function sendCustomMessage() {
-      const input = document.getElementById('custom-msg-input');
-      const text = input.value.trim();
-      if (!text || !gameState) return;
-      input.value = '';
-      const newLogs = [...(gameState.story_log || []), { type: 'player', actor: myName, role: myRole, text }];
-      await db.from('game_state').update({ story_log: newLogs, updated_at: new Date().toISOString() }).eq('id', 1);
-    }
-    document.getElementById('btn-send-msg').addEventListener('click', sendCustomMessage);
-    document.getElementById('custom-msg-input').addEventListener('keypress', e => e.key === 'Enter' && sendCustomMessage());
-
-    // 导入 JSON 剧本
-    document.getElementById('btn-toggle-upload').addEventListener('click', () => {
-      document.getElementById('upload-panel').classList.toggle('hidden');
-    });
-    document.getElementById('btn-save-script').addEventListener('click', async () => {
-      const title = document.getElementById('new-script-title').value.trim();
-      const type = document.getElementById('new-script-type').value;
-      const summary = document.getElementById('new-script-summary').value.trim();
-      const rawJson = document.getElementById('new-script-json').value.trim();
-      if (!title || !rawJson) return alert('请填写名称和 JSON');
-      try {
-        const parsed = JSON.parse(rawJson);
-        const nodes = parsed.nodes ? parsed.nodes : parsed;
-        const initialVars = parsed.initial_vars || {};
-        if (!nodes.start) return alert('剧本必须包含 "start" 节点');
-        const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
-        if (error) throw error;
-        alert('导入成功！');
-        document.getElementById('upload-panel').classList.add('hidden');
-        const { data } = await db.from('scripts').select('*');
-        allScripts = data || [];
-      } catch (e) {
-        alert('JSON 解析错误：' + e.message);
-      }
-    });
-
-    // 右侧边栏逻辑（倒计时 & 惩罚）
-    const sideDrawer = document.getElementById('side-drawer');
-    document.getElementById('drawer-toggle-btn').onclick = () => sideDrawer.classList.add('open');
-    document.getElementById('drawer-close-btn').onclick = () => sideDrawer.classList.remove('open');
-
-    let timerInterval = null;
-    window.startTimer = function(seconds) {
-      clearInterval(timerInterval);
-      let remain = seconds;
-      const display = document.getElementById('timer-display');
-      const updateText = () => {
-        const m = String(Math.floor(remain / 60)).padStart(2, '0');
-        const s = String(remain % 60).padStart(2, '0');
-        display.textContent = `${m}:${s}`;
-      };
-      updateText();
-      timerInterval = setInterval(() => {
-        remain--;
-        updateText();
-        if (remain <= 0) {
-          clearInterval(timerInterval);
-          display.textContent = '时间到';
-        }
-      }, 1000);
-    };
-
-    document.getElementById('btn-draw-punishment').onclick = async () => {
-      if (!gameState) return;
-      const item = PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
-      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `${myName} 抽取了：${item}` }];
-      await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
-      sideDrawer.classList.remove('open');
-    };
-
-    document.getElementById('btn-send-punishment').onclick = async () => {
-      const inp = document.getElementById('custom-punish-input');
-      const txt = inp.value.trim();
-      if (!txt || !gameState) return;
-      inp.value = '';
-      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `【${myName} 下达指令】${txt}` }];
-      await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
-      sideDrawer.classList.remove('open');
-    };
-
-    // 核心：彻底擦除云端 story_log 的阅后即焚函数
-    async function wipeCloudLogs() {
-      await db.from('game_state').update({
-        story_log: [],
-        variables: {},
-        current_node_id: 'start',
-        updated_at: new Date().toISOString()
-      }).eq('id', 1);
-    }
-
-    // 监听关闭标签页/关闭浏览器事件，利用 keepalive 发出清场请求
-    window.addEventListener('pagehide', () => {
-      if (!currentAccessToken) return;
-      fetch(`${SUPABASE_URL}/rest/v1/game_state?id=eq.1`, {
-        method: 'PATCH',
-        keepalive: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${currentAccessToken}`
-        },
-        body: JSON.stringify({ story_log: [], variables: {}, current_node_id: 'start' })
-      });
-    });
-
-    // 主动点击“退出并清场”
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      await wipeCloudLogs();
-      await db.auth.signOut();
-      location.reload();
-    });
-
-    async function initSession(session) {
-      currentAccessToken = session.access_token;
-      const email = session.user.email;
-      myName = email.startsWith('yc') ? 'YC' : 'LY';
-      myRole = email.startsWith('yc') ? 'female' : 'male';
-
-      document.getElementById('login-view').classList.add('hidden');
-      document.getElementById('game-view').classList.remove('hidden');
-      document.getElementById('drawer-toggle-btn').classList.remove('hidden');
-
-      const { data: scriptsData } = await db.from('scripts').select('*');
-      allScripts = scriptsData || [];
-      const { data: stateData } = await db.from('game_state').select('*').eq('id', 1).single();
-      gameState = stateData;
-      renderGame();
-
-      const channel = db.channel('room-1', { config: { presence: { key: myName } } });
-      channel
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_state', filter: 'id=eq.1' }, async (payload) => {
-          gameState = payload.new;
-          if (gameState.active_script_id && !allScripts.find(s => s.id === gameState.active_script_id)) {
-            const { data } = await db.from('scripts').select('*');
-            allScripts = data || [];
-          }
-          renderGame();
-        })
-        .on('presence', { event: 'sync' }, () => updatePresenceUI(channel.presenceState()))
-        .subscribe(async status => {
-          if (status === 'SUBSCRIBED') await channel.track({ player: myName });
-        });
-    }
-
+    // ==================== 1. 登录与初始化 ====================
     db.auth.getSession().then(({ data: { session } }) => {
       if (session) initSession(session);
     });
@@ -538,12 +407,464 @@
       const email = document.getElementById('player-select').value;
       const password = document.getElementById('password-input').value;
       const { data, error } = await db.auth.signInWithPassword({ email, password });
-      if (error) {
-        document.getElementById('login-error').textContent = '验证失败: ' + error.message;
-      } else {
-        initSession(data.session);
-      }
+      if (error) document.getElementById('login-error').textContent = '验证失败: ' + error.message;
+      else initSession(data.session);
     });
+
+    async function initSession(session) {
+      const email = session.user.email;
+      myName = email.startsWith('yc') ? 'YC' : 'LY';
+      myRole = email.startsWith('yc') ? 'female' : 'male';
+
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('app-view').classList.remove('hidden');
+
+      await loadScripts();
+      const { data } = await db.from('game_state').select('*').eq('id', 1).single();
+      gameState = data;
+      renderAll();
+
+      const channel = db.channel('room-1', { config: { presence: { key: myName } } });
+      channel
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_state', filter: 'id=eq.1' }, async (payload) => {
+          gameState = payload.new;
+          if (gameState.active_script_id && !allScripts.find(s => s.id === gameState.active_script_id)) {
+            await loadScripts();
+          }
+          renderAll();
+        })
+        .on('presence', { event: 'sync' }, () => {
+          const online = new Set();
+          Object.values(channel.presenceState()).forEach(arr => arr.forEach(s => s.player && online.add(s.player)));
+          ['YC', 'LY'].forEach(n => document.getElementById(`pill-${n.toLowerCase()}`).classList.toggle('on', online.has(n)));
+        })
+        .subscribe(async status => {
+          if (status === 'SUBSCRIBED') await channel.track({ player: myName });
+        });
+    }
+
+    // ==================== 2. 全局视图与异地开关渲染 ====================
+    function renderAll() {
+      if (!gameState) return;
+
+      // 同步异地开关
+      const isRemote = Boolean(gameState.is_remote);
+      document.getElementById('remote-checkbox').checked = isRemote;
+      document.getElementById('remote-mode-desc').textContent = isRemote
+        ? '已开启：所有指令与节奏将实时推送到对方屏幕并要求确认'
+        : '关闭：同房共享控制台，无需弹窗推送';
+
+      // 异地指令横幅展示（仅开启异地且有未确认的指令，且指令不是自己发的时候高亮）
+      const tState = gameState.tool_state || {};
+      const banner = document.getElementById('remote-banner');
+      if (isRemote && tState.active_cmd && tState.cmd_sender !== myName) {
+        banner.classList.remove('hidden');
+        document.getElementById('remote-banner-text').textContent = `【来自 ${tState.cmd_sender} 的指令】${tState.active_cmd}`;
+      } else {
+        banner.classList.add('hidden');
+      }
+
+      // 视图切换：lobby / script / tool
+      const mode = gameState.app_mode || 'lobby';
+      document.getElementById('lobby-view').classList.toggle('hidden', mode !== 'lobby');
+      document.getElementById('script-view').classList.toggle('hidden', mode !== 'script');
+      document.getElementById('tool-view').classList.toggle('hidden', mode !== 'tool');
+      document.getElementById('btn-back-lobby').classList.toggle('hidden', mode === 'lobby');
+
+      if (mode === 'script') renderScriptMode();
+      if (mode === 'tool') renderToolMode();
+    }
+
+    window.switchAppMode = async function(targetMode) {
+      await db.from('game_state').update({ app_mode: targetMode }).eq('id', 1);
+    };
+    document.getElementById('btn-back-lobby').onclick = () => switchAppMode('lobby');
+
+    window.toggleRemoteMode = async function(checked) {
+      await db.from('game_state').update({ is_remote: checked }).eq('id', 1);
+    };
+
+    document.getElementById('btn-ack-remote').onclick = async () => {
+      const nextTool = { ...(gameState.tool_state || {}), active_cmd: '' };
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `✅ ${myName} 已确认执行指令` }];
+      await db.from('game_state').update({ tool_state: nextTool, story_log: newLogs }).eq('id', 1);
+    };
+
+    // ==================== 3. 剧本模式逻辑 ====================
+    async function loadScripts() {
+      const { data } = await db.from('scripts').select('*').order('created_at', { ascending: false });
+      allScripts = data || [];
+      const sel = document.getElementById('script-selector');
+      sel.innerHTML = allScripts.map(s => `<option value="${s.id}">【${s.type}】${s.title}</option>`).join('');
+      if (gameState && gameState.active_script_id) sel.value = gameState.active_script_id;
+    }
+
+    window.startSelectedScript = async function() {
+      const id = document.getElementById('script-selector').value;
+      const picked = allScripts.find(s => s.id === id);
+      if (!picked) return;
+      const startNode = picked.nodes['start'];
+      await db.from('game_state').update({
+        active_script_id: picked.id,
+        current_node_id: 'start',
+        variables: picked.initial_vars || {},
+        story_log: startNode ? [{ type: 'narrator', text: startNode.text }] : []
+      }).eq('id', 1);
+    };
+
+    window.startRandomScript = async function() {
+      if (allScripts.length === 0) return alert('剧本库为空');
+      const picked = allScripts[Math.floor(Math.random() * allScripts.length)];
+      document.getElementById('script-selector').value = picked.id;
+      await startSelectedScript();
+    };
+
+    window.saveNewScript = async function() {
+      const title = document.getElementById('new-script-title').value.trim();
+      const type = document.getElementById('new-script-type').value;
+      const summary = document.getElementById('new-script-summary').value.trim();
+      const rawJson = document.getElementById('new-script-json').value.trim();
+      if (!title || !rawJson) return alert('请填写剧本名称和 JSON');
+      try {
+        const parsed = JSON.parse(rawJson);
+        const nodes = parsed.nodes ? parsed.nodes : parsed;
+        const initialVars = parsed.initial_vars || {};
+        if (!nodes.start) return alert('必须包含 "start" 节点');
+        const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
+        if (error) throw error;
+        alert('剧本已保存到云端！');
+        document.getElementById('upload-panel').classList.add('hidden');
+        await loadScripts();
+      } catch (e) {
+        alert('JSON 格式错误：' + e.message);
+      }
+    };
+
+    window.deleteSelectedScript = async function() {
+      const id = document.getElementById('script-selector').value;
+      if (!id || !confirm('确定从云端删除该剧本吗？')) return;
+      await db.from('scripts').delete().eq('id', id);
+      await loadScripts();
+    };
+
+    function renderScriptMode() {
+      const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
+      const titleEl = document.getElementById('active-script-title');
+      const subEl = document.getElementById('active-script-summary');
+      const dashCard = document.getElementById('dashboard-card');
+      const feedEl = document.getElementById('story-feed');
+      const choicesEl = document.getElementById('choices-box');
+
+      if (!activeScript) {
+        titleEl.textContent = '请在上方选择或随机抽取剧本';
+        subEl.textContent = '';
+        dashCard.classList.add('hidden');
+        feedEl.innerHTML = '';
+        choicesEl.innerHTML = '';
+        return;
+      }
+
+      titleEl.textContent = activeScript.title;
+      subEl.textContent = activeScript.summary || '';
+
+      // 渲染仪表盘
+      const vars = gameState.variables || {};
+      if (activeScript.type === 'story' || Object.keys(vars).length === 0) {
+        dashCard.classList.add('hidden');
+      } else {
+        dashCard.classList.remove('hidden');
+        document.getElementById('dashboard-grid').innerHTML = Object.entries(vars).map(([k, v]) => {
+          const isBar = k.includes('度') || k.includes('值');
+          const pct = Math.max(0, Math.min(100, Number(v) || 0));
+          return `<div class="dash-item"><div class="dash-label">${k}</div><div class="dash-val">${v}</div>${isBar ? `<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}</div>`;
+        }).join('');
+      }
+
+      // 渲染剧情流
+      const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
+      feedEl.innerHTML = logs.map(item => {
+        if (item.type === 'narrator') return `<div class="msg-narrator">${item.text}</div>`;
+        if (item.type === 'sys') return `<div class="msg-sys">${item.text}</div>`;
+        const cls = item.role === 'female' ? 'tag-f' : 'tag-m';
+        return `<div class="msg-player"><span class="${cls}">[${item.actor}]</span>${item.text}</div>`;
+      }).join('');
+      feedEl.scrollTop = feedEl.scrollHeight;
+
+      // 渲染各自视角选项
+      const node = activeScript.nodes[gameState.current_node_id];
+      choicesEl.innerHTML = '';
+      if (node && Array.isArray(node.choices) && node.choices.length > 0) {
+        const myChoices = node.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
+        if (myChoices.length === 0) {
+          choicesEl.innerHTML = `<div class="wait-tip">等待对方做出选择...</div>`;
+        } else {
+          myChoices.forEach(choice => {
+            let passed = true, hint = '';
+            if (choice.condition) {
+              const cur = Number(vars[choice.condition.var] ?? 0);
+              const tgt = Number(choice.condition.val);
+              if (choice.condition.op === '>=') passed = cur >= tgt;
+              else if (choice.condition.op === '<=') passed = cur <= tgt;
+              else if (choice.condition.op === '>') passed = cur > tgt;
+              else if (choice.condition.op === '<') passed = cur < tgt;
+              hint = ` [${choice.condition.var}${choice.condition.op}${tgt}]`;
+            }
+            const btn = document.createElement('button');
+            btn.className = 'btn-choice';
+            btn.disabled = !passed;
+            btn.textContent = (passed ? '' : '🔒 ') + choice.label + hint;
+            btn.onclick = async () => {
+              const nextVars = { ...vars };
+              const effTxt = [];
+              if (choice.effects) {
+                Object.entries(choice.effects).forEach(([k, d]) => {
+                  nextVars[k] = (Number(nextVars[k]) || 0) + Number(d);
+                  effTxt.push(`${k}${d >= 0 ? '+' + d : d}`);
+                });
+              }
+              const nextNode = activeScript.nodes[choice.next];
+              const newLogs = [...logs, { type: 'player', actor: myName, role: myRole, text: choice.label }];
+              if (effTxt.length) newLogs.push({ type: 'sys', text: `状态变化：${effTxt.join('，')}` });
+              if (nextNode) newLogs.push({ type: 'narrator', text: nextNode.text });
+
+              const updatePayload = { current_node_id: choice.next, variables: nextVars, story_log: newLogs };
+              if (gameState.is_remote) {
+                updatePayload.tool_state = { ...(gameState.tool_state || {}), active_cmd: `对方选择了：${choice.label}`, cmd_sender: myName };
+              }
+              await db.from('game_state').update(updatePayload).eq('id', 1);
+            };
+            choicesEl.appendChild(btn);
+          });
+        }
+      }
+    }
+
+    window.sendCustomMessage = async function() {
+      const inp = document.getElementById('custom-msg-input');
+      const txt = inp.value.trim();
+      if (!txt || !gameState) return;
+      inp.value = '';
+      const newLogs = [...(gameState.story_log || []), { type: 'player', actor: myName, role: myRole, text: txt }];
+      await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
+    };
+
+    // ==================== 4. 工具模式逻辑（三阶段 + 节拍器 + 阈值计数） ====================
+    window.switchToolPhase = function(phase) {
+      ['foreplay', 'action', 'aftercare'].forEach(p => {
+        document.getElementById(`phase-${p}`).classList.toggle('hidden', p !== phase);
+        document.getElementById(`tab-${p}`).classList.toggle('active', p === phase);
+      });
+    };
+
+    window.drawToolCard = async function(deckName) {
+      const deck = TOOL_DECKS[deckName] || [];
+      const cardText = deck[Math.floor(Math.random() * deck.length)];
+      if (deckName === 'foreplay' || deckName === 'strip') document.getElementById('foreplay-card-box').textContent = cardText;
+      if (deckName === 'punish') document.getElementById('punish-card-box').textContent = cardText;
+      if (deckName === 'aftercare') document.getElementById('aftercare-card-box').textContent = cardText;
+
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `${myName} 抽取：${cardText}` }];
+      const nextTool = { ...(gameState.tool_state || {}) };
+      if (gameState.is_remote) {
+        nextTool.active_cmd = cardText;
+        nextTool.cmd_sender = myName;
+      }
+      await db.from('game_state').update({ story_log: newLogs, tool_state: nextTool }).eq('id', 1);
+    };
+
+    window.sendCustomToolCmd = async function() {
+      const inp = document.getElementById('custom-tool-cmd');
+      const txt = inp.value.trim();
+      if (!txt) return;
+      inp.value = '';
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `【${myName} 指令】${txt}` }];
+      const nextTool = { ...(gameState.tool_state || {}) };
+      if (gameState.is_remote) {
+        nextTool.active_cmd = txt;
+        nextTool.cmd_sender = myName;
+      }
+      await db.from('game_state').update({ story_log: newLogs, tool_state: nextTool }).eq('id', 1);
+    };
+
+    // 倒计时器
+    let timerId = null;
+    window.startTimer = function(sec) {
+      clearInterval(timerId);
+      const disp = document.getElementById('timer-display');
+      if (sec <= 0) { disp.textContent = '00:00'; return; }
+      let rem = sec;
+      const tick = () => {
+        disp.textContent = `${String(Math.floor(rem / 60)).padStart(2, '0')}:${String(rem % 60).padStart(2, '0')}`;
+        if (rem <= 0) clearInterval(timerId);
+        rem--;
+      };
+      tick();
+      timerId = setInterval(tick, 1000);
+    };
+
+    // 节拍器（Web Audio 合成低沉心跳声 + 视觉脉冲 + 云端同步速度）
+    let audioCtx = null;
+    let beatInterval = null;
+    let localPlaying = false;
+
+    function playThumpSound() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(110, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.14);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch (e) {}
+    }
+
+    function applyMetronomeLoop(bpm, playing) {
+      clearInterval(beatInterval);
+      const circle = document.getElementById('beat-circle');
+      const btn = document.getElementById('btn-toggle-beat');
+      circle.textContent = bpm;
+      document.getElementById('bpm-slider').value = bpm;
+      btn.textContent = playing ? '暂停节拍器' : '启动节拍器';
+      localPlaying = playing;
+
+      if (playing) {
+        const ms = Math.round(60000 / bpm);
+        beatInterval = setInterval(() => {
+          circle.classList.add('pulse');
+          playThumpSound();
+          setTimeout(() => circle.classList.remove('pulse'), 100);
+        }, ms);
+      }
+    }
+
+    window.updateBpmUI = function(val) {
+      document.getElementById('beat-circle').textContent = val;
+    };
+    window.syncMetronomeState = async function() {
+      const bpm = Number(document.getElementById('bpm-slider').value);
+      const nextTool = { ...(gameState.tool_state || {}), bpm, playing: localPlaying };
+      if (gameState.is_remote) {
+        nextTool.active_cmd = `节拍器速度调整为 ${bpm} BPM`;
+        nextTool.cmd_sender = myName;
+      }
+      await db.from('game_state').update({ tool_state: nextTool }).eq('id', 1);
+    };
+    window.toggleMetronome = async function() {
+      const bpm = Number(document.getElementById('bpm-slider').value);
+      const nextPlaying = !localPlaying;
+      const nextTool = { ...(gameState.tool_state || {}), bpm, playing: nextPlaying };
+      await db.from('game_state').update({ tool_state: nextTool }).eq('id', 1);
+    };
+
+    // 阈值计数器
+    window.updateCounterTarget = async function(val) {
+      const nextTool = { ...(gameState.tool_state || {}), target: Math.max(1, Number(val) || 5) };
+      await db.from('game_state').update({ tool_state: nextTool }).eq('id', 1);
+    };
+    window.changeCounter = async function(delta) {
+      const cur = Number((gameState.tool_state || {}).count || 0);
+      const nextCount = Math.max(0, cur + delta);
+      const nextTool = { ...(gameState.tool_state || {}), count: nextCount };
+      await db.from('game_state').update({ tool_state: nextTool }).eq('id', 1);
+    };
+    window.triggerThresholdUnlock = async function() {
+      const msg = '🎉 已达成设定阈值！解锁下一阶段 / 准许释放高潮！';
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: msg }];
+      const nextTool = { ...(gameState.tool_state || {}), count: 0 };
+      if (gameState.is_remote) {
+        nextTool.active_cmd = msg;
+        nextTool.cmd_sender = myName;
+      }
+      await db.from('game_state').update({ story_log: newLogs, tool_state: nextTool }).eq('id', 1);
+    };
+
+    function renderToolMode() {
+      const t = gameState.tool_state || { bpm: 60, playing: false, count: 0, target: 5 };
+      applyMetronomeLoop(t.bpm || 60, Boolean(t.playing));
+
+      const count = Number(t.count || 0);
+      const target = Number(t.target || 5);
+      document.getElementById('counter-val').textContent = count;
+      document.getElementById('counter-target-display').textContent = target;
+      document.getElementById('counter-target-input').value = target;
+
+      const unlockBtn = document.getElementById('btn-counter-unlock');
+      const hint = document.getElementById('counter-status-hint');
+      if (count >= target) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.opacity = '1';
+        unlockBtn.textContent = '🔓 已达标！点击下达释放/进入下一步许可';
+        hint.textContent = '阈值已达成！';
+        hint.style.color = '#f472b6';
+      } else {
+        unlockBtn.disabled = true;
+        unlockBtn.style.opacity = '0.4';
+        unlockBtn.textContent = `🔒 还差 ${target - count} 次解锁下一步`;
+        hint.textContent = '未达到阈值，继续忍耐或累计';
+        hint.style.color = '#a1a1aa';
+      }
+    }
+
+    // ==================== 5. 退出时自主选择“保存”或“彻底删除” ====================
+    document.getElementById('btn-open-exit-modal').onclick = () => {
+      document.getElementById('exit-modal').classList.remove('hidden');
+    };
+
+    window.finishSession = async function(shouldSave) {
+      clearInterval(beatInterval);
+      if (shouldSave && gameState && Array.isArray(gameState.story_log) && gameState.story_log.length > 0) {
+        const title = document.getElementById('archive-title-input').value.trim() || `私密记录 ${new Date().toLocaleString()}`;
+        await db.from('session_archives').insert([{ title, logs: gameState.story_log }]);
+      }
+      // 重置实时房间状态（清场）
+      await db.from('game_state').update({
+        app_mode: 'lobby',
+        story_log: [],
+        variables: {},
+        current_node_id: 'start',
+        tool_state: { bpm: 60, playing: false, count: 0, target: 5, active_cmd: '' }
+      }).eq('id', 1);
+
+      await db.auth.signOut();
+      location.reload();
+    };
+
+    // 查看云端已保存的记录
+    window.toggleArchivesPanel = async function() {
+      const panel = document.getElementById('archives-panel');
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden')) {
+        const { data } = await db.from('session_archives').select('*').order('created_at', { ascending: false });
+        const listEl = document.getElementById('archives-list');
+        if (!data || data.length === 0) {
+          listEl.innerHTML = '暂无保存的记录';
+          return;
+        }
+        listEl.innerHTML = data.map(item => `
+          <div style="background:#1c1c26; padding:10px; border-radius:8px; margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; color:#f472b6; font-weight:600; margin-bottom:4px;">
+              <span>${item.title}</span>
+              <span style="cursor:pointer; color:#fb7185;" onclick="deleteArchive('${item.id}')">删除</span>
+            </div>
+            <div style="font-size:12px; color:#d4d4d8; max-height:100px; overflow-y:auto;">
+              ${(item.logs || []).map(l => `<div>${l.actor ? '['+l.actor+'] ' : ''}${l.text}</div>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+    };
+
+    window.deleteArchive = async function(id) {
+      await db.from('session_archives').delete().eq('id', id);
+      toggleArchivesPanel();
+      toggleArchivesPanel();
+    };
   </script>
 </body>
 </html>
