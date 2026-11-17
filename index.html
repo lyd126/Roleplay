@@ -4,124 +4,118 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Private Session</title>
+  <title>Session</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0f0f13;
+      background: #0c0c10;
       color: #e4e4e7;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 16px;
+      padding: 14px;
+      overflow-x: hidden;
     }
-    .container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .card {
-      background: #18181f;
-      border: 1px solid #272732;
-      border-radius: 16px;
-      padding: 20px;
-    }
+    .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
+    .card { background: #16161d; border: 1px solid #262633; border-radius: 16px; padding: 18px; }
     .hidden { display: none !important; }
     select, input, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #2e2e3a;
-      border-radius: 10px;
-      background: #111116;
-      color: #f4f4f5;
-      font-size: 15px;
-      outline: none;
+      width: 100%; padding: 11px 12px; border: 1px solid #2e2e3d; border-radius: 10px;
+      background: #0f0f14; color: #f4f4f5; font-size: 14px; outline: none;
     }
-    select:focus, input:focus, textarea:focus { border-color: #a855f7; }
+    select:focus, input:focus, textarea:focus { border-color: #db2777; }
     button {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
+      padding: 12px 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: transform 0.1s, opacity 0.15s;
     }
     button:active { transform: scale(0.98); }
-    .btn-accent { background: linear-gradient(135deg, #9333ea, #db2777); color: #fff; }
-    .btn-choice {
-      background: #23232e;
-      border: 1px solid #38384a;
-      color: #f4f4f5;
-      text-align: left;
-      padding: 14px 16px;
-      line-height: 1.4;
-    }
-    .btn-choice:hover { border-color: #db2777; background: #2a2433; }
-    .btn-ghost { background: transparent; border: 1px solid #2e2e3a; color: #a1a1aa; padding: 9px 12px; font-size: 13px; width: auto; }
-    .top-bar { display: flex; justify-content: space-between; align-items: center; }
-    .presence { display: flex; gap: 8px; }
+    .btn-accent { background: linear-gradient(135deg, #9333ea, #db2777); color: #fff; width: 100%; }
+    .btn-ghost { background: #1e1e28; border: 1px solid #2e2e3d; color: #cbd5e1; padding: 8px 11px; font-size: 12px; }
+    .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; padding: 8px 11px; font-size: 12px; }
+
+    /* 顶部栏 */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .presence { display: flex; gap: 6px; }
     .pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px; border-radius: 99px; font-size: 12px;
-      background: #1e1e26; color: #71717a;
+      display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+      border-radius: 99px; font-size: 12px; background: #1c1c24; color: #71717a;
     }
-    .pill.on { background: rgba(219, 39, 119, 0.15); color: #f472b6; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: #52525b; }
+    .pill.on { background: rgba(219, 39, 119, 0.16); color: #f472b6; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #52525b; }
     .pill.on .dot { background: #ec4899; box-shadow: 0 0 6px #ec4899; }
 
-    /* 剧情流区域 */
+    /* 动态仪表盘 */
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+    .dash-item {
+      background: #1d1d26; border: 1px solid #2c2c3a; border-radius: 12px; padding: 10px; text-align: center;
+    }
+    .dash-label { font-size: 11px; color: #a1a1aa; margin-bottom: 4px; }
+    .dash-val { font-size: 20px; font-weight: 800; color: #f472b6; }
+    .progress-bar { width: 100%; height: 6px; background: #272734; border-radius: 99px; overflow: hidden; margin-top: 6px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #9333ea, #ec4899); transition: width 0.3s; }
+
+    /* 剧情流 */
     .story-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 52vh;
-      overflow-y: auto;
-      padding-right: 4px;
+      display: flex; flex-direction: column; gap: 10px; max-height: 46vh; overflow-y: auto; padding-right: 4px;
     }
     .msg-narrator {
-      background: #201c29;
-      border-left: 3px solid #db2777;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      line-height: 1.65;
-      color: #f4f4f5;
+      background: #211b2b; border-left: 3px solid #db2777; padding: 13px;
+      border-radius: 10px; font-size: 14.5px; line-height: 1.65; color: #f4f4f5;
     }
-    .msg-player {
-      background: #1e1e26;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      color: #d4d4d8;
+    .msg-player { background: #1c1c25; padding: 10px 13px; border-radius: 10px; font-size: 13.5px; color: #d4d4d8; }
+    .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 6px; }
+    .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 6px; }
+    .msg-sys { text-align: center; font-size: 12px; color: #a78bfa; padding: 4px 0; }
+
+    /* 分支按钮 */
+    .choices-box { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
+    .btn-choice {
+      width: 100%; background: #22222e; border: 1px solid #38384c; color: #f4f4f5;
+      text-align: left; padding: 13px 15px; line-height: 1.45;
     }
-    .msg-player span { color: #f472b6; font-weight: 700; margin-right: 6px; }
-    .choices-box { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+    .btn-choice:hover:not(:disabled) { border-color: #db2777; background: #2b2236; }
+    .btn-choice:disabled { opacity: 0.45; cursor: not-allowed; border-style: dashed; }
+    .wait-tip {
+      text-align: center; padding: 14px; background: #1b1b24; border-radius: 10px;
+      font-size: 13px; color: #a1a1aa; border: 1px dashed #323242;
+    }
+
+    /* 底部输入 */
     .input-row { display: flex; gap: 8px; margin-top: 10px; }
     .input-row input { flex: 1; }
-    .input-row button { width: auto; padding: 0 18px; }
-    .script-title { font-size: 17px; font-weight: 700; color: #f472b6; margin-bottom: 4px; }
-    .script-sub { font-size: 13px; color: #a1a1aa; margin-bottom: 12px; }
-    .error-msg { color: #fb7185; font-size: 13px; margin-top: 10px; text-align: center; }
+    .input-row button { width: auto; padding: 0 16px; }
+
+    /* 右侧边栏抽屉（惩罚与辅助工具） */
+    .drawer-toggle {
+      position: fixed; right: 0; top: 45%; transform: translateY(-50%);
+      background: #252533; border: 1px solid #3f3f54; border-right: none;
+      color: #f472b6; padding: 12px 8px; border-radius: 12px 0 0 12px;
+      writing-mode: vertical-rl; font-size: 12px; letter-spacing: 2px; z-index: 40;
+    }
+    .side-drawer {
+      position: fixed; right: 0; top: 0; bottom: 0; width: 280px;
+      background: #14141b; border-left: 1px solid #2e2e3e; padding: 20px 16px;
+      z-index: 50; display: flex; flex-direction: column; gap: 16px;
+      transform: translateX(100%); transition: transform 0.25s ease;
+    }
+    .side-drawer.open { transform: translateX(0); }
+    .timer-display { font-size: 32px; font-weight: 800; text-align: center; color: #f472b6; font-variant-numeric: tabular-nums; }
   </style>
 </head>
 <body>
 
-  <!-- 登录框（已移除标题和副标题） -->
+  <!-- 登录框 -->
   <div id="login-view" class="container" style="justify-content: center;">
     <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
       <select id="player-select">
-        <option value="yc@play.game">YC</option>
-        <option value="ly@play.game">LY</option>
+        <option value="yc@play.game">YC (女方视角)</option>
+        <option value="ly@play.game">LY (男方视角)</option>
       </select>
       <input type="password" id="password-input" placeholder="Password" />
       <button id="login-btn" class="btn-accent">Enter</button>
-      <p id="login-error" class="error-msg"></p>
+      <p id="login-error" style="color:#fb7185; font-size:13px; text-align:center;"></p>
     </div>
   </div>
 
@@ -129,49 +123,79 @@
   <div id="game-view" class="container hidden">
     <div class="top-bar">
       <div class="presence">
-        <div id="pill-yc" class="pill"><span class="dot"></span>YC</div>
-        <div id="pill-ly" class="pill"><span class="dot"></span>LY</div>
+        <div id="pill-yc" class="pill"><span class="dot"></span>YC · 女</div>
+        <div id="pill-ly" class="pill"><span class="dot"></span>LY · 男</div>
       </div>
-      <div style="display: flex; gap: 6px;">
-        <button id="btn-random-script" class="btn-ghost">随机切换剧本</button>
-        <button id="btn-toggle-upload" class="btn-ghost">+ 上传剧本</button>
-        <button id="logout-btn" class="btn-ghost">退出</button>
+      <div style="display: flex; gap: 5px;">
+        <button id="btn-random-script" class="btn-ghost">随机剧本</button>
+        <button id="btn-toggle-upload" class="btn-ghost">+ 导入</button>
+        <button id="logout-btn" class="btn-danger">退出并清场</button>
       </div>
     </div>
 
-    <!-- 上传剧本面板（默认折叠） -->
+    <!-- JSON 剧本导入面板 -->
     <div id="upload-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 10px;">
-      <div style="font-size: 14px; font-weight: 600; color: #f472b6;">添加新分支剧本 (JSON 格式)</div>
-      <input type="text" id="new-script-title" placeholder="剧本名称，例如：酒店总统套房" />
-      <input type="text" id="new-script-summary" placeholder="一句话设定（可选）" />
-      <textarea id="new-script-json" rows="6" placeholder='粘贴节点 JSON，例如：
-{
-  "start": {
-    "text": "开场白...",
-    "choices": [
-      { "label": "选项A", "next": "node2" }
-    ]
-  },
-  "node2": { "text": "后续发展...", "choices": [] }
-}'></textarea>
+      <div style="font-size: 13px; font-weight: 600; color: #f472b6;">导入分支剧本 (JSON)</div>
+      <input type="text" id="new-script-title" placeholder="剧本名称" />
+      <select id="new-script-type">
+        <option value="edging">剧本类型：寸止 / 忍耐考验 (edging)</option>
+        <option value="conquest">剧本类型：攻略 / 心动养成 (conquest)</option>
+        <option value="domsub">剧本类型：支配 / 顺从调教 (domsub)</option>
+        <option value="story">剧本类型：纯剧情沉浸 (story)</option>
+      </select>
+      <input type="text" id="new-script-summary" placeholder="简介（可选）" />
+      <textarea id="new-script-json" rows="5" placeholder='粘贴完整 JSON（可包含 initial_vars 和 nodes，或直接粘贴 nodes 对象）'></textarea>
       <button id="btn-save-script" class="btn-accent">保存到剧本库</button>
+    </div>
+
+    <!-- 动态场景仪表盘（按剧本类型自动展示） -->
+    <div id="dashboard-card" class="card hidden">
+      <div class="dashboard-grid" id="dashboard-grid"></div>
     </div>
 
     <!-- 剧情主舞台 -->
     <div class="card">
-      <div class="script-title" id="active-script-title">尚未抽取剧本</div>
-      <div class="script-sub" id="active-script-summary">点击右上角“随机切换剧本”开始</div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+        <div style="font-size: 16px; font-weight: 700; color: #f472b6;" id="active-script-title">等待抽取剧本</div>
+        <span style="font-size: 11px; color: #a1a1aa;" id="active-script-type-badge"></span>
+      </div>
+      <div style="font-size: 12px; color: #a1a1aa; margin-bottom: 12px;" id="active-script-summary">点击上方「随机剧本」开始</div>
 
       <div class="story-feed" id="story-feed"></div>
-
-      <!-- 分支选项按钮区 -->
       <div class="choices-box" id="choices-box"></div>
 
-      <!-- 自由文字输入（补充台词或动作） -->
       <div class="input-row">
-        <input type="text" id="custom-msg-input" placeholder="输入台词或动作描写..." />
+        <input type="text" id="custom-msg-input" placeholder="输入台词或动作..." />
         <button id="btn-send-msg" class="btn-accent">发送</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 右侧边栏开关与抽屉（惩罚与倒计时） -->
+  <button id="drawer-toggle-btn" class="drawer-toggle hidden">⚡ 惩罚 / 计时</button>
+  <div id="side-drawer" class="side-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-weight:700; color:#f472b6;">辅助工具箱</span>
+      <button id="drawer-close-btn" class="btn-ghost">收起</button>
+    </div>
+
+    <!-- 倒计时器 -->
+    <div style="background:#1c1c26; padding:12px; border-radius:12px;">
+      <div style="font-size:12px; color:#a1a1aa; margin-bottom:6px;">动作保持倒计时</div>
+      <div class="timer-display" id="timer-display">00:00</div>
+      <div style="display:flex; gap:6px; margin-top:10px;">
+        <button class="btn-ghost" style="flex:1" onclick="startTimer(30)">30秒</button>
+        <button class="btn-ghost" style="flex:1" onclick="startTimer(60)">60秒</button>
+        <button class="btn-ghost" style="flex:1" onclick="startTimer(180)">3分钟</button>
+      </div>
+    </div>
+
+    <!-- 随机惩罚/指令抽取 -->
+    <div style="background:#1c1c26; padding:12px; border-radius:12px; display:flex; flex-direction:column; gap:8px;">
+      <div style="font-size:12px; color:#a1a1aa;">随机小惩罚 / 临时指令</div>
+      <button id="btn-draw-punishment" class="btn-accent">抽取并同步到剧情</button>
+      <input type="text" id="custom-punish-input" placeholder="输入自定义惩罚（直接发送）" />
+      <button id="btn-send-punishment" class="btn-ghost">发送自定义指令</button>
     </div>
   </div>
 
@@ -180,34 +204,77 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_gbR5IGXPz5n1kVTEpbq7pQ_R3dPPdud';
 
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        storage: window.sessionStorage,
-        autoRefreshToken: true,
-        persistSession: true
-      }
+      auth: { storage: window.sessionStorage, autoRefreshToken: true, persistSession: true }
     });
 
-    let currentPlayer = '';
+    // 角色固定映射：YC = female，LY = male
+    let myRole = ''; // 'female' | 'male'
+    let myName = ''; // 'YC' | 'LY'
     let allScripts = [];
     let activeScript = null;
     let gameState = null;
+    let currentAccessToken = '';
 
-    const loginView = document.getElementById('login-view');
-    const gameView = document.getElementById('game-view');
+    const TYPE_LABELS = {
+      edging: '寸止 / 忍耐模式',
+      conquest: '攻略 / 心动模式',
+      domsub: '支配 / 顺从模式',
+      story: '纯剧情模式'
+    };
 
+    const PUNISHMENTS = [
+      '【临时指令】保持当前姿势静止 60 秒，不许发出声音。',
+      '【临时指令】蒙上眼睛，接下来 2 分钟完全交由对方主导。',
+      '【小惩罚】主动向对方说出此刻最真实、最羞耻的一个想法。',
+      '【小惩罚】亲吻对方指定的任意一个部位 10 秒钟。',
+      '【临时指令】暂停所有动作，深呼吸 30 秒平复心跳。',
+      '【小惩罚】用最顺从的语气向对方提出一个请求。'
+    ];
+
+    // 双人在线状态
     function updatePresenceUI(presenceState) {
       const online = new Set();
       Object.values(presenceState).forEach(arr => arr.forEach(s => s.player && online.add(s.player)));
       ['YC', 'LY'].forEach(name => {
         const el = document.getElementById(`pill-${name.toLowerCase()}`);
-        if (online.has(name)) el.classList.add('on');
-        else el.classList.remove('on');
+        el.classList.toggle('on', online.has(name));
       });
     }
 
-    async function loadScripts() {
-      const { data } = await db.from('scripts').select('*').order('created_at', { ascending: false });
-      allScripts = data || [];
+    // 渲染场景化仪表盘
+    function renderDashboard(script, vars) {
+      const dashCard = document.getElementById('dashboard-card');
+      const dashGrid = document.getElementById('dashboard-grid');
+      if (!script || script.type === 'story' || !vars || Object.keys(vars).length === 0) {
+        dashCard.classList.add('hidden');
+        return;
+      }
+      dashCard.classList.remove('hidden');
+      dashGrid.innerHTML = Object.entries(vars).map(([key, val]) => {
+        const isPercent = key.includes('度') || key.includes('进度') || key.includes('值');
+        const clamped = Math.max(0, Math.min(100, Number(val) || 0));
+        return `
+          <div class="dash-item">
+            <div class="dash-label">${key}</div>
+            <div class="dash-val">${val}</div>
+            ${isPercent ? `<div class="progress-bar"><div class="progress-fill" style="width:${clamped}%"></div></div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 检查《博德之门》式分支条件
+    function checkCondition(cond, vars) {
+      if (!cond) return { passed: true, hint: '' };
+      const currentVal = Number((vars || {})[cond.var] ?? 0);
+      const targetVal = Number(cond.val);
+      let passed = false;
+      if (cond.op === '>=') passed = currentVal >= targetVal;
+      else if (cond.op === '<=') passed = currentVal <= targetVal;
+      else if (cond.op === '>') passed = currentVal > targetVal;
+      else if (cond.op === '<') passed = currentVal < targetVal;
+      else if (cond.op === '==') passed = currentVal == targetVal;
+      return { passed, hint: `[检定：${cond.var} ${cond.op} ${cond.val}，当前 ${currentVal}]` };
     }
 
     function renderGame() {
@@ -215,70 +282,95 @@
       activeScript = allScripts.find(s => s.id === gameState.active_script_id) || null;
 
       const titleEl = document.getElementById('active-script-title');
+      const typeBadge = document.getElementById('active-script-type-badge');
       const subEl = document.getElementById('active-script-summary');
       const feedEl = document.getElementById('story-feed');
       const choicesEl = document.getElementById('choices-box');
 
       if (!activeScript) {
         titleEl.textContent = '等待抽取剧本';
-        subEl.textContent = '点击上方「随机切换剧本」开启今晚的剧情';
+        typeBadge.textContent = '';
+        subEl.textContent = '点击上方「随机剧本」开启今晚的剧情';
         feedEl.innerHTML = '';
         choicesEl.innerHTML = '';
+        renderDashboard(null, null);
         return;
       }
 
       titleEl.textContent = activeScript.title;
+      typeBadge.textContent = TYPE_LABELS[activeScript.type] || '';
       subEl.textContent = activeScript.summary || '';
+      renderDashboard(activeScript, gameState.variables);
 
       // 渲染历史记录流
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       feedEl.innerHTML = logs.map(item => {
-        if (item.type === 'narrator') {
-          return `<div class="msg-narrator">${item.text}</div>`;
-        } else {
-          return `<div class="msg-player"><span>[${item.actor}]</span>${item.text}</div>`;
-        }
+        if (item.type === 'narrator') return `<div class="msg-narrator">${item.text}</div>`;
+        if (item.type === 'sys') return `<div class="msg-sys">${item.text}</div>`;
+        const tagClass = item.role === 'female' ? 'tag-f' : 'tag-m';
+        return `<div class="msg-player"><span class="${tagClass}">[${item.actor}]</span>${item.text}</div>`;
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
-      // 渲染当前节点的可选分支按钮
+      // 过滤当前节点中仅属于当前角色（YC女 / LY男）的选项
       const currentNode = activeScript.nodes[gameState.current_node_id];
       choicesEl.innerHTML = '';
-      if (currentNode && Array.isArray(currentNode.choices)) {
-        currentNode.choices.forEach(choice => {
-          const btn = document.createElement('button');
-          btn.className = 'btn-choice';
-          btn.textContent = choice.label;
-          btn.onclick = () => selectBranch(choice);
-          choicesEl.appendChild(btn);
-        });
+      if (currentNode && Array.isArray(currentNode.choices) && currentNode.choices.length > 0) {
+        const myChoices = currentNode.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
+        if (myChoices.length === 0) {
+          choicesEl.innerHTML = `<div class="wait-tip">当前回合由对方主导，等待对方做出选择...</div>`;
+        } else {
+          myChoices.forEach(choice => {
+            const { passed, hint } = checkCondition(choice.condition, gameState.variables);
+            const btn = document.createElement('button');
+            btn.className = 'btn-choice';
+            btn.disabled = !passed;
+            btn.textContent = passed ? `${choice.label} ${hint}` : `🔒 ${choice.label} ${hint}`;
+            btn.onclick = () => selectBranch(choice);
+            choicesEl.appendChild(btn);
+          });
+        }
       }
     }
 
-    // 选择分支推进剧情
+    // 选择分支并结算属性变化
     async function selectBranch(choice) {
       if (!activeScript || !gameState) return;
+      const nextVars = { ...(gameState.variables || {}) };
+      const effectTexts = [];
+      if (choice.effects) {
+        Object.entries(choice.effects).forEach(([k, delta]) => {
+          nextVars[k] = (Number(nextVars[k]) || 0) + Number(delta);
+          effectTexts.push(`${k} ${delta >= 0 ? '+' + delta : delta}`);
+        });
+      }
+
       const nextNode = activeScript.nodes[choice.next];
       const newLogs = [...(gameState.story_log || [])];
-      newLogs.push({ type: 'player', actor: currentPlayer, text: `选择了：${choice.label}` });
+      newLogs.push({ type: 'player', actor: myName, role: myRole, text: `选择了：${choice.label}` });
+      if (effectTexts.length > 0) {
+        newLogs.push({ type: 'sys', text: `状态变化：${effectTexts.join('，')}` });
+      }
       if (nextNode) {
         newLogs.push({ type: 'narrator', text: nextNode.text });
       }
+
       await db.from('game_state').update({
         current_node_id: choice.next,
+        variables: nextVars,
         story_log: newLogs,
         updated_at: new Date().toISOString()
       }).eq('id', 1);
     }
 
-    // 随机抽取剧本并初始化开场
+    // 随机抽取剧本
     document.getElementById('btn-random-script').addEventListener('click', async () => {
-      await loadScripts();
-      if (allScripts.length === 0) return alert('剧本库为空，请先上传剧本');
-      let candidates = allScripts;
-      if (allScripts.length > 1 && activeScript) {
-        candidates = allScripts.filter(s => s.id !== activeScript.id);
-      }
+      const { data } = await db.from('scripts').select('*');
+      allScripts = data || [];
+      if (allScripts.length === 0) return alert('剧本库为空');
+      let candidates = allScripts.length > 1 && activeScript
+        ? allScripts.filter(s => s.id !== activeScript.id)
+        : allScripts;
       const picked = candidates[Math.floor(Math.random() * candidates.length)];
       const startNode = picked.nodes['start'];
       const initialLog = startNode ? [{ type: 'narrator', text: startNode.text }] : [];
@@ -286,82 +378,160 @@
       await db.from('game_state').update({
         active_script_id: picked.id,
         current_node_id: 'start',
+        variables: picked.initial_vars || {},
         story_log: initialLog,
         updated_at: new Date().toISOString()
       }).eq('id', 1);
     });
 
-    // 发送自由文字台词/动作
+    // 发送自由对话/动作
     async function sendCustomMessage() {
       const input = document.getElementById('custom-msg-input');
       const text = input.value.trim();
       if (!text || !gameState) return;
       input.value = '';
-      const newLogs = [...(gameState.story_log || []), { type: 'player', actor: currentPlayer, text }];
-      await db.from('game_state').update({
-        story_log: newLogs,
-        updated_at: new Date().toISOString()
-      }).eq('id', 1);
+      const newLogs = [...(gameState.story_log || []), { type: 'player', actor: myName, role: myRole, text }];
+      await db.from('game_state').update({ story_log: newLogs, updated_at: new Date().toISOString() }).eq('id', 1);
     }
     document.getElementById('btn-send-msg').addEventListener('click', sendCustomMessage);
-    document.getElementById('custom-msg-input').addEventListener('keypress', e => {
-      if (e.key === 'Enter') sendCustomMessage();
-    });
+    document.getElementById('custom-msg-input').addEventListener('keypress', e => e.key === 'Enter' && sendCustomMessage());
 
-    // 折叠/展开上传剧本面板
+    // 导入 JSON 剧本
     document.getElementById('btn-toggle-upload').addEventListener('click', () => {
       document.getElementById('upload-panel').classList.toggle('hidden');
     });
-
-    // 保存新剧本到云端
     document.getElementById('btn-save-script').addEventListener('click', async () => {
       const title = document.getElementById('new-script-title').value.trim();
+      const type = document.getElementById('new-script-type').value;
       const summary = document.getElementById('new-script-summary').value.trim();
       const rawJson = document.getElementById('new-script-json').value.trim();
-      if (!title || !rawJson) return alert('请填写剧本名称和 JSON 内容');
+      if (!title || !rawJson) return alert('请填写名称和 JSON');
       try {
-        const parsedNodes = JSON.parse(rawJson);
-        if (!parsedNodes.start) return alert('JSON 必须包含 "start" 起始节点');
-        const { error } = await db.from('scripts').insert([{ title, summary, nodes: parsedNodes }]);
+        const parsed = JSON.parse(rawJson);
+        const nodes = parsed.nodes ? parsed.nodes : parsed;
+        const initialVars = parsed.initial_vars || {};
+        if (!nodes.start) return alert('剧本必须包含 "start" 节点');
+        const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
         if (error) throw error;
-        alert('剧本已保存！现在可以点击“随机切换剧本”抽到它了');
-        document.getElementById('new-script-title').value = '';
-        document.getElementById('new-script-summary').value = '';
-        document.getElementById('new-script-json').value = '';
+        alert('导入成功！');
         document.getElementById('upload-panel').classList.add('hidden');
-        await loadScripts();
+        const { data } = await db.from('scripts').select('*');
+        allScripts = data || [];
       } catch (e) {
-        alert('格式有误：' + e.message);
+        alert('JSON 解析错误：' + e.message);
       }
     });
 
-    async function initSession(email) {
-      currentPlayer = email.startsWith('yc') ? 'YC' : 'LY';
-      loginView.classList.add('hidden');
-      gameView.classList.remove('hidden');
+    // 右侧边栏逻辑（倒计时 & 惩罚）
+    const sideDrawer = document.getElementById('side-drawer');
+    document.getElementById('drawer-toggle-btn').onclick = () => sideDrawer.classList.add('open');
+    document.getElementById('drawer-close-btn').onclick = () => sideDrawer.classList.remove('open');
 
-      await loadScripts();
-      const { data } = await db.from('game_state').select('*').eq('id', 1).single();
-      gameState = data;
+    let timerInterval = null;
+    window.startTimer = function(seconds) {
+      clearInterval(timerInterval);
+      let remain = seconds;
+      const display = document.getElementById('timer-display');
+      const updateText = () => {
+        const m = String(Math.floor(remain / 60)).padStart(2, '0');
+        const s = String(remain % 60).padStart(2, '0');
+        display.textContent = `${m}:${s}`;
+      };
+      updateText();
+      timerInterval = setInterval(() => {
+        remain--;
+        updateText();
+        if (remain <= 0) {
+          clearInterval(timerInterval);
+          display.textContent = '时间到';
+        }
+      }, 1000);
+    };
+
+    document.getElementById('btn-draw-punishment').onclick = async () => {
+      if (!gameState) return;
+      const item = PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `${myName} 抽取了：${item}` }];
+      await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
+      sideDrawer.classList.remove('open');
+    };
+
+    document.getElementById('btn-send-punishment').onclick = async () => {
+      const inp = document.getElementById('custom-punish-input');
+      const txt = inp.value.trim();
+      if (!txt || !gameState) return;
+      inp.value = '';
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `【${myName} 下达指令】${txt}` }];
+      await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
+      sideDrawer.classList.remove('open');
+    };
+
+    // 核心：彻底擦除云端 story_log 的阅后即焚函数
+    async function wipeCloudLogs() {
+      await db.from('game_state').update({
+        story_log: [],
+        variables: {},
+        current_node_id: 'start',
+        updated_at: new Date().toISOString()
+      }).eq('id', 1);
+    }
+
+    // 监听关闭标签页/关闭浏览器事件，利用 keepalive 发出清场请求
+    window.addEventListener('pagehide', () => {
+      if (!currentAccessToken) return;
+      fetch(`${SUPABASE_URL}/rest/v1/game_state?id=eq.1`, {
+        method: 'PATCH',
+        keepalive: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${currentAccessToken}`
+        },
+        body: JSON.stringify({ story_log: [], variables: {}, current_node_id: 'start' })
+      });
+    });
+
+    // 主动点击“退出并清场”
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await wipeCloudLogs();
+      await db.auth.signOut();
+      location.reload();
+    });
+
+    async function initSession(session) {
+      currentAccessToken = session.access_token;
+      const email = session.user.email;
+      myName = email.startsWith('yc') ? 'YC' : 'LY';
+      myRole = email.startsWith('yc') ? 'female' : 'male';
+
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('game-view').classList.remove('hidden');
+      document.getElementById('drawer-toggle-btn').classList.remove('hidden');
+
+      const { data: scriptsData } = await db.from('scripts').select('*');
+      allScripts = scriptsData || [];
+      const { data: stateData } = await db.from('game_state').select('*').eq('id', 1).single();
+      gameState = stateData;
       renderGame();
 
-      const channel = db.channel('room-1', { config: { presence: { key: currentPlayer } } });
+      const channel = db.channel('room-1', { config: { presence: { key: myName } } });
       channel
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_state', filter: 'id=eq.1' }, async (payload) => {
           gameState = payload.new;
           if (gameState.active_script_id && !allScripts.find(s => s.id === gameState.active_script_id)) {
-            await loadScripts();
+            const { data } = await db.from('scripts').select('*');
+            allScripts = data || [];
           }
           renderGame();
         })
         .on('presence', { event: 'sync' }, () => updatePresenceUI(channel.presenceState()))
         .subscribe(async status => {
-          if (status === 'SUBSCRIBED') await channel.track({ player: currentPlayer });
+          if (status === 'SUBSCRIBED') await channel.track({ player: myName });
         });
     }
 
     db.auth.getSession().then(({ data: { session } }) => {
-      if (session) initSession(session.user.email);
+      if (session) initSession(session);
     });
 
     document.getElementById('login-btn').addEventListener('click', async () => {
@@ -371,13 +541,8 @@
       if (error) {
         document.getElementById('login-error').textContent = '验证失败: ' + error.message;
       } else {
-        initSession(data.user.email);
+        initSession(data.session);
       }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      await db.auth.signOut();
-      location.reload();
     });
   </script>
 </body>
