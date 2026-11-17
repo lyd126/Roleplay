@@ -11,35 +11,27 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #09090d; color: #e4e4e7; min-height: 100vh;
-      display: flex; justify-content: center; padding: 14px; overflow-x: hidden;
+      display: flex; justify-content: center; padding: 16px; overflow-x: hidden;
     }
 
-    .app-shell { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 12px; }
-    .stage-grid { display: flex; flex-direction: column; gap: 12px; }
-
+    .app-shell { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 14px; }
     @media (min-width: 840px) {
-      body { padding: 24px; }
-      .app-shell { max-width: 1060px; }
-      .stage-grid {
-        display: grid;
-        grid-template-columns: 1.65fr 1fr;
-        align-items: start;
-        gap: 18px;
-      }
-      .story-feed { max-height: 54vh !important; }
+      body { padding: 28px; }
+      .app-shell { max-width: 780px; }
+      .story-feed { max-height: 56vh !important; }
     }
 
-    .card { background: #14141b; border: 1px solid #242432; border-radius: 14px; padding: 18px; }
+    .card { background: #14141b; border: 1px solid #242432; border-radius: 14px; padding: 20px; }
     .hidden { display: none !important; }
 
     select, input, textarea {
-      width: 100%; padding: 10px 12px; border: 1px solid #2c2c3c; border-radius: 9px;
-      background: #0d0d12; color: #f4f4f5; font-size: 14px; outline: none;
+      width: 100%; padding: 11px 13px; border: 1px solid #2c2c3c; border-radius: 9px;
+      background: #0d0d12; color: #f4f4f5; font-size: 15px; outline: none;
     }
     select:focus, input:focus, textarea:focus { border-color: #db2777; }
 
     button {
-      padding: 10px 13px; border: none; border-radius: 9px; font-size: 13.5px; font-weight: 600;
+      padding: 11px 15px; border: none; border-radius: 9px; font-size: 14px; font-weight: 600;
       cursor: pointer; transition: transform 0.1s, opacity 0.15s;
       white-space: nowrap; flex-shrink: 0;
     }
@@ -48,91 +40,123 @@
     .btn-ghost { background: #1c1c26; border: 1px solid #2c2c3c; color: #cbd5e1; }
     .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; }
 
+    /* 登录页异地开关行 */
+    .login-remote-row {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #0d0d12; border: 1px solid #2c2c3c; border-radius: 9px; padding: 10px 13px;
+      font-size: 14px; color: #cbd5e1;
+    }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; inset: 0; background-color: #2e2e3e; transition: .25s; border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background-color: white; transition: .25s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #db2777; }
+    input:checked + .slider:before { transform: translateX(20px); }
+
     /* 顶部栏 */
     .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .presence { display: flex; gap: 5px; align-items: center; }
+    .presence { display: flex; gap: 6px; align-items: center; }
     .pill {
-      display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px;
-      border-radius: 99px; font-size: 12px; background: #1a1a22; color: #71717a;
+      display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px;
+      border-radius: 99px; font-size: 12.5px; background: #1a1a22; color: #71717a;
     }
     .pill.on { background: rgba(219, 39, 119, 0.18); color: #f472b6; }
     .dot { width: 6px; height: 6px; border-radius: 50%; background: #52525b; }
     .pill.on .dot { background: #ec4899; box-shadow: 0 0 6px #ec4899; }
 
-    .remote-chip {
-      padding: 4px 9px; border-radius: 99px; font-size: 12px;
-      background: #1a1a22; border: 1px solid #2c2c3c; color: #a1a1aa; cursor: pointer;
-    }
-    .remote-chip.active { border-color: #db2777; color: #f472b6; background: rgba(219, 39, 119, 0.12); }
-
     .remote-banner {
       background: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(219, 39, 119, 0.25));
-      border: 1px solid #ec4899; border-radius: 12px; padding: 11px 14px;
+      border: 1px solid #ec4899; border-radius: 12px; padding: 12px 15px;
       display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
 
     /* 背景引入幕布 */
     .prologue-box {
       background: linear-gradient(180deg, #1b1624 0%, #14141b 100%);
-      border: 1px solid #362542; border-radius: 16px; padding: 26px 22px;
-      display: flex; flex-direction: column; gap: 16px;
+      border: 1px solid #362542; border-radius: 16px; padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 18px;
     }
-    .prologue-title { font-size: 20px; font-weight: 800; color: #f472b6; letter-spacing: 1px; text-align: center; }
-    .prologue-text { font-size: 15px; line-height: 1.8; color: #e4e4e7; white-space: pre-line; }
+    .prologue-title { font-size: 22px; font-weight: 800; color: #f472b6; letter-spacing: 1px; text-align: center; }
+    .prologue-text { font-size: 16px; line-height: 1.85; color: #e4e4e7; white-space: pre-line; }
     .role-card {
       background: rgba(255, 255, 255, 0.03); border-left: 3px solid #9333ea;
-      padding: 12px 14px; border-radius: 8px; font-size: 14px; line-height: 1.65; color: #d8b4fe;
+      padding: 14px 16px; border-radius: 8px; font-size: 15px; line-height: 1.75; color: #d8b4fe;
     }
 
     /* 剧情流 */
-    .story-feed { display: flex; flex-direction: column; gap: 11px; max-height: 46vh; overflow-y: auto; padding-right: 4px; }
+    .story-feed { display: flex; flex-direction: column; gap: 14px; max-height: 50vh; overflow-y: auto; padding-right: 4px; }
     .msg-narrator {
-      background: #1e1828; border-left: 3px solid #db2777; padding: 13px 15px;
-      border-radius: 10px; font-size: 14.5px; line-height: 1.75; color: #f4f4f5;
+      background: #1c1726; border-left: 3px solid #db2777; padding: 15px 18px;
+      border-radius: 10px; font-size: 16px; line-height: 1.85; color: #f4f4f5;
     }
-    .msg-player { background: #1a1a23; padding: 9px 13px; border-radius: 10px; font-size: 14px; line-height: 1.5; }
-    .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 6px; }
-    .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 6px; }
-    .msg-sys { text-align: center; font-size: 12.5px; color: #c084fc; padding: 4px 0; }
+    .msg-player { background: #1a1a23; padding: 11px 15px; border-radius: 10px; font-size: 15.5px; line-height: 1.65; }
+    .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 7px; }
+    .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 7px; }
+    .msg-sys { text-align: center; font-size: 13.5px; color: #c084fc; padding: 4px 0; }
 
-    /* 紧贴正文下方的抉择按钮（允许文字换行） */
-    .choices-box {
-      display: flex; flex-direction: column; gap: 9px;
-      margin-top: 14px; padding-top: 14px; border-top: 1px solid #262634;
+    /* 缩进式选项区 */
+    .choices-wrapper {
+      margin-top: 16px;
+      margin-left: 14px;
+      padding-left: 14px;
+      border-left: 2px solid #322642;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .btn-choice {
-      width: 100%; background: linear-gradient(135deg, #252033 0%, #1e1c29 100%);
-      border: 1px solid #4c2d52; color: #fff; text-align: left;
-      padding: 13px 15px; font-size: 14px; line-height: 1.5;
+      width: 100%; background: linear-gradient(135deg, #241f31 0%, #1d1b28 100%);
+      border: 1px solid #482b4e; color: #fff; text-align: left;
+      padding: 13px 16px; font-size: 15px; line-height: 1.55;
       white-space: normal;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
     }
-    .btn-choice:hover:not(:disabled) { border-color: #ec4899; background: #2f223b; }
+    .btn-choice:hover:not(:disabled) { border-color: #ec4899; background: #2d2138; }
     .btn-choice:disabled { opacity: 0.4; cursor: not-allowed; border-style: dashed; border-color: #323242; background: #181820; }
-    .btn-improv {
-      width: 100%; background: transparent; border: 1px dashed #3b3b4f; color: #a1a1aa;
-      text-align: center; padding: 9px 12px; font-size: 12.5px; white-space: normal;
+    .btn-continue {
+      width: 100%; background: #221d2e; border: 1px solid #7e22ce; color: #e9d5ff;
+      text-align: center; padding: 12px; font-size: 14.5px; white-space: normal;
     }
-    .btn-improv:hover { border-color: #a855f7; color: #e4e4e7; }
     .wait-tip {
       text-align: center; padding: 13px; background: #181822; border-radius: 10px;
-      font-size: 13px; color: #71717a; border: 1px dashed #2e2e3e;
+      font-size: 14px; color: #71717a; border: 1px dashed #2e2e3e;
     }
 
-    /* 状态滑块面板 */
-    .stats-panel { display: flex; flex-direction: column; gap: 10px; }
-    .stat-row {
-      background: #1a1a23; border: 1px solid #2a2a38; border-radius: 10px; padding: 10px 12px;
-      display: flex; flex-direction: column; gap: 6px;
+    /* 快捷常用回复胶囊栏 */
+    .quick-replies {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 8px 0 2px;
+      scrollbar-width: none;
     }
-    .stat-header { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; }
-    .stat-owner-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: 700; }
-    .owner-both { background: #2e1f3d; color: #d8b4fe; }
-    .owner-female { background: #3d1c2e; color: #f472b6; }
-    .owner-male { background: #1e293b; color: #818cf8; }
-    .stat-slider-wrap { display: flex; align-items: center; gap: 10px; }
-    .stat-slider-wrap input[type="range"] { flex: 1; padding: 0; accent-color: #ec4899; cursor: pointer; }
-    .stat-slider-wrap.male-slider input[type="range"] { accent-color: #6366f1; }
+    .quick-replies::-webkit-scrollbar { display: none; }
+    .quick-chip {
+      background: #1b1a24;
+      border: 1px solid #322e42;
+      color: #d4d4d8;
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .quick-chip:hover { border-color: #db2777; color: #f472b6; }
+
+    /* 隐蔽式数值微调栏 */
+    .silent-var-bar {
+      display: flex; gap: 6px; align-items: center; margin-top: 8px;
+    }
+    .silent-var-bar select { flex: 1.2; padding: 8px 10px; font-size: 13px; color: #a1a1aa; }
+    .silent-var-bar input { flex: 1; padding: 8px 10px; font-size: 13px; }
 
     /* 侧边栏抽屉 */
     .drawer-tab {
@@ -160,7 +184,7 @@
 </head>
 <body>
 
-  <!-- 登录 -->
+  <!-- 登录页 -->
   <div id="login-view" class="app-shell" style="max-width: 360px; justify-content: center;">
     <div class="card" style="display: flex; flex-direction: column; gap: 12px;">
       <select id="player-select">
@@ -168,6 +192,13 @@
         <option value="ly@play.game">LY</option>
       </select>
       <input type="password" id="password-input" placeholder="Password" />
+      <div class="login-remote-row">
+        <span>异地模式</span>
+        <label class="switch">
+          <input type="checkbox" id="login-remote-checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
       <button id="login-btn" class="btn-accent">Enter</button>
       <p id="login-error" style="color:#fb7185; font-size:13px; text-align:center;"></p>
     </div>
@@ -175,12 +206,10 @@
 
   <!-- 主界面 -->
   <div id="app-view" class="app-shell hidden">
-    <!-- 顶部栏：存档与读档独立成两个按钮 -->
     <div class="top-bar">
       <div class="presence">
         <div id="pill-yc" class="pill"><span class="dot"></span>YC</div>
         <div id="pill-ly" class="pill"><span class="dot"></span>LY</div>
-        <div id="remote-chip" class="remote-chip" onclick="toggleRemoteMode()">异地：关</div>
       </div>
       <div style="display: flex; gap: 5px; flex-wrap: wrap;">
         <button id="btn-toggle-picker" class="btn-ghost hidden" onclick="toggleScriptPicker()">换本</button>
@@ -191,13 +220,13 @@
       </div>
     </div>
 
-    <!-- 异地实时弹窗条 -->
+    <!-- 异地指令提示条 -->
     <div id="remote-banner" class="remote-banner hidden">
-      <div id="remote-banner-text" style="font-size: 13.5px; color: #fff; line-height: 1.4;"></div>
-      <button class="btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="ackRemoteAlert()">收到</button>
+      <div id="remote-banner-text" style="font-size: 14.5px; color: #fff; line-height: 1.5;"></div>
+      <button class="btn-accent" style="padding: 6px 12px; font-size: 12.5px;" onclick="ackRemoteAlert()">收到</button>
     </div>
 
-    <!-- 选本栏（去掉了“删”按钮，保留选择、开始、随机） -->
+    <!-- 选本栏 -->
     <div id="script-picker-card" class="card" style="display: flex; gap: 6px;">
       <select id="script-selector" style="flex: 1;"></select>
       <button class="btn-accent" onclick="startSelectedScript()">开始</button>
@@ -210,7 +239,7 @@
         <input type="text" id="new-script-title" placeholder="剧本名称" style="flex: 2;" />
         <select id="new-script-type" style="flex: 1;">
           <option value="conquest">攻略</option>
-          <option value="edging">寸止</option>
+          <option value="edging">节奏</option>
           <option value="domsub">支配</option>
           <option value="story">剧情</option>
         </select>
@@ -219,9 +248,9 @@
       <button class="btn-accent" onclick="saveNewScript()">保存至云端</button>
     </div>
 
-    <!-- 读档列表面板（支持一键恢复当时进度继续游玩） -->
+    <!-- 读档列表 -->
     <div id="load-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 8px;">
-      <div id="archives-list" style="font-size: 13px; color: #a1a1aa;"></div>
+      <div id="archives-list" style="font-size: 13.5px; color: #a1a1aa;"></div>
     </div>
 
     <!-- 阶段 0：背景引入页 -->
@@ -229,31 +258,40 @@
       <div class="prologue-title" id="prologue-title"></div>
       <div class="prologue-text" id="prologue-bg"></div>
       <div class="role-card" id="prologue-role"></div>
-      <button class="btn-accent" style="padding: 13px; font-size: 15px; margin-top: 6px;" onclick="enterFirstScene()">进入角色 · 开启今夜</button>
+      <button class="btn-accent" style="padding: 13px; font-size: 15.5px; margin-top: 6px;" onclick="enterFirstScene()">进入角色 · 开启今夜</button>
     </div>
 
     <!-- 阶段 1：正戏舞台 -->
-    <div id="stage-view" class="stage-grid hidden">
-      <div class="card" style="display: flex; flex-direction: column;">
-        <div id="active-script-title" style="font-size: 14px; font-weight: 700; color: #f472b6; margin-bottom: 10px;"></div>
-        <div class="story-feed" id="story-feed"></div>
-        <div class="choices-box" id="choices-box"></div>
+    <div id="stage-view" class="card hidden" style="display: flex; flex-direction: column;">
+      <div id="active-script-title" style="font-size: 15px; font-weight: 700; color: #f472b6; margin-bottom: 12px;"></div>
 
-        <!-- 自由台词输入（发送按钮固定横排不换行） -->
-        <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
-          <input type="text" id="custom-msg-input" style="flex: 1; min-width: 0;" placeholder="输入台词或动作..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
-          <button class="btn-accent" style="padding: 10px 18px;" onclick="sendCustomMessage()">发送</button>
-        </div>
+      <div class="story-feed" id="story-feed"></div>
+
+      <!-- 缩进式抉择区 -->
+      <div class="choices-wrapper" id="choices-wrapper">
+        <div id="choices-box" style="display: flex; flex-direction: column; gap: 9px;"></div>
       </div>
 
-      <!-- 右上角/右栏 状态滑块 -->
-      <div id="right-stats-card" class="card hidden">
-        <div id="stats-panel" class="stats-panel"></div>
+      <!-- 自由台词输入 + 快捷常用回复 + 可选数值微调 -->
+      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #242432;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="text" id="custom-msg-input" style="flex: 1; min-width: 0;" placeholder="输入台词或动作..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
+          <button class="btn-accent" style="padding: 11px 18px;" onclick="sendCustomMessage()">发送</button>
+        </div>
+
+        <!-- 分角色快捷常用回复胶囊 -->
+        <div id="quick-replies-bar" class="quick-replies"></div>
+
+        <!-- 可选：自主设定当前数值 -->
+        <div id="silent-var-bar" class="silent-var-bar hidden">
+          <select id="silent-var-key"></select>
+          <input type="number" id="silent-var-val" min="0" max="100" placeholder="可选：设定数值(0-100)" />
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 侧边栏工具箱（借鉴主流情趣遥控与情侣互动设计） -->
+  <!-- 侧边栏工具箱 -->
   <button id="drawer-tab" class="drawer-tab hidden" onclick="document.getElementById('side-drawer').classList.add('open')">工具</button>
   <div id="side-drawer" class="side-drawer">
     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -261,13 +299,11 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
-    <!-- 1. 部位 × 动作 双盲盒抽签 -->
     <div class="tool-box">
-      <span style="font-size:12px; color:#a1a1aa;">部位 × 动作 盲盒</span>
-      <button class="btn-accent" style="font-size:12.5px;" onclick="drawBodyActionCombo()">抽取挑逗组合</button>
+      <span style="font-size:12px; color:#a1a1aa;">氛围盲盒</span>
+      <button class="btn-accent" style="font-size:12.5px;" onclick="drawBodyActionCombo()">抽取互动指令</button>
     </div>
 
-    <!-- 2. 倒计时 -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#a1a1aa;">计时</span>
@@ -281,7 +317,6 @@
       </div>
     </div>
 
-    <!-- 3. 律动节拍器 -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
@@ -293,16 +328,14 @@
       <input type="range" id="bpm-slider" min="30" max="160" value="60" style="padding:0;" oninput="changeBpm(this.value)" />
     </div>
 
-    <!-- 4. 随机惩罚 / 自定义指令 -->
     <div class="tool-box">
-      <button class="btn-ghost" style="font-size:12.5px;" onclick="drawRandomPenalty()">随机惩罚 / 指令</button>
+      <button class="btn-ghost" style="font-size:12.5px;" onclick="drawRandomPenalty()">随机小惩罚</button>
       <div style="display:flex; gap:6px;">
         <input type="text" id="custom-cmd-input" style="flex:1; min-width:0; font-size:12.5px; padding:8px;" placeholder="自定义指令..." />
         <button class="btn-ghost" style="padding:8px 12px; font-size:12px;" onclick="sendCustomCmd()">发</button>
       </div>
     </div>
 
-    <!-- 5. 安全词 / 暂停喘息 -->
     <button class="btn-danger" style="font-size:12.5px;" onclick="triggerSafeWord()">红灯暂停 · 抱抱喘息</button>
   </div>
 
@@ -330,21 +363,38 @@
     let myRole = '', myName = '', allScripts = [], gameState = null;
     let currentAccessToken = '';
     let hasExplicitlyFinished = false;
-    let hasCustomChatInNode = false; // 记录当前节点是否进行过自由输入对话
+    let isRemoteSession = false;
 
-    const BODY_PARTS = ['耳垂与颈侧', '锁骨窝', '胸前敏感点', '小腹与腰窝', '大腿内侧', '最私密敏感处'];
-    const ACTIONS = ['用唇舌缓慢舔舐 30 秒', '轻咬并呼出热气', '用指腹若有若无地打圈揉弄', '含一口温水/冰水刺激', '贴紧用力吸吮留下印记'];
+    // 默认分角色快捷常用回复（也可在剧本 JSON 中通过 quick_replies 覆盖或补充）
+    const DEFAULT_QUICK_REPLIES = {
+      female: [
+        '“过来，坐到我身边来。”',
+        '（抬眸静静看着他，指尖轻抚他的侧脸）',
+        '（微微仰头，轻声叹息）“今晚不必这么拘谨。”',
+        '（勾住他的脖颈，主动贴近耳畔低语）',
+        '（轻咬下唇，眼神示意他继续）'
+      ],
+      male: [
+        '“谨遵殿下吩咐。”（俯身靠近）',
+        '（克制地握住她的手，用掌心替她暖手）',
+        '（低头在她耳畔轻声道）“臣在。”',
+        '（顺从地依偎过去，呼吸渐重）',
+        '（抬眸望向她，眼底满是温柔与克制）'
+      ]
+    };
+
+    const BODY_PARTS = ['耳垂与颈侧', '锁骨窝', '掌心与指尖', '腰窝', '额头与眉心'];
+    const ACTIONS = ['凑近低语 30 秒', '轻柔抚摸并深呼吸', '对视 20 秒不许移开视线', '用指腹轻划皮肤', '贴紧相拥感受心跳'];
 
     const PENALTIES = [
-      '【指令】保持当前姿势静止 60 秒，不准发出声音。',
-      '【指令】蒙上眼睛，接下来 2 分钟完全交由对方主导。',
-      '【惩罚】拍打臀部 10 下并大声报数。',
-      '【惩罚】用唇舌服侍对方 2 分钟，不准用手。',
-      '【惩罚】坦白此刻最羞耻的一个想法。',
-      '【指令】暂停所有动作深呼吸 30 秒，忍住不许越线。'
+      '【指令】保持当前姿势静止 60 秒，专注感受彼此呼吸。',
+      '【指令】闭上眼睛，接下来 2 分钟完全交由对方引导。',
+      '【惩罚】轻刮对方鼻尖并说一句最肉麻的情话。',
+      '【惩罚】主动献上一个长达 30 秒的深吻。',
+      '【惩罚】坦白此刻心里最真实的一个念头。',
+      '【指令】暂停所有动作深呼吸 30 秒，平复心跳。'
     ];
 
-    // 刷新/关闭自动存档并重置房间
     window.addEventListener('pagehide', () => {
       if (!currentAccessToken || hasExplicitlyFinished || !gameState) return;
       const headers = {
@@ -385,6 +435,7 @@
     document.getElementById('login-btn').addEventListener('click', async () => {
       const email = document.getElementById('player-select').value;
       const password = document.getElementById('password-input').value;
+      isRemoteSession = document.getElementById('login-remote-checkbox').checked;
       const { data, error } = await db.auth.signInWithPassword({ email, password });
       if (error) document.getElementById('login-error').textContent = error.message;
       else initSession(data.session);
@@ -423,11 +474,6 @@
     window.togglePanel = function(id) { document.getElementById(id).classList.toggle('hidden'); };
     window.toggleScriptPicker = function() { document.getElementById('script-picker-card').classList.toggle('hidden'); };
 
-    window.toggleRemoteMode = async function() {
-      if (!gameState) return;
-      await db.from('game_state').update({ is_remote: !gameState.is_remote }).eq('id', 1);
-    };
-
     window.ackRemoteAlert = async function() {
       await db.from('game_state').update({ remote_alert: { text: '', sender: '' } }).eq('id', 1);
     };
@@ -450,21 +496,56 @@
           res[k] = {
             val: Number(v.val ?? 0),
             max: Number(v.max ?? 100),
-            owner: v.owner || 'both',
-            visible: v.visible !== undefined ? Boolean(v.visible) : true
+            owner: v.owner || 'both'
           };
         } else {
-          res[k] = { val: Number(v ?? 0), max: 100, owner: 'both', visible: true };
+          res[k] = { val: Number(v ?? 0), max: 100, owner: 'both' };
         }
       });
       return res;
+    }
+
+    function applyOptionalManualVar(varsObj) {
+      const keyEl = document.getElementById('silent-var-key');
+      const valEl = document.getElementById('silent-var-val');
+      if (!keyEl || !valEl || valEl.value.trim() === '') return varsObj;
+      const k = keyEl.value;
+      const num = Number(valEl.value);
+      if (!isNaN(num)) {
+        if (!varsObj[k]) varsObj[k] = { val: 0, max: 100, owner: myRole };
+        varsObj[k].val = Math.max(0, Math.min(varsObj[k].max, num));
+      }
+      valEl.value = '';
+      return varsObj;
+    }
+
+    function nodeToLogEntries(node) {
+      if (!node || !node.text) return [];
+      if (Array.isArray(node.text)) {
+        return node.text.map(paragraph => ({ type: 'narrator', text: paragraph }));
+      }
+      return [{ type: 'narrator', text: node.text }];
+    }
+
+    // 统一条件检查函数（同时用于分支按钮解锁与自由对话自动收束触发器）
+    function evaluateConditions(condList, vars) {
+      if (!condList || !condList.length) return true;
+      return condList.every(cond => {
+        const cur = Number((vars[cond.var] || {}).val ?? 0);
+        const tgt = Number(cond.val);
+        if (cond.op === '>=') return cur >= tgt;
+        if (cond.op === '<=') return cur <= tgt;
+        if (cond.op === '>') return cur > tgt;
+        if (cond.op === '<') return cur < tgt;
+        if (cond.op === '==') return cur == tgt;
+        return false;
+      });
     }
 
     window.startSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       const picked = allScripts.find(s => s.id === id);
       if (!picked) return;
-      hasCustomChatInNode = false;
       await db.from('game_state').update({
         active_script_id: picked.id,
         current_node_id: 'prologue',
@@ -485,15 +566,10 @@
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
       if (!activeScript) return;
       const startNode = activeScript.nodes['start'];
-      const nextVars = normalizeVars(gameState.variables);
-      if (startNode && Array.isArray(startNode.unlock_vars)) {
-        startNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
-      }
-      hasCustomChatInNode = false;
       await db.from('game_state').update({
         current_node_id: 'start',
-        variables: nextVars,
-        story_log: startNode ? [{ type: 'narrator', text: startNode.text }] : []
+        variables: normalizeVars(gameState.variables),
+        story_log: nodeToLogEntries(startNode)
       }).eq('id', 1);
     };
 
@@ -508,13 +584,12 @@
         const initialVars = parsed.initial_vars || {};
         const summary = parsed.background || parsed.summary || '';
         if (!nodes.start) return alert('缺少 start 节点');
-        if (parsed.background || parsed.female_role || parsed.male_role) {
-          nodes._meta = {
-            background: parsed.background || '',
-            female_role: parsed.female_role || '',
-            male_role: parsed.male_role || ''
-          };
-        }
+        nodes._meta = {
+          background: parsed.background || '',
+          female_role: parsed.female_role || '',
+          male_role: parsed.male_role || '',
+          quick_replies: parsed.quick_replies || null
+        };
         const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
         if (error) throw error;
         document.getElementById('new-script-title').value = '';
@@ -524,30 +599,12 @@
       } catch (e) { alert(e.message); }
     };
 
-    window.onSliderInput = function(key, val) {
-      const labelEl = document.getElementById(`stat-val-${key}`);
-      if (labelEl) labelEl.textContent = val;
-    };
-    window.onSliderCommit = async function(key, val) {
-      if (!gameState || !gameState.variables) return;
-      const nextVars = normalizeVars(gameState.variables);
-      if (nextVars[key]) {
-        nextVars[key].val = Number(val);
-        await db.from('game_state').update({ variables: nextVars }).eq('id', 1);
-      }
-    };
-
     function renderAll() {
       if (!gameState) return;
 
-      const isRemote = Boolean(gameState.is_remote);
-      const chip = document.getElementById('remote-chip');
-      chip.textContent = isRemote ? '异地：开' : '异地：关';
-      chip.classList.toggle('active', isRemote);
-
       const alertObj = gameState.remote_alert || {};
       const banner = document.getElementById('remote-banner');
-      if (isRemote && alertObj.text && alertObj.sender !== myName) {
+      if (isRemoteSession && alertObj.text && alertObj.sender !== myName) {
         banner.classList.remove('hidden');
         document.getElementById('remote-banner-text').textContent = `[${alertObj.sender}] ${alertObj.text}`;
       } else {
@@ -571,10 +628,11 @@
       pickerCard.classList.add('hidden');
       togglePickerBtn.classList.remove('hidden');
 
+      const meta = activeScript.nodes._meta || {};
+
       if (gameState.current_node_id === 'prologue') {
         prologueView.classList.remove('hidden');
         stageView.classList.add('hidden');
-        const meta = activeScript.nodes._meta || {};
         document.getElementById('prologue-title').textContent = activeScript.title;
         document.getElementById('prologue-bg').textContent = meta.background || activeScript.summary || '';
         const roleBox = document.getElementById('prologue-role');
@@ -592,39 +650,32 @@
       stageView.classList.remove('hidden');
       document.getElementById('active-script-title').textContent = activeScript.title;
 
-      const vars = normalizeVars(gameState.variables);
-      const visibleEntries = Object.entries(vars).filter(([_, item]) => item.visible);
-      const rightStatsCard = document.getElementById('right-stats-card');
-      const statsPanel = document.getElementById('stats-panel');
+      // 渲染分角色快捷常用回复胶囊
+      const qrBar = document.getElementById('quick-replies-bar');
+      const scriptQR = (meta.quick_replies && Array.isArray(meta.quick_replies[myRole]))
+        ? meta.quick_replies[myRole]
+        : DEFAULT_QUICK_REPLIES[myRole];
+      qrBar.innerHTML = scriptQR.map(phrase =>
+        `<span class="quick-chip" onclick="sendQuickReply('${phrase.replace(/'/g, "&#39;")}')">${phrase}</span>`
+      ).join('');
 
-      if (!visibleEntries.length) {
-        rightStatsCard.classList.add('hidden');
+      // 隐蔽式数值微调下拉框
+      const vars = normalizeVars(gameState.variables);
+      const editableKeys = Object.entries(vars)
+        .filter(([_, item]) => item.owner === 'both' || item.owner === myRole)
+        .map(([k]) => k);
+      const silentBar = document.getElementById('silent-var-bar');
+      const silentKeySel = document.getElementById('silent-var-key');
+      if (editableKeys.length > 0) {
+        silentBar.classList.remove('hidden');
+        const prevVal = silentKeySel.value;
+        silentKeySel.innerHTML = editableKeys.map(k => `<option value="${k}">状态指标：${k}</option>`).join('');
+        if (editableKeys.includes(prevVal)) silentKeySel.value = prevVal;
       } else {
-        rightStatsCard.classList.remove('hidden');
-        statsPanel.innerHTML = visibleEntries.map(([k, item]) => {
-          const ownerTag = item.owner === 'female'
-            ? `<span class="stat-owner-tag owner-female">女方</span>`
-            : (item.owner === 'male'
-              ? `<span class="stat-owner-tag owner-male">男方</span>`
-              : `<span class="stat-owner-tag owner-both">双方</span>`);
-          const canDrag = item.owner === 'both' || item.owner === myRole;
-          const sliderClass = item.owner === 'male' ? 'stat-slider-wrap male-slider' : 'stat-slider-wrap';
-          return `
-            <div class="stat-row">
-              <div class="stat-header">
-                <div>${ownerTag}<strong>${k}</strong></div>
-                <div><strong id="stat-val-${k}" style="color:#f472b6;">${item.val}</strong> <span style="color:#71717a;">/ ${item.max}</span></div>
-              </div>
-              <div class="${sliderClass}">
-                <input type="range" min="0" max="${item.max}" value="${item.val}" ${canDrag ? '' : 'disabled'}
-                  oninput="onSliderInput('${k}', this.value)"
-                  onchange="onSliderCommit('${k}', this.value)" />
-              </div>
-            </div>
-          `;
-        }).join('');
+        silentBar.classList.add('hidden');
       }
 
+      // 剧情记录流
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       const feedEl = document.getElementById('story-feed');
       feedEl.innerHTML = logs.map(item => {
@@ -635,111 +686,127 @@
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
+      // 渲染缩进式抉择区
       const node = activeScript.nodes[gameState.current_node_id];
+      const choicesWrapper = document.getElementById('choices-wrapper');
       const choicesEl = document.getElementById('choices-box');
       choicesEl.innerHTML = '';
 
-      if (node && Array.isArray(node.choices) && node.choices.length > 0) {
-        const myChoices = node.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
-        if (!myChoices.length) {
-          choicesEl.innerHTML = `<div class="wait-tip">等待对方行动...</div>`;
-        } else {
-          myChoices.forEach(choice => {
-            let passed = true, hint = '';
-            const condList = Array.isArray(choice.conditions)
-              ? choice.conditions
-              : (choice.condition ? [choice.condition] : []);
+      let hasRenderedControls = false;
 
-            if (condList.length > 0) {
-              const hints = [];
-              condList.forEach(cond => {
-                const cur = Number((vars[cond.var] || {}).val ?? 0);
-                const tgt = Number(cond.val);
-                let ok = false;
-                if (cond.op === '>=') ok = cur >= tgt;
-                else if (cond.op === '<=') ok = cur <= tgt;
-                else if (cond.op === '>') ok = cur > tgt;
-                else if (cond.op === '<') ok = cur < tgt;
-                else if (cond.op === '==') ok = cur == tgt;
-                if (!ok) passed = false;
-                hints.push(`${cond.var}${cond.op}${tgt}`);
-              });
-              hint = ` [${hints.join(' · ')}]`;
-            }
+      if (node) {
+        const hasChoices = Array.isArray(node.choices) && node.choices.length > 0;
+        if (!hasChoices && node.next) {
+          hasRenderedControls = true;
+          const contBtn = document.createElement('button');
+          contBtn.className = 'btn-continue';
+          contBtn.textContent = node.continue_label || '继续剧情 ▾';
+          contBtn.onclick = async () => {
+            const nextVars = applyOptionalManualVar(normalizeVars(vars));
+            const nextNode = activeScript.nodes[node.next];
+            const newLogs = [...logs, ...nodeToLogEntries(nextNode)];
+            await db.from('game_state').update({
+              current_node_id: node.next,
+              variables: nextVars,
+              story_log: newLogs
+            }).eq('id', 1);
+          };
+          choicesEl.appendChild(contBtn);
+        } else if (hasChoices) {
+          hasRenderedControls = true;
+          const myChoices = node.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
+          if (!myChoices.length) {
+            choicesEl.innerHTML = `<div class="wait-tip">等待对方回应...</div>`;
+          } else {
+            myChoices.forEach(choice => {
+              const condList = Array.isArray(choice.conditions)
+                ? choice.conditions
+                : (choice.condition ? [choice.condition] : []);
+              const passed = evaluateConditions(condList, vars);
+              const hint = condList.length > 0
+                ? ` [${condList.map(c => `${c.var}${c.op}${c.val}`).join(' · ')}]`
+                : '';
 
-            const btn = document.createElement('button');
-            btn.className = 'btn-choice';
-            btn.disabled = !passed;
-            btn.textContent = (passed ? '' : '🔒 ') + choice.label + hint;
-            btn.onclick = async () => {
-              hasCustomChatInNode = false;
-              const nextVars = normalizeVars(vars);
-              if (choice.effects) {
-                Object.entries(choice.effects).forEach(([k, d]) => {
-                  if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both', visible: true };
-                  nextVars[k].val = Math.max(0, Math.min(nextVars[k].max, nextVars[k].val + Number(d)));
-                });
-              }
-              const nextNode = activeScript.nodes[choice.next];
-              if (nextNode && Array.isArray(nextNode.unlock_vars)) {
-                nextNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
-              }
+              const btn = document.createElement('button');
+              btn.className = 'btn-choice';
+              btn.disabled = !passed;
+              btn.textContent = (passed ? '' : '🔒 ') + choice.label + hint;
+              btn.onclick = async () => {
+                let nextVars = normalizeVars(vars);
+                if (choice.effects) {
+                  Object.entries(choice.effects).forEach(([k, d]) => {
+                    if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both' };
+                    nextVars[k].val = Math.max(0, Math.min(nextVars[k].max, nextVars[k].val + Number(d)));
+                  });
+                }
+                nextVars = applyOptionalManualVar(nextVars);
 
-              const newLogs = [...logs, { type: 'player', actor: myName, role: myRole, text: choice.label }];
-              if (nextNode) newLogs.push({ type: 'narrator', text: nextNode.text });
+                const nextNode = activeScript.nodes[choice.next];
+                const newLogs = [...logs, { type: 'player', actor: myName, role: myRole, text: choice.label }, ...nodeToLogEntries(nextNode)];
 
-              const payload = { current_node_id: choice.next, variables: nextVars, story_log: newLogs };
-              if (gameState.is_remote) payload.remote_alert = { text: choice.label, sender: myName };
-              await db.from('game_state').update(payload).eq('id', 1);
-            };
-            choicesEl.appendChild(btn);
-          });
+                const payload = { current_node_id: choice.next, variables: nextVars, story_log: newLogs };
+                if (isRemoteSession) payload.remote_alert = { text: choice.label, sender: myName };
+                await db.from('game_state').update(payload).eq('id', 1);
+              };
+              choicesEl.appendChild(btn);
+            });
+          }
         }
       }
 
-      // 解决自由输入后衔接剧情：当你们自定义发过台词后，提供一个“顺势接戏”推进旁白按钮，不破坏主线分支
-      const lastLog = logs[logs.length - 1];
-      if (lastLog && lastLog.type === 'player' && hasCustomChatInNode) {
-        const improvBtn = document.createElement('button');
-        improvBtn.className = 'btn-improv';
-        improvBtn.textContent = '↻ 顺势接戏（推演当前氛围并继续主线）';
-        improvBtn.onclick = async () => {
-          hasCustomChatInNode = false;
-          const bridgeTexts = [
-            '两人的低语与试探让空气愈发焦灼，彼此的呼吸交缠在一起，顺理成章地迈向更深一步……',
-            '这一番临场交锋点燃了更深的渴望，谁也不愿再克制，顺势将局面推向了新的转折……',
-            '话音未落，气氛已然彻底失控，身体比理智更快做出了诚实的回应……'
-          ];
-          const bridge = bridgeTexts[Math.floor(Math.random() * bridgeTexts.length)];
-          const newLogs = [...logs, { type: 'narrator', text: bridge }];
-          await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
-        };
-        choicesEl.appendChild(improvBtn);
-      }
+      choicesWrapper.classList.toggle('hidden', !hasRenderedControls);
     }
 
-    // 自由台词发送（同时自动微增双方共有的情感/氛围值 +5）
+    // 快捷回复一键发送
+    window.sendQuickReply = async function(phrase) {
+      document.getElementById('custom-msg-input').value = phrase;
+      await sendCustomMessage();
+    };
+
+    // 自由对话发送 + 数值收束触发器检测（满足阈值自动引导进入下个剧本场景）
     window.sendCustomMessage = async function() {
       const inp = document.getElementById('custom-msg-input');
       const txt = inp.value.trim();
       if (!txt || !gameState) return;
       inp.value = '';
-      hasCustomChatInNode = true;
 
-      const nextVars = normalizeVars(gameState.variables);
-      Object.values(nextVars).forEach(v => {
-        if (v.owner === 'both' && v.visible) {
-          v.val = Math.min(v.max, v.val + 5);
-        }
-      });
+      let nextVars = normalizeVars(gameState.variables);
+      const manualValInp = document.getElementById('silent-var-val');
+      if (manualValInp && manualValInp.value.trim() !== '') {
+        nextVars = applyOptionalManualVar(nextVars);
+      } else {
+        // 默认每次自由对话温柔推进共有羁绊 +8
+        Object.values(nextVars).forEach(v => {
+          if (v.owner === 'both') v.val = Math.min(v.max, v.val + 8);
+        });
+      }
 
+      let nextNodeId = gameState.current_node_id;
       const newLogs = [...(gameState.story_log || []), { type: 'player', actor: myName, role: myRole, text: txt }];
-      const payload = { story_log: newLogs, variables: nextVars };
-      if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
+
+      // 检测当前节点是否配置了 triggers（自由对话数值收束触发器）
+      const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
+      const currentNode = activeScript ? activeScript.nodes[gameState.current_node_id] : null;
+      if (currentNode && Array.isArray(currentNode.triggers)) {
+        for (const trig of currentNode.triggers) {
+          const condList = Array.isArray(trig.conditions) ? trig.conditions : (trig.condition ? [trig.condition] : []);
+          if (evaluateConditions(condList, nextVars) && trig.next && activeScript.nodes[trig.next]) {
+            nextNodeId = trig.next;
+            if (trig.transition_text) {
+              newLogs.push({ type: 'sys', text: trig.transition_text });
+            }
+            newLogs.push(...nodeToLogEntries(activeScript.nodes[trig.next]));
+            break;
+          }
+        }
+      }
+
+      const payload = { current_node_id: nextNodeId, story_log: newLogs, variables: nextVars };
+      if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       await db.from('game_state').update(payload).eq('id', 1);
     };
 
-    // ==================== 存档与读档（独立双按钮） ====================
+    // ==================== 存档与读档 ====================
     window.quickSaveProgress = async function() {
       if (!gameState || !gameState.active_script_id) return alert('当前没有进行中的剧本');
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
@@ -855,10 +922,10 @@
       if (!gameState) return;
       const part = BODY_PARTS[Math.floor(Math.random() * BODY_PARTS.length)];
       const act = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
-      const txt = `【盲盒指令】对【${part}】执行：${act}`;
+      const txt = `【氛围指令】对【${part}】执行：${act}`;
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
       const payload = { story_log: newLogs };
-      if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
+      if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       await db.from('game_state').update(payload).eq('id', 1);
       document.getElementById('side-drawer').classList.remove('open');
     };
@@ -868,7 +935,7 @@
       const item = PENALTIES[Math.floor(Math.random() * PENALTIES.length)];
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: item }];
       const payload = { story_log: newLogs };
-      if (gameState.is_remote) payload.remote_alert = { text: item, sender: myName };
+      if (isRemoteSession) payload.remote_alert = { text: item, sender: myName };
       await db.from('game_state').update(payload).eq('id', 1);
       document.getElementById('side-drawer').classList.remove('open');
     };
@@ -880,7 +947,7 @@
       inp.value = '';
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `【指令】${txt}` }];
       const payload = { story_log: newLogs };
-      if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
+      if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       await db.from('game_state').update(payload).eq('id', 1);
       document.getElementById('side-drawer').classList.remove('open');
     };
@@ -890,7 +957,7 @@
       const txt = '🛑 【红灯暂停】节奏暂缓，先拥抱彼此平复呼吸。';
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
       const payload = { story_log: newLogs };
-      if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
+      if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       await db.from('game_state').update(payload).eq('id', 1);
       document.getElementById('side-drawer').classList.remove('open');
     };
