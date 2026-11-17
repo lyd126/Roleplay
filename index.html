@@ -130,37 +130,67 @@
     }
     .mood-pill .stage-dot { width: 7px; height: 7px; border-radius: 50%; background: #ec4899; }
 
-    /* 三级层级区分 */
+    /* 剧情流（无缩进，正文本灰色边条，玩家回答按性别用粉红/蓝色边条） */
     .story-feed { display: flex; flex-direction: column; gap: 13px; max-height: 50vh; overflow-y: auto; padding-right: 4px; }
+
     .msg-narrator {
-      background: #1d1727; border-left: 3.5px solid #db2777; padding: 15px 18px;
-      border-radius: 10px; font-size: 16px; line-height: 1.85; color: #f4f4f5;
-    }
-    .msg-player {
-      margin-left: 22px; background: #191a24; border: 1px solid #2a2c3d;
-      padding: 10px 14px; border-radius: 12px 12px 12px 4px; font-size: 15px; line-height: 1.65; color: #e4e4e7;
-    }
-    .msg-player.female-msg { border-left: 2.5px solid #f472b6; }
-    .msg-player.male-msg { border-left: 2.5px solid #818cf8; }
-    .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 7px; }
-    .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 7px; }
-    .msg-sys {
-      margin-left: 14px; text-align: center; font-size: 13px; color: #c084fc;
-      background: rgba(168, 85, 247, 0.08); padding: 6px 12px; border-radius: 8px;
+      background: #1a1a22;
+      border-left: 3.5px solid #64748b;
+      padding: 15px 18px;
+      border-radius: 10px;
+      font-size: 16px;
+      line-height: 1.85;
+      color: #f4f4f5;
     }
 
-    /* 选项区 */
+    .msg-player {
+      background: #181922;
+      border: 1px solid #282a3a;
+      padding: 11px 15px;
+      border-radius: 10px;
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: #e4e4e7;
+    }
+    .msg-player.female-msg { border-left: 3.5px solid #f472b6; }
+    .msg-player.male-msg { border-left: 3.5px solid #818cf8; }
+    .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 7px; }
+    .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 7px; }
+
+    .msg-sys {
+      text-align: center;
+      font-size: 13px;
+      color: #c084fc;
+      background: rgba(168, 85, 247, 0.08);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    /* 选项区（无缩进，按当前玩家性别用粉红/蓝色边条） */
     .choices-wrapper {
-      margin-top: 16px; margin-left: 34px; padding-left: 14px;
-      border-left: 2px dashed #443159; display: flex; flex-direction: column; gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #262634;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .btn-choice {
-      width: 100%; background: linear-gradient(135deg, #251f33 0%, #1d1b29 100%);
-      border: 1px solid #523059; color: #fff; text-align: left;
-      padding: 12px 15px; font-size: 14.5px; line-height: 1.55;
-      white-space: normal; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
+      width: 100%;
+      background: #1c1d28;
+      border: 1px solid #2f3144;
+      color: #fff;
+      text-align: left;
+      padding: 13px 16px;
+      font-size: 15px;
+      line-height: 1.55;
+      white-space: normal;
     }
-    .btn-choice:hover { border-color: #ec4899; background: #2f223b; }
+    .btn-choice.female-choice { border-left: 3.5px solid #f472b6; }
+    .btn-choice.female-choice:hover { border-color: #f472b6; background: #291d29; }
+    .btn-choice.male-choice { border-left: 3.5px solid #818cf8; }
+    .btn-choice.male-choice:hover { border-color: #818cf8; background: #1e2136; }
+
     .btn-continue {
       width: 100%; background: #221d2e; border: 1px solid #7e22ce; color: #e9d5ff;
       text-align: center; padding: 11px; font-size: 14.5px; white-space: normal;
@@ -331,7 +361,7 @@
       <!-- 剧情记录流 -->
       <div class="story-feed" id="story-feed"></div>
 
-      <!-- 缩进式抉择区 -->
+      <!-- 无缩进抉择区 -->
       <div class="choices-wrapper" id="choices-wrapper">
         <div id="choices-box" style="display: flex; flex-direction: column; gap: 9px;"></div>
       </div>
@@ -361,7 +391,6 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
-    <!-- 部位 × 动作 × 时间 三框联动惩罚/指令器 -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#f472b6; font-weight:700;">随机小惩罚 / 限时指令</span>
@@ -468,7 +497,7 @@
     let userManuallyChangedSelect = false;
     let taskTickInterval = null;
     let lastRenderedTaskEndAt = 0;
-    let pendingParsedScriptJson = null; // 暂存拖拽或选择文件读取到的 JSON 对象
+    let pendingParsedScriptJson = null;
 
     const DEFAULT_QUICK_REPLIES = {
       female: ['好的', '不要', '继续', '慢一点', '过来', '随你', '再靠近些', '停一下'],
@@ -479,7 +508,6 @@
     const PRESET_ACTIONS = ['轻吻并缓慢舔舐', '用指腹打圈揉弄', '轻咬并呼出热气', '轻轻拍打并报数', '保持姿势静止不动'];
     const PRESET_TIMES = ['30秒', '60秒', '90秒', '2分钟'];
 
-    // 绑定拖拽上传事件
     const dropZone = document.getElementById('script-drop-zone');
     ['dragenter', 'dragover'].forEach(evtName => {
       dropZone.addEventListener(evtName, e => {
@@ -790,25 +818,30 @@
       await startSelectedScript();
     };
 
+    // 修复外键约束报错：先解除 game_state 对该剧本的引用，再执行 scripts 表删除
     window.deleteSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       if (!id) return;
       const target = allScripts.find(s => s.id === id);
       if (!confirm(`确定要彻底删除剧本《${target ? target.title : ''}》吗？`)) return;
 
-      const { error } = await db.from('scripts').delete().eq('id', id);
-      if (error) return alert('删除失败：' + error.message);
-
+      // 1. 若当前房间状态正引用此剧本，先将 active_script_id 置空以解除外键占用
       if (gameState && gameState.active_script_id === id) {
-        const { data } = await db.from('game_state').update({
+        const { data: clearedState, error: clearErr } = await db.from('game_state').update({
           active_script_id: null,
           current_node_id: 'start',
           variables: {},
           story_log: [],
           updated_at: new Date().toISOString()
         }).eq('id', 1).select().single();
-        if (data) gameState = data;
+        if (clearErr) return alert('解除剧本占用失败：' + clearErr.message);
+        if (clearedState) gameState = clearedState;
       }
+
+      // 2. 再从 scripts 表删除该剧本
+      const { error } = await db.from('scripts').delete().eq('id', id);
+      if (error) return alert('删除失败：' + error.message);
+
       await loadScripts();
       renderAll();
     };
@@ -848,7 +881,6 @@
         const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
         if (error) throw error;
 
-        // 重置上传表单状态
         pendingParsedScriptJson = null;
         document.getElementById('new-script-title').value = '';
         document.getElementById('script-file-input').value = '';
@@ -862,7 +894,6 @@
       } catch (e) { alert('保存失败：' + e.message); }
     };
 
-    // ==================== 主屏幕带时间任务倒计时 & 结束提交数值 ====================
     function renderActiveTaskBanner(vars) {
       const alertObj = gameState.remote_alert || {};
       const task = alertObj.active_task;
@@ -1007,7 +1038,6 @@
         moodBadgesEl.classList.add('hidden');
       }
 
-      // 优先展示剧本专属 quick_replies，同时保留简短日常快捷词，点击均填入输入框不直接发送
       const qrBar = document.getElementById('quick-replies-bar');
       const scriptQR = (meta.quick_replies && Array.isArray(meta.quick_replies[myRole])) ? meta.quick_replies[myRole] : [];
       const fallbackQR = DEFAULT_QUICK_REPLIES[myRole] || DEFAULT_QUICK_REPLIES.female;
@@ -1028,6 +1058,7 @@
         silentBar.classList.add('hidden');
       }
 
+      // 剧情记录流（无缩进；正文灰色边条，女方回答粉红边条，男方回答蓝色边条）
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       const feedEl = document.getElementById('story-feed');
       feedEl.innerHTML = logs.map(item => {
@@ -1039,6 +1070,7 @@
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
+      // 选项区（无缩进；按钮按当前角色性别赋予粉红或蓝色边条）
       const node = activeScript.nodes ? activeScript.nodes[gameState.current_node_id] : null;
       const choicesWrapper = document.getElementById('choices-wrapper');
       const choicesEl = document.getElementById('choices-box');
@@ -1077,7 +1109,8 @@
           } else {
             myChoices.forEach(choice => {
               const btn = document.createElement('button');
-              btn.className = 'btn-choice';
+              const genderChoiceClass = myRole === 'female' ? 'female-choice' : 'male-choice';
+              btn.className = `btn-choice ${genderChoiceClass}`;
               btn.textContent = choice.label;
               btn.onclick = async () => {
                 let nextVars = normalizeVars(vars);
