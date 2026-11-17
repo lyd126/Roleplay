@@ -175,7 +175,7 @@
 </head>
 <body>
 
-  <!-- 登录页（默认YC，若检测到YC已在线自动切换为LY） -->
+  <!-- 登录页 -->
   <div id="login-view" class="app-shell" style="max-width: 360px; justify-content: center;">
     <div class="card" style="display: flex; flex-direction: column; gap: 12px;">
       <select id="player-select">
@@ -218,7 +218,7 @@
       <button class="btn-accent" style="padding: 6px 12px; font-size: 12.5px;" onclick="ackRemoteAlert()">收到</button>
     </div>
 
-    <!-- 选本栏（含开始、随机、删除按钮） -->
+    <!-- 选本栏 -->
     <div id="script-picker-card" class="card" style="display: flex; gap: 6px;">
       <select id="script-selector" style="flex: 1; min-width: 0;"></select>
       <button class="btn-accent" onclick="startSelectedScript()">开始</button>
@@ -356,6 +356,7 @@
     let hasExplicitlyFinished = false;
     let isRemoteSession = false;
     let roomChannel = null;
+    let syncPollTimer = null;
     let userManuallyChangedSelect = false;
 
     const SHORT_QUICK_REPLIES = {
@@ -375,7 +376,6 @@
       '【指令】暂停所有动作深呼吸 30 秒，平复心跳。'
     ];
 
-    // 登录前先侦听房间在线状态：默认选 YC；若发现 YC 已在线，自动切换下拉框为 LY
     document.getElementById('player-select').addEventListener('change', () => {
       userManuallyChangedSelect = true;
     });
@@ -468,8 +468,10 @@
       gameState = data;
       renderAll();
 
-      // 移除登录前的侦听频道并建立正式带身份的频道
+      // 关键修复 1：移除登录前的匿名频道，并为 Realtime 注入已登录用户的 JWT Token
       await db.removeAllChannels();
+      db.realtime.setAuth(session.access_token);
+
       roomChannel = db.channel('room-1', { config: { presence: { key: myName } } });
       roomChannel
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'game_state', filter: 'id=eq.1' }, async (payload) => {
@@ -486,7 +488,20 @@
           Object.values(roomChannel.presenceState()).forEach(arr => arr.forEach(s => s.player && online.add(s.player)));
           ['YC', 'LY'].forEach(n => document.getElementById(`pill-${n.toLowerCase()}`).classList.toggle('on', online.has(n)));
         })
-        .subscribe(async status => { if (status === 'SUBSCRIBED') await roomChannel.track({ player: myName }); });
+        .subscribe(async status => {
+          if (status === 'SUBSCRIBED') await roomChannel.track({ player: myName });
+        });
+
+      // 关键修复 2：每 3.5 秒静默同步一次状态作为兜底，防止移动设备锁屏切后台漏掉 WebSocket 推送
+      clearInterval(syncPollTimer);
+      syncPollTimer = setInterval(async () => {
+        const { data: latest } = await db.from('game_state').select('*').eq('id', 1).single();
+        if (latest && (!gameState || latest.updated_at !== gameState.updated_at || (latest.story_log || []).length !== (gameState.story_log || []).length)) {
+          gameState = latest;
+          if (gameState.active_script_id && !allScripts.find(s => s.id === gameState.active_script_id)) await loadScripts();
+          renderAll();
+        }
+      }, 3500);
     }
 
     window.togglePanel = function(id) { document.getElementById(id).classList.toggle('hidden'); };
@@ -500,7 +515,11 @@
     };
 
     window.ackRemoteAlert = async function() {
-      await db.from('game_state').update({ remote_alert: { text: '', sender: '' } }).eq('id', 1);
+      const { data } = await db.from('game_state').update({
+        remote_alert: { text: '', sender: '' },
+        updated_at: new Date().toISOString()
+      }).eq('id', 1).select().single();
+      if (data) { gameState = data; renderAll(); }
     };
 
     async function loadScripts() {
@@ -583,7 +602,6 @@
       });
     }
 
-    // 修复：点击“开始”立即拉取并更新本地状态及渲染，不干等 Realtime 回调
     window.startSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       if (!id) return alert('请先选择一个剧本');
@@ -618,7 +636,6 @@
       await startSelectedScript();
     };
 
-    // 新增：删除选中剧本（同步清理正在进行中的对应状态）
     window.deleteSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       if (!id) return;
@@ -633,7 +650,8 @@
           active_script_id: null,
           current_node_id: 'start',
           variables: {},
-          story_log: []
+          story_log: [],
+          updated_at: new Date().toISOString()
         }).eq('id', 1).select().single();
         if (data) gameState = data;
       }
@@ -652,7 +670,8 @@
       const { data, error } = await db.from('game_state').update({
         current_node_id: 'start',
         variables: nextVars,
-        story_log: nodeToLogEntries(startNode)
+        story_log: nodeToLogEntries(startNode),
+        updated_at: new Date().toISOString()
       }).eq('id', 1).select().single();
       if (!error && data) {
         gameState = data;
@@ -736,7 +755,6 @@
       stageView.classList.remove('hidden');
       document.getElementById('active-script-title').textContent = activeScript.title;
 
-      // 分阶段、分性别的模糊状态徽章
       const vars = normalizeVars(gameState.variables);
       const myVisibleVars = Object.entries(vars).filter(([_, item]) =>
         item.visible && (item.owner === 'both' || item.owner === myRole)
@@ -752,14 +770,12 @@
         moodBadgesEl.classList.add('hidden');
       }
 
-      // 简短日常快捷词
       const qrBar = document.getElementById('quick-replies-bar');
       const phrases = SHORT_QUICK_REPLIES[myRole] || SHORT_QUICK_REPLIES.female;
       qrBar.innerHTML = phrases.map(p =>
         `<span class="quick-chip" onclick="fillQuickReply('${p}')">${p}</span>`
       ).join('');
 
-      // 隐蔽式数值微调下拉框
       const editableKeys = myVisibleVars.map(([k]) => k);
       const silentBar = document.getElementById('silent-var-bar');
       const silentKeySel = document.getElementById('silent-var-key');
@@ -772,7 +788,6 @@
         silentBar.classList.add('hidden');
       }
 
-      // 剧情记录流
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       const feedEl = document.getElementById('story-feed');
       feedEl.innerHTML = logs.map(item => {
@@ -783,7 +798,6 @@
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
 
-      // 选项区：所有选项点击即直接推进剧本
       const node = activeScript.nodes ? activeScript.nodes[gameState.current_node_id] : null;
       const choicesWrapper = document.getElementById('choices-wrapper');
       const choicesEl = document.getElementById('choices-box');
@@ -808,7 +822,8 @@
             const { data } = await db.from('game_state').update({
               current_node_id: node.next,
               variables: nextVars,
-              story_log: newLogs
+              story_log: newLogs,
+              updated_at: new Date().toISOString()
             }).eq('id', 1).select().single();
             if (data) { gameState = data; renderAll(); }
           };
@@ -840,7 +855,12 @@
 
                 const newLogs = [...logs, { type: 'player', actor: myName, role: myRole, text: choice.label }, ...nodeToLogEntries(nextNode)];
 
-                const payload = { current_node_id: choice.next, variables: nextVars, story_log: newLogs };
+                const payload = {
+                  current_node_id: choice.next,
+                  variables: nextVars,
+                  story_log: newLogs,
+                  updated_at: new Date().toISOString()
+                };
                 if (isRemoteSession) payload.remote_alert = { text: choice.label, sender: myName };
                 const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
                 if (data) { gameState = data; renderAll(); }
@@ -899,7 +919,12 @@
         }
       }
 
-      const payload = { current_node_id: nextNodeId, story_log: newLogs, variables: nextVars };
+      const payload = {
+        current_node_id: nextNodeId,
+        story_log: newLogs,
+        variables: nextVars,
+        updated_at: new Date().toISOString()
+      };
       if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
@@ -962,7 +987,8 @@
         current_node_id: snapshot.node_id || 'start',
         variables: snapshot.variables || {},
         story_log: snapshot.story_log || [],
-        remote_alert: { text: '', sender: '' }
+        remote_alert: { text: '', sender: '' },
+        updated_at: new Date().toISOString()
       }).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
       document.getElementById('load-panel').classList.add('hidden');
@@ -1024,7 +1050,7 @@
       const act = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
       const txt = `【氛围指令】对【${part}】执行：${act}`;
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
-      const payload = { story_log: newLogs };
+      const payload = { story_log: newLogs, updated_at: new Date().toISOString() };
       if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
@@ -1035,7 +1061,7 @@
       if (!gameState) return;
       const item = PENALTIES[Math.floor(Math.random() * PENALTIES.length)];
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: item }];
-      const payload = { story_log: newLogs };
+      const payload = { story_log: newLogs, updated_at: new Date().toISOString() };
       if (isRemoteSession) payload.remote_alert = { text: item, sender: myName };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
@@ -1048,7 +1074,7 @@
       if (!txt || !gameState) return;
       inp.value = '';
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `【指令】${txt}` }];
-      const payload = { story_log: newLogs };
+      const payload = { story_log: newLogs, updated_at: new Date().toISOString() };
       if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
@@ -1059,7 +1085,7 @@
       if (!gameState) return;
       const txt = '🛑 【红灯暂停】节奏暂缓，先拥抱彼此平复呼吸。';
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
-      const payload = { story_log: newLogs };
+      const payload = { story_log: newLogs, updated_at: new Date().toISOString() };
       if (isRemoteSession) payload.remote_alert = { text: txt, sender: myName };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
@@ -1069,6 +1095,7 @@
     window.finishSession = async function(shouldSave) {
       hasExplicitlyFinished = true;
       clearInterval(beatId);
+      clearInterval(syncPollTimer);
       if (shouldSave && gameState && gameState.active_script_id) {
         const title = document.getElementById('archive-title-input').value.trim() || new Date().toLocaleString();
         const snapshot = {
@@ -1080,7 +1107,7 @@
         await db.from('session_archives').insert([{ title, logs: snapshot }]);
       }
       await db.from('game_state').update({
-        active_script_id: null, story_log: [], variables: {}, current_node_id: 'start', remote_alert: { text: '', sender: '' }
+        active_script_id: null, story_log: [], variables: {}, current_node_id: 'start', remote_alert: { text: '', sender: '' }, updated_at: new Date().toISOString()
       }).eq('id', 1);
       await db.auth.signOut();
       location.reload();
