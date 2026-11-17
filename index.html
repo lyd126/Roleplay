@@ -41,16 +41,18 @@
     button {
       padding: 10px 13px; border: none; border-radius: 9px; font-size: 13.5px; font-weight: 600;
       cursor: pointer; transition: transform 0.1s, opacity 0.15s;
+      white-space: nowrap; flex-shrink: 0;
     }
     button:active { transform: scale(0.97); }
     .btn-accent { background: linear-gradient(135deg, #9333ea, #db2777); color: #fff; }
     .btn-ghost { background: #1c1c26; border: 1px solid #2c2c3c; color: #cbd5e1; }
     .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; }
 
+    /* 顶部栏 */
     .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .presence { display: flex; gap: 6px; align-items: center; }
+    .presence { display: flex; gap: 5px; align-items: center; }
     .pill {
-      display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+      display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px;
       border-radius: 99px; font-size: 12px; background: #1a1a22; color: #71717a;
     }
     .pill.on { background: rgba(219, 39, 119, 0.18); color: #f472b6; }
@@ -58,7 +60,7 @@
     .pill.on .dot { background: #ec4899; box-shadow: 0 0 6px #ec4899; }
 
     .remote-chip {
-      padding: 4px 10px; border-radius: 99px; font-size: 12px;
+      padding: 4px 9px; border-radius: 99px; font-size: 12px;
       background: #1a1a22; border: 1px solid #2c2c3c; color: #a1a1aa; cursor: pointer;
     }
     .remote-chip.active { border-color: #db2777; color: #f472b6; background: rgba(219, 39, 119, 0.12); }
@@ -69,6 +71,7 @@
       display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
 
+    /* 背景引入幕布 */
     .prologue-box {
       background: linear-gradient(180deg, #1b1624 0%, #14141b 100%);
       border: 1px solid #362542; border-radius: 16px; padding: 26px 22px;
@@ -81,16 +84,18 @@
       padding: 12px 14px; border-radius: 8px; font-size: 14px; line-height: 1.65; color: #d8b4fe;
     }
 
+    /* 剧情流 */
     .story-feed { display: flex; flex-direction: column; gap: 11px; max-height: 46vh; overflow-y: auto; padding-right: 4px; }
     .msg-narrator {
       background: #1e1828; border-left: 3px solid #db2777; padding: 13px 15px;
       border-radius: 10px; font-size: 14.5px; line-height: 1.75; color: #f4f4f5;
     }
-    .msg-player { background: #1a1a23; padding: 9px 13px; border-radius: 10px; font-size: 14px; }
+    .msg-player { background: #1a1a23; padding: 9px 13px; border-radius: 10px; font-size: 14px; line-height: 1.5; }
     .msg-player .tag-f { color: #f472b6; font-weight: 700; margin-right: 6px; }
     .msg-player .tag-m { color: #818cf8; font-weight: 700; margin-right: 6px; }
     .msg-sys { text-align: center; font-size: 12.5px; color: #c084fc; padding: 4px 0; }
 
+    /* 紧贴正文下方的抉择按钮（允许文字换行） */
     .choices-box {
       display: flex; flex-direction: column; gap: 9px;
       margin-top: 14px; padding-top: 14px; border-top: 1px solid #262634;
@@ -99,15 +104,22 @@
       width: 100%; background: linear-gradient(135deg, #252033 0%, #1e1c29 100%);
       border: 1px solid #4c2d52; color: #fff; text-align: left;
       padding: 13px 15px; font-size: 14px; line-height: 1.5;
+      white-space: normal;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
     .btn-choice:hover:not(:disabled) { border-color: #ec4899; background: #2f223b; }
     .btn-choice:disabled { opacity: 0.4; cursor: not-allowed; border-style: dashed; border-color: #323242; background: #181820; }
+    .btn-improv {
+      width: 100%; background: transparent; border: 1px dashed #3b3b4f; color: #a1a1aa;
+      text-align: center; padding: 9px 12px; font-size: 12.5px; white-space: normal;
+    }
+    .btn-improv:hover { border-color: #a855f7; color: #e4e4e7; }
     .wait-tip {
       text-align: center; padding: 13px; background: #181822; border-radius: 10px;
       font-size: 13px; color: #71717a; border: 1px dashed #2e2e3e;
     }
 
+    /* 状态滑块面板 */
     .stats-panel { display: flex; flex-direction: column; gap: 10px; }
     .stat-row {
       background: #1a1a23; border: 1px solid #2a2a38; border-radius: 10px; padding: 10px 12px;
@@ -122,6 +134,7 @@
     .stat-slider-wrap input[type="range"] { flex: 1; padding: 0; accent-color: #ec4899; cursor: pointer; }
     .stat-slider-wrap.male-slider input[type="range"] { accent-color: #6366f1; }
 
+    /* 侧边栏抽屉 */
     .drawer-tab {
       position: fixed; right: 0; top: 46%; transform: translateY(-50%);
       background: #222230; border: 1px solid #3b3b50; border-right: none;
@@ -129,12 +142,13 @@
       writing-mode: vertical-rl; font-size: 12px; letter-spacing: 2px; z-index: 40; cursor: pointer;
     }
     .side-drawer {
-      position: fixed; right: 0; top: 0; bottom: 0; width: 270px;
+      position: fixed; right: 0; top: 0; bottom: 0; width: 280px;
       background: #13131a; border-left: 1px solid #2c2c3c; padding: 18px 15px;
-      z-index: 60; display: flex; flex-direction: column; gap: 14px;
+      z-index: 60; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
       transform: translateX(100%); transition: transform 0.22s ease;
     }
     .side-drawer.open { transform: translateX(0); }
+    .tool-box { background: #1a1a24; padding: 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 8px; }
     .beat-dot { width: 12px; height: 12px; border-radius: 50%; background: #52525b; display: inline-block; transition: transform 0.08s; }
     .beat-dot.pulse { background: #ec4899; transform: scale(1.4); box-shadow: 0 0 10px #ec4899; }
 
@@ -161,31 +175,33 @@
 
   <!-- 主界面 -->
   <div id="app-view" class="app-shell hidden">
+    <!-- 顶部栏：存档与读档独立成两个按钮 -->
     <div class="top-bar">
       <div class="presence">
         <div id="pill-yc" class="pill"><span class="dot"></span>YC</div>
         <div id="pill-ly" class="pill"><span class="dot"></span>LY</div>
         <div id="remote-chip" class="remote-chip" onclick="toggleRemoteMode()">异地：关</div>
       </div>
-      <div style="display: flex; gap: 6px;">
+      <div style="display: flex; gap: 5px; flex-wrap: wrap;">
         <button id="btn-toggle-picker" class="btn-ghost hidden" onclick="toggleScriptPicker()">换本</button>
         <button class="btn-ghost" onclick="togglePanel('upload-panel')">+ 剧本</button>
-        <button class="btn-ghost" onclick="toggleArchivesPanel()">存档</button>
+        <button class="btn-ghost" onclick="quickSaveProgress()">存档</button>
+        <button class="btn-ghost" onclick="toggleLoadPanel()">读档</button>
         <button class="btn-danger" onclick="document.getElementById('exit-modal').classList.remove('hidden')">退出</button>
       </div>
     </div>
 
+    <!-- 异地实时弹窗条 -->
     <div id="remote-banner" class="remote-banner hidden">
       <div id="remote-banner-text" style="font-size: 13.5px; color: #fff; line-height: 1.4;"></div>
-      <button class="btn-accent" style="padding: 6px 12px; font-size: 12px; white-space: nowrap;" onclick="ackRemoteAlert()">收到</button>
+      <button class="btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="ackRemoteAlert()">收到</button>
     </div>
 
-    <!-- 选本栏 -->
+    <!-- 选本栏（去掉了“删”按钮，保留选择、开始、随机） -->
     <div id="script-picker-card" class="card" style="display: flex; gap: 6px;">
       <select id="script-selector" style="flex: 1;"></select>
       <button class="btn-accent" onclick="startSelectedScript()">开始</button>
       <button class="btn-ghost" onclick="startRandomScript()">🎲</button>
-      <button class="btn-danger" onclick="deleteSelectedScript()">删</button>
     </div>
 
     <!-- 上传剧本 -->
@@ -203,8 +219,8 @@
       <button class="btn-accent" onclick="saveNewScript()">保存至云端</button>
     </div>
 
-    <!-- 历史存档 -->
-    <div id="archives-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 8px;">
+    <!-- 读档列表面板（支持一键恢复当时进度继续游玩） -->
+    <div id="load-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 8px;">
       <div id="archives-list" style="font-size: 13px; color: #a1a1aa;"></div>
     </div>
 
@@ -222,19 +238,22 @@
         <div id="active-script-title" style="font-size: 14px; font-weight: 700; color: #f472b6; margin-bottom: 10px;"></div>
         <div class="story-feed" id="story-feed"></div>
         <div class="choices-box" id="choices-box"></div>
-        <div style="display: flex; gap: 8px; margin-top: 12px;">
-          <input type="text" id="custom-msg-input" placeholder="输入台词或动作..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
-          <button class="btn-accent" onclick="sendCustomMessage()">发送</button>
+
+        <!-- 自由台词输入（发送按钮固定横排不换行） -->
+        <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+          <input type="text" id="custom-msg-input" style="flex: 1; min-width: 0;" placeholder="输入台词或动作..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
+          <button class="btn-accent" style="padding: 10px 18px;" onclick="sendCustomMessage()">发送</button>
         </div>
       </div>
 
+      <!-- 右上角/右栏 状态滑块 -->
       <div id="right-stats-card" class="card hidden">
         <div id="stats-panel" class="stats-panel"></div>
       </div>
     </div>
   </div>
 
-  <!-- 侧边栏抽屉 -->
+  <!-- 侧边栏工具箱（借鉴主流情趣遥控与情侣互动设计） -->
   <button id="drawer-tab" class="drawer-tab hidden" onclick="document.getElementById('side-drawer').classList.add('open')">工具</button>
   <div id="side-drawer" class="side-drawer">
     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -242,7 +261,14 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
-    <div style="background:#1a1a24; padding:12px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
+    <!-- 1. 部位 × 动作 双盲盒抽签 -->
+    <div class="tool-box">
+      <span style="font-size:12px; color:#a1a1aa;">部位 × 动作 盲盒</span>
+      <button class="btn-accent" style="font-size:12.5px;" onclick="drawBodyActionCombo()">抽取挑逗组合</button>
+    </div>
+
+    <!-- 2. 倒计时 -->
+    <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#a1a1aa;">计时</span>
         <strong id="timer-display" style="color:#f472b6; font-size:18px;">00:00</strong>
@@ -255,7 +281,8 @@
       </div>
     </div>
 
-    <div style="background:#1a1a24; padding:12px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
+    <!-- 3. 律动节拍器 -->
+    <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div style="display:flex; align-items:center; gap:6px;">
           <span id="beat-dot" class="beat-dot"></span>
@@ -266,13 +293,17 @@
       <input type="range" id="bpm-slider" min="30" max="160" value="60" style="padding:0;" oninput="changeBpm(this.value)" />
     </div>
 
-    <div style="background:#1a1a24; padding:12px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
-      <button class="btn-accent" style="font-size:12.5px;" onclick="drawRandomPenalty()">随机惩罚 / 指令</button>
+    <!-- 4. 随机惩罚 / 自定义指令 -->
+    <div class="tool-box">
+      <button class="btn-ghost" style="font-size:12.5px;" onclick="drawRandomPenalty()">随机惩罚 / 指令</button>
       <div style="display:flex; gap:6px;">
-        <input type="text" id="custom-cmd-input" placeholder="自定义指令..." style="font-size:12.5px; padding:8px;" />
-        <button class="btn-ghost" style="padding:8px 10px; font-size:12px;" onclick="sendCustomCmd()">发</button>
+        <input type="text" id="custom-cmd-input" style="flex:1; min-width:0; font-size:12.5px; padding:8px;" placeholder="自定义指令..." />
+        <button class="btn-ghost" style="padding:8px 12px; font-size:12px;" onclick="sendCustomCmd()">发</button>
       </div>
     </div>
+
+    <!-- 5. 安全词 / 暂停喘息 -->
+    <button class="btn-danger" style="font-size:12.5px;" onclick="triggerSafeWord()">红灯暂停 · 抱抱喘息</button>
   </div>
 
   <!-- 退出弹窗 -->
@@ -299,6 +330,10 @@
     let myRole = '', myName = '', allScripts = [], gameState = null;
     let currentAccessToken = '';
     let hasExplicitlyFinished = false;
+    let hasCustomChatInNode = false; // 记录当前节点是否进行过自由输入对话
+
+    const BODY_PARTS = ['耳垂与颈侧', '锁骨窝', '胸前敏感点', '小腹与腰窝', '大腿内侧', '最私密敏感处'];
+    const ACTIONS = ['用唇舌缓慢舔舐 30 秒', '轻咬并呼出热气', '用指腹若有若无地打圈揉弄', '含一口温水/冰水刺激', '贴紧用力吸吮留下印记'];
 
     const PENALTIES = [
       '【指令】保持当前姿势静止 60 秒，不准发出声音。',
@@ -309,6 +344,7 @@
       '【指令】暂停所有动作深呼吸 30 秒，忍住不许越线。'
     ];
 
+    // 刷新/关闭自动存档并重置房间
     window.addEventListener('pagehide', () => {
       if (!currentAccessToken || hasExplicitlyFinished || !gameState) return;
       const headers = {
@@ -318,12 +354,17 @@
       };
 
       if (Array.isArray(gameState.story_log) && gameState.story_log.length > 0) {
-        const autoTitle = `自动存档 ${new Date().toLocaleString()}`;
+        const snapshot = {
+          script_id: gameState.active_script_id,
+          node_id: gameState.current_node_id,
+          variables: gameState.variables,
+          story_log: gameState.story_log
+        };
         fetch(`${SUPABASE_URL}/rest/v1/session_archives`, {
           method: 'POST',
           keepalive: true,
           headers,
-          body: JSON.stringify({ title: autoTitle, logs: gameState.story_log })
+          body: JSON.stringify({ title: `自动存档 ${new Date().toLocaleString()}`, logs: snapshot })
         });
       }
 
@@ -423,6 +464,7 @@
       const id = document.getElementById('script-selector').value;
       const picked = allScripts.find(s => s.id === id);
       if (!picked) return;
+      hasCustomChatInNode = false;
       await db.from('game_state').update({
         active_script_id: picked.id,
         current_node_id: 'prologue',
@@ -447,6 +489,7 @@
       if (startNode && Array.isArray(startNode.unlock_vars)) {
         startNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
       }
+      hasCustomChatInNode = false;
       await db.from('game_state').update({
         current_node_id: 'start',
         variables: nextVars,
@@ -479,13 +522,6 @@
         document.getElementById('upload-panel').classList.add('hidden');
         await loadScripts();
       } catch (e) { alert(e.message); }
-    };
-
-    window.deleteSelectedScript = async function() {
-      const id = document.getElementById('script-selector').value;
-      if (!id || !confirm('确认删除？')) return;
-      await db.from('scripts').delete().eq('id', id);
-      await loadScripts();
     };
 
     window.onSliderInput = function(key, val) {
@@ -602,6 +638,7 @@
       const node = activeScript.nodes[gameState.current_node_id];
       const choicesEl = document.getElementById('choices-box');
       choicesEl.innerHTML = '';
+
       if (node && Array.isArray(node.choices) && node.choices.length > 0) {
         const myChoices = node.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
         if (!myChoices.length) {
@@ -635,6 +672,7 @@
             btn.disabled = !passed;
             btn.textContent = (passed ? '' : '🔒 ') + choice.label + hint;
             btn.onclick = async () => {
+              hasCustomChatInNode = false;
               const nextVars = normalizeVars(vars);
               if (choice.effects) {
                 Object.entries(choice.effects).forEach(([k, d]) => {
@@ -658,19 +696,117 @@
           });
         }
       }
+
+      // 解决自由输入后衔接剧情：当你们自定义发过台词后，提供一个“顺势接戏”推进旁白按钮，不破坏主线分支
+      const lastLog = logs[logs.length - 1];
+      if (lastLog && lastLog.type === 'player' && hasCustomChatInNode) {
+        const improvBtn = document.createElement('button');
+        improvBtn.className = 'btn-improv';
+        improvBtn.textContent = '↻ 顺势接戏（推演当前氛围并继续主线）';
+        improvBtn.onclick = async () => {
+          hasCustomChatInNode = false;
+          const bridgeTexts = [
+            '两人的低语与试探让空气愈发焦灼，彼此的呼吸交缠在一起，顺理成章地迈向更深一步……',
+            '这一番临场交锋点燃了更深的渴望，谁也不愿再克制，顺势将局面推向了新的转折……',
+            '话音未落，气氛已然彻底失控，身体比理智更快做出了诚实的回应……'
+          ];
+          const bridge = bridgeTexts[Math.floor(Math.random() * bridgeTexts.length)];
+          const newLogs = [...logs, { type: 'narrator', text: bridge }];
+          await db.from('game_state').update({ story_log: newLogs }).eq('id', 1);
+        };
+        choicesEl.appendChild(improvBtn);
+      }
     }
 
+    // 自由台词发送（同时自动微增双方共有的情感/氛围值 +5）
     window.sendCustomMessage = async function() {
       const inp = document.getElementById('custom-msg-input');
       const txt = inp.value.trim();
       if (!txt || !gameState) return;
       inp.value = '';
+      hasCustomChatInNode = true;
+
+      const nextVars = normalizeVars(gameState.variables);
+      Object.values(nextVars).forEach(v => {
+        if (v.owner === 'both' && v.visible) {
+          v.val = Math.min(v.max, v.val + 5);
+        }
+      });
+
       const newLogs = [...(gameState.story_log || []), { type: 'player', actor: myName, role: myRole, text: txt }];
-      const payload = { story_log: newLogs };
+      const payload = { story_log: newLogs, variables: nextVars };
       if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
       await db.from('game_state').update(payload).eq('id', 1);
     };
 
+    // ==================== 存档与读档（独立双按钮） ====================
+    window.quickSaveProgress = async function() {
+      if (!gameState || !gameState.active_script_id) return alert('当前没有进行中的剧本');
+      const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
+      const defaultName = `${activeScript ? activeScript.title : '存档'} · ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+      const title = prompt('输入存档名称：', defaultName);
+      if (title === null) return;
+
+      const snapshot = {
+        script_id: gameState.active_script_id,
+        node_id: gameState.current_node_id,
+        variables: gameState.variables,
+        story_log: gameState.story_log
+      };
+      const { error } = await db.from('session_archives').insert([{ title: title.trim() || defaultName, logs: snapshot }]);
+      if (error) alert('存档失败：' + error.message);
+      else alert('进度已保存');
+    };
+
+    window.toggleLoadPanel = async function() {
+      const panel = document.getElementById('load-panel');
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden')) {
+        const { data } = await db.from('session_archives').select('*').order('created_at', { ascending: false });
+        const listEl = document.getElementById('archives-list');
+        if (!data || !data.length) {
+          listEl.innerHTML = '暂无存档';
+          return;
+        }
+        listEl.innerHTML = data.map(item => {
+          const isSnapshot = item.logs && !Array.isArray(item.logs) && item.logs.script_id;
+          const previewLogs = isSnapshot ? (item.logs.story_log || []) : (Array.isArray(item.logs) ? item.logs : []);
+          return `
+            <div style="background:#1c1c26; padding:10px; border-radius:8px; margin-bottom:8px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#f472b6; font-weight:600;">${item.title}</span>
+                <div style="display:flex; gap:6px;">
+                  ${isSnapshot ? `<button class="btn-accent" style="padding:4px 10px; font-size:12px;" onclick='loadSnapshot(${JSON.stringify(item.logs).replace(/'/g, "&#39;")})'>读取继续</button>` : ''}
+                  <button class="btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteArchive('${item.id}')">删</button>
+                </div>
+              </div>
+              <div style="font-size:12px; color:#a1a1aa; max-height:70px; overflow-y:auto;">
+                ${previewLogs.slice(-3).map(l => `<div>${l.actor ? '['+l.actor+'] ' : ''}${l.text}</div>`).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    };
+
+    window.loadSnapshot = async function(snapshot) {
+      if (!snapshot || !snapshot.script_id) return;
+      await db.from('game_state').update({
+        active_script_id: snapshot.script_id,
+        current_node_id: snapshot.node_id || 'start',
+        variables: snapshot.variables || {},
+        story_log: snapshot.story_log || [],
+        remote_alert: { text: '', sender: '' }
+      }).eq('id', 1);
+      document.getElementById('load-panel').classList.add('hidden');
+    };
+
+    window.deleteArchive = async function(id) {
+      await db.from('session_archives').delete().eq('id', id);
+      toggleLoadPanel(); toggleLoadPanel();
+    };
+
+    // ==================== 侧边栏工具 ====================
     let timerId = null;
     window.startTimer = function(sec) {
       clearInterval(timerId);
@@ -715,6 +851,18 @@
       if (beatOn) runBeat(); else clearInterval(beatId);
     };
 
+    window.drawBodyActionCombo = async function() {
+      if (!gameState) return;
+      const part = BODY_PARTS[Math.floor(Math.random() * BODY_PARTS.length)];
+      const act = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+      const txt = `【盲盒指令】对【${part}】执行：${act}`;
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
+      const payload = { story_log: newLogs };
+      if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
+      await db.from('game_state').update(payload).eq('id', 1);
+      document.getElementById('side-drawer').classList.remove('open');
+    };
+
     window.drawRandomPenalty = async function() {
       if (!gameState) return;
       const item = PENALTIES[Math.floor(Math.random() * PENALTIES.length)];
@@ -737,42 +885,34 @@
       document.getElementById('side-drawer').classList.remove('open');
     };
 
+    window.triggerSafeWord = async function() {
+      if (!gameState) return;
+      const txt = '🛑 【红灯暂停】节奏暂缓，先拥抱彼此平复呼吸。';
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
+      const payload = { story_log: newLogs };
+      if (gameState.is_remote) payload.remote_alert = { text: txt, sender: myName };
+      await db.from('game_state').update(payload).eq('id', 1);
+      document.getElementById('side-drawer').classList.remove('open');
+    };
+
     window.finishSession = async function(shouldSave) {
       hasExplicitlyFinished = true;
       clearInterval(beatId);
-      if (shouldSave && gameState && Array.isArray(gameState.story_log) && gameState.story_log.length > 0) {
+      if (shouldSave && gameState && gameState.active_script_id) {
         const title = document.getElementById('archive-title-input').value.trim() || new Date().toLocaleString();
-        await db.from('session_archives').insert([{ title, logs: gameState.story_log }]);
+        const snapshot = {
+          script_id: gameState.active_script_id,
+          node_id: gameState.current_node_id,
+          variables: gameState.variables,
+          story_log: gameState.story_log
+        };
+        await db.from('session_archives').insert([{ title, logs: snapshot }]);
       }
       await db.from('game_state').update({
         active_script_id: null, story_log: [], variables: {}, current_node_id: 'start', remote_alert: { text: '', sender: '' }
       }).eq('id', 1);
       await db.auth.signOut();
       location.reload();
-    };
-
-    window.toggleArchivesPanel = async function() {
-      const panel = document.getElementById('archives-panel');
-      panel.classList.toggle('hidden');
-      if (!panel.classList.contains('hidden')) {
-        const { data } = await db.from('session_archives').select('*').order('created_at', { ascending: false });
-        const listEl = document.getElementById('archives-list');
-        listEl.innerHTML = (!data || !data.length) ? '空' : data.map(item => `
-          <div style="background:#1c1c26; padding:10px; border-radius:8px; margin-bottom:6px;">
-            <div style="display:flex; justify-content:space-between; color:#f472b6; font-weight:600; margin-bottom:4px;">
-              <span>${item.title}</span>
-              <span style="cursor:pointer; color:#fb7185;" onclick="deleteArchive('${item.id}')">删除</span>
-            </div>
-            <div style="font-size:12px; color:#d4d4d8; max-height:90px; overflow-y:auto;">
-              ${(item.logs || []).map(l => `<div>${l.actor ? '['+l.actor+'] ' : ''}${l.text}</div>`).join('')}
-            </div>
-          </div>
-        `).join('');
-      }
-    };
-    window.deleteArchive = async function(id) {
-      await db.from('session_archives').delete().eq('id', id);
-      toggleArchivesPanel(); toggleArchivesPanel();
     };
   </script>
 </body>
