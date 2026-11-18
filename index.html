@@ -60,24 +60,7 @@
     .drop-zone-title { font-size: 14.5px; color: #f4f4f5; font-weight: 600; }
     .drop-zone-sub { font-size: 12.5px; color: #a1a1aa; }
 
-    /* 登录页异地开关与在线提示 */
-    .login-remote-row {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #0d0d12; border: 1px solid #2c2c3c; border-radius: 9px; padding: 10px 13px;
-      font-size: 14px; color: #cbd5e1;
-    }
     .login-hint { font-size: 12.5px; color: #f472b6; text-align: center; min-height: 18px; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; cursor: pointer; inset: 0; background-color: #2e2e3e; transition: .25s; border-radius: 24px;
-    }
-    .slider:before {
-      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
-      background-color: white; transition: .25s; border-radius: 50%;
-    }
-    input:checked + .slider { background-color: #db2777; }
-    input:checked + .slider:before { transform: translateX(20px); }
 
     /* 顶部栏 */
     .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -130,8 +113,8 @@
     }
     .mood-pill .stage-dot { width: 7px; height: 7px; border-radius: 50%; background: #ec4899; }
 
-    /* 剧情流（无缩进，正文本灰色边条，玩家回答按性别用粉红/蓝色边条） */
-    .story-feed { display: flex; flex-direction: column; gap: 13px; max-height: 50vh; overflow-y: auto; padding-right: 4px; }
+    /* 剧情流 */
+    .story-feed { display: flex; flex-direction: column; gap: 13px; max-height: 54vh; overflow-y: auto; padding-right: 4px; }
 
     .msg-narrator {
       background: #1a1a22;
@@ -166,53 +149,26 @@
       border-radius: 8px;
     }
 
-    /* 选项区（无缩进，按当前玩家性别用粉红/蓝色边条） */
-    .choices-wrapper {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid #262634;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .btn-choice {
-      width: 100%;
-      background: #1c1d28;
-      border: 1px solid #2f3144;
-      color: #fff;
-      text-align: left;
-      padding: 13px 16px;
-      font-size: 15px;
-      line-height: 1.55;
-      white-space: normal;
-    }
-    .btn-choice.female-choice { border-left: 3.5px solid #f472b6; }
-    .btn-choice.female-choice:hover { border-color: #f472b6; background: #291d29; }
-    .btn-choice.male-choice { border-left: 3.5px solid #818cf8; }
-    .btn-choice.male-choice:hover { border-color: #818cf8; background: #1e2136; }
-
-    .btn-continue {
-      width: 100%; background: #221d2e; border: 1px solid #7e22ce; color: #e9d5ff;
-      text-align: center; padding: 11px; font-size: 14.5px; white-space: normal;
-    }
-    .wait-tip {
-      text-align: center; padding: 12px; background: #181822; border-radius: 10px;
-      font-size: 13.5px; color: #71717a; border: 1px dashed #2e2e3e;
-    }
-
-    /* 快捷常用回复 */
-    .quick-replies { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    /* 快捷回复胶囊 */
+    .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .quick-chip {
-      background: #1b1a24; border: 1px solid #322e42; color: #d4d4d8;
-      padding: 5px 12px; border-radius: 16px; font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: border-color 0.15s, color 0.15s; line-height: 1.4;
+      background: #1b1a24; border: 1px solid #322e42; color: #e4e4e7;
+      padding: 7px 13px; border-radius: 12px; font-size: 13.5px; font-weight: 500;
+      cursor: pointer; transition: border-color 0.15s, background 0.15s; line-height: 1.45;
+      text-align: left;
     }
-    .quick-chip:hover { border-color: #db2777; color: #f472b6; }
+    .quick-chip.female-chip { border-left: 3px solid #f472b6; }
+    .quick-chip.female-chip:hover { border-color: #f472b6; background: #291d29; }
+    .quick-chip.male-chip { border-left: 3px solid #818cf8; }
+    .quick-chip.male-chip:hover { border-color: #818cf8; background: #1e2136; }
+    .quick-chip.replied-chip { border-left: 3px solid #a855f7; color: #d8b4fe; }
+    .quick-chip.replied-chip:hover { border-color: #a855f7; background: #231b30; }
 
     /* 隐蔽式数值微调栏 */
-    .silent-var-bar { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+    .silent-var-bar { display: flex; gap: 6px; align-items: center; margin-top: 10px; }
     .silent-var-bar select { flex: 1.2; padding: 8px 10px; font-size: 13px; color: #a1a1aa; }
     .silent-var-bar input { flex: 1; padding: 8px 10px; font-size: 13px; }
+    .btn-var-only { padding: 8px 12px; font-size: 13px; }
 
     /* 固定侧边栏触发器 */
     .drawer-tab {
@@ -256,13 +212,6 @@
       </select>
       <div id="login-presence-hint" class="login-hint hidden"></div>
       <input type="password" id="password-input" placeholder="Password" onkeypress="if(event.key==='Enter') document.getElementById('login-btn').click()" />
-      <div class="login-remote-row">
-        <span>异地模式</span>
-        <label class="switch">
-          <input type="checkbox" id="login-remote-checkbox" />
-          <span class="slider"></span>
-        </label>
-      </div>
       <button id="login-btn" class="btn-accent">Enter</button>
       <p id="login-error" style="color:#fb7185; font-size:13px; text-align:center;"></p>
     </div>
@@ -284,7 +233,7 @@
       </div>
     </div>
 
-    <!-- 异地指令提示条 -->
+    <!-- 实时同步提示条 -->
     <div id="remote-banner" class="remote-banner hidden">
       <div id="remote-banner-text" style="font-size: 14.5px; color: #fff; line-height: 1.5;"></div>
       <button class="btn-accent" style="padding: 6px 12px; font-size: 12.5px;" onclick="ackRemoteAlert()">收到</button>
@@ -361,15 +310,10 @@
       <!-- 剧情记录流 -->
       <div class="story-feed" id="story-feed"></div>
 
-      <!-- 无缩进抉择区 -->
-      <div class="choices-wrapper" id="choices-wrapper">
-        <div id="choices-box" style="display: flex; flex-direction: column; gap: 9px;"></div>
-      </div>
-
-      <!-- 自由台词输入 -->
+      <!-- 统一回复与操作区 -->
       <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #242432;">
         <div style="display: flex; gap: 8px; align-items: center;">
-          <input type="text" id="custom-msg-input" style="flex: 1; min-width: 0;" placeholder="输入台词或动作..." onkeypress="if(event.key==='Enter') sendCustomMessage()" />
+          <input type="text" id="custom-msg-input" style="flex: 1; min-width: 0;" placeholder="输入回复、动作，或点下方剧本选项..." oninput="onCustomInputTyped()" onkeypress="if(event.key==='Enter') sendCustomMessage()" />
           <button class="btn-accent" style="padding: 11px 18px;" onclick="sendCustomMessage()">发送</button>
         </div>
 
@@ -378,6 +322,7 @@
         <div id="silent-var-bar" class="silent-var-bar hidden">
           <select id="silent-var-key"></select>
           <input type="number" id="silent-var-val" min="0" max="100" placeholder="可选：设定数值(0-100)" />
+          <button class="btn-ghost btn-var-only" onclick="applyVarAdjustmentOnly()">仅调数值</button>
         </div>
       </div>
     </div>
@@ -391,31 +336,38 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
+    <!-- 惩罚 / 限时互动指令器（明确区分“对对方执行”或“让对方执行”，且无“不动”选项，改为挑逗类动作） -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:12px; color:#f472b6; font-weight:700;">随机小惩罚 / 限时指令</span>
+        <span style="font-size:12px; color:#f472b6; font-weight:700;">小惩罚 / 限时挑逗指令</span>
         <button class="btn-ghost" style="padding:3px 8px; font-size:11.5px;" onclick="randomizeThreeFields()">🎲 随机填充</button>
       </div>
+
+      <!-- 执行对象方向选择 -->
+      <select id="punish-direction" style="padding:7px 9px; font-size:12.5px; color:#f472b6;">
+        <option value="to_partner">主动：我对对方执行</option>
+        <option value="by_partner">命令：让对方对我执行</option>
+      </select>
 
       <div class="combo-field">
         <input type="text" id="punish-part" placeholder="部位（点下方快捷词或手填）" style="padding:7px 9px; font-size:12.5px;" />
         <div class="combo-chips">
           <span class="mini-chip" onclick="setField('punish-part','耳垂与颈侧')">耳垂颈侧</span>
           <span class="mini-chip" onclick="setField('punish-part','锁骨窝')">锁骨</span>
-          <span class="mini-chip" onclick="setField('punish-part','胸前敏感点')">敏感点</span>
-          <span class="mini-chip" onclick="setField('punish-part','大腿内侧')">大腿内侧</span>
-          <span class="mini-chip" onclick="setField('punish-part','臀部')">臀部</span>
+          <span class="mini-chip" onclick="setField('punish-part','掌心与指尖')">掌心指尖</span>
+          <span class="mini-chip" onclick="setField('punish-part','腰侧')">腰侧</span>
+          <span class="mini-chip" onclick="setField('punish-part','后颈')">后颈</span>
         </div>
       </div>
 
       <div class="combo-field">
         <input type="text" id="punish-action" placeholder="动作（点下方快捷词或手填）" style="padding:7px 9px; font-size:12.5px;" />
         <div class="combo-chips">
-          <span class="mini-chip" onclick="setField('punish-action','轻吻并缓慢舔舐')">轻吻舔舐</span>
-          <span class="mini-chip" onclick="setField('punish-action','用指腹打圈揉弄')">指腹打圈</span>
-          <span class="mini-chip" onclick="setField('punish-action','轻咬并呼出热气')">轻咬呼气</span>
-          <span class="mini-chip" onclick="setField('punish-action','轻轻拍打并报数')">轻拍报数</span>
-          <span class="mini-chip" onclick="setField('punish-action','保持姿势静止不动')">静止保持</span>
+          <span class="mini-chip" onclick="setField('punish-action','轻吻并低语挑逗')">轻吻挑逗</span>
+          <span class="mini-chip" onclick="setField('punish-action','用指腹打圈挑逗')">指腹挑逗</span>
+          <span class="mini-chip" onclick="setField('punish-action','用指尖轻划挑逗')">指尖轻划</span>
+          <span class="mini-chip" onclick="setField('punish-action','贴近耳畔呼气低语')">耳畔呼气</span>
+          <span class="mini-chip" onclick="setField('punish-action','轻抚并专注对视')">轻抚对视</span>
         </div>
       </div>
 
@@ -491,7 +443,6 @@
     let myRole = '', myName = '', allScripts = [], gameState = null;
     let currentAccessToken = '';
     let hasExplicitlyFinished = false;
-    let isRemoteSession = false;
     let roomChannel = null;
     let syncPollTimer = null;
     let userManuallyChangedSelect = false;
@@ -499,13 +450,11 @@
     let lastRenderedTaskEndAt = 0;
     let pendingParsedScriptJson = null;
 
-    const DEFAULT_QUICK_REPLIES = {
-      female: ['好的', '不要', '继续', '慢一点', '过来', '随你', '再靠近些', '停一下'],
-      male: ['好的', '遵命', '继续', '慢一点', '可以吗', '忍住了', '都听你的', '抱紧你']
-    };
+    let selectedScriptChoice = null;
+    let currentNodeChoiceCache = [];
 
-    const PRESET_PARTS = ['耳垂与颈侧', '锁骨窝', '胸前敏感点', '小腹与腰窝', '大腿内侧', '臀部'];
-    const PRESET_ACTIONS = ['轻吻并缓慢舔舐', '用指腹打圈揉弄', '轻咬并呼出热气', '轻轻拍打并报数', '保持姿势静止不动'];
+    const PRESET_PARTS = ['耳垂与颈侧', '锁骨窝', '掌心与指尖', '腰侧', '后颈'];
+    const PRESET_ACTIONS = ['轻吻并低语挑逗', '用指腹打圈挑逗', '用指尖轻划挑逗', '贴近耳畔呼气低语', '轻抚并专注对视'];
     const PRESET_TIMES = ['30秒', '60秒', '90秒', '2分钟'];
 
     const dropZone = document.getElementById('script-drop-zone');
@@ -632,17 +581,31 @@
     document.getElementById('login-btn').addEventListener('click', async () => {
       const email = document.getElementById('player-select').value;
       const password = document.getElementById('password-input').value;
-      isRemoteSession = document.getElementById('login-remote-checkbox').checked;
       const { data, error } = await db.auth.signInWithPassword({ email, password });
       if (error) document.getElementById('login-error').textContent = error.message;
       else initSession(data.session);
     });
+
+    function getPartnerName() {
+      return myName === 'YC' ? 'LY' : 'YC';
+    }
+
+    function updateDirectionSelectLabels() {
+      const partner = getPartnerName();
+      const sel = document.getElementById('punish-direction');
+      if (sel && sel.options.length >= 2) {
+        sel.options[0].textContent = `主动：我对 ${partner} 执行`;
+        sel.options[1].textContent = `命令：让 ${partner} 对我执行`;
+      }
+    }
 
     async function initSession(session) {
       currentAccessToken = session.access_token;
       const email = session.user.email;
       myName = email.startsWith('yc') ? 'YC' : 'LY';
       myRole = email.startsWith('yc') ? 'female' : 'male';
+
+      updateDirectionSelectLabels();
 
       document.getElementById('login-view').classList.add('hidden');
       document.getElementById('app-view').classList.remove('hidden');
@@ -790,12 +753,36 @@
       });
     }
 
+    function checkNodeTriggers(activeScript, currentNodeId, varsObj, logsArr) {
+      const currentNode = (activeScript && activeScript.nodes) ? activeScript.nodes[currentNodeId] : null;
+      let nextNodeId = currentNodeId;
+      if (currentNode && Array.isArray(currentNode.triggers)) {
+        for (const trig of currentNode.triggers) {
+          const condList = Array.isArray(trig.conditions) ? trig.conditions : (trig.condition ? [trig.condition] : []);
+          if (evaluateConditions(condList, varsObj) && trig.next && activeScript.nodes[trig.next]) {
+            nextNodeId = trig.next;
+            const targetNode = activeScript.nodes[trig.next];
+            if (Array.isArray(targetNode.unlock_vars)) {
+              targetNode.unlock_vars.forEach(k => { if (varsObj[k]) varsObj[k].visible = true; });
+            }
+            if (trig.transition_text) {
+              logsArr.push({ type: 'sys', text: trig.transition_text });
+            }
+            logsArr.push(...nodeToLogEntries(targetNode));
+            break;
+          }
+        }
+      }
+      return nextNodeId;
+    }
+
     window.startSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       if (!id) return alert('请先选择一个剧本');
       const picked = allScripts.find(s => s.id === id);
       if (!picked) return alert('未找到该剧本，请刷新后重试');
 
+      selectedScriptChoice = null;
       const updateObj = {
         active_script_id: picked.id,
         current_node_id: 'prologue',
@@ -818,14 +805,12 @@
       await startSelectedScript();
     };
 
-    // 修复外键约束报错：先解除 game_state 对该剧本的引用，再执行 scripts 表删除
     window.deleteSelectedScript = async function() {
       const id = document.getElementById('script-selector').value;
       if (!id) return;
       const target = allScripts.find(s => s.id === id);
       if (!confirm(`确定要彻底删除剧本《${target ? target.title : ''}》吗？`)) return;
 
-      // 1. 若当前房间状态正引用此剧本，先将 active_script_id 置空以解除外键占用
       if (gameState && gameState.active_script_id === id) {
         const { data: clearedState, error: clearErr } = await db.from('game_state').update({
           active_script_id: null,
@@ -838,7 +823,6 @@
         if (clearedState) gameState = clearedState;
       }
 
-      // 2. 再从 scripts 表删除该剧本
       const { error } = await db.from('scripts').delete().eq('id', id);
       if (error) return alert('删除失败：' + error.message);
 
@@ -875,8 +859,7 @@
         nodes._meta = {
           background: parsed.background || '',
           female_role: parsed.female_role || '',
-          male_role: parsed.male_role || '',
-          quick_replies: parsed.quick_replies || null
+          male_role: parsed.male_role || ''
         };
         const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
         if (error) throw error;
@@ -958,11 +941,14 @@
 
       const curAlert = gameState.remote_alert || {};
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `✓ ${myName} 完成了限时指令` }];
+      const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
+      const nextNodeId = checkNodeTriggers(activeScript, gameState.current_node_id, nextVars, newLogs);
 
       const { data } = await db.from('game_state').update({
+        current_node_id: nextNodeId,
         variables: nextVars,
         story_log: newLogs,
-        remote_alert: { ...curAlert, active_task: null },
+        remote_alert: { ...curAlert, active_task: null, text: `${myName} 完成了限时指令`, sender: myName },
         updated_at: new Date().toISOString()
       }).eq('id', 1).select().single();
 
@@ -970,12 +956,20 @@
       if (data) { gameState = data; renderAll(); }
     };
 
+    function formatChoiceDisplay(choice) {
+      if (!choice) return '';
+      if (choice.reply && choice.reply !== choice.label) {
+        return `${choice.label}「${choice.reply}」`;
+      }
+      return choice.label;
+    }
+
     function renderAll() {
       if (!gameState) return;
 
       const alertObj = gameState.remote_alert || {};
       const banner = document.getElementById('remote-banner');
-      if (isRemoteSession && alertObj.text && alertObj.sender !== myName) {
+      if (alertObj.text && alertObj.sender !== myName) {
         banner.classList.remove('hidden');
         document.getElementById('remote-banner-text').textContent = `[${alertObj.sender}] ${alertObj.text}`;
       } else {
@@ -1038,13 +1032,22 @@
         moodBadgesEl.classList.add('hidden');
       }
 
+      const node = activeScript.nodes ? activeScript.nodes[gameState.current_node_id] : null;
       const qrBar = document.getElementById('quick-replies-bar');
-      const scriptQR = (meta.quick_replies && Array.isArray(meta.quick_replies[myRole])) ? meta.quick_replies[myRole] : [];
-      const fallbackQR = DEFAULT_QUICK_REPLIES[myRole] || DEFAULT_QUICK_REPLIES.female;
-      const combinedQR = scriptQR.length > 0 ? [...scriptQR, ...fallbackQR.slice(0, 4)] : fallbackQR;
-      qrBar.innerHTML = combinedQR.map(p =>
-        `<span class="quick-chip" onclick="fillQuickReply('${p.replace(/'/g, "&#39;")}')">${p}</span>`
-      ).join('');
+      currentNodeChoiceCache = [];
+      let chipsHtml = '';
+
+      if (node && Array.isArray(node.choices)) {
+        currentNodeChoiceCache = node.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
+        const roleChipCls = myRole === 'female' ? 'female-chip' : 'male-chip';
+        chipsHtml += currentNodeChoiceCache.map((c, idx) => {
+          const disp = formatChoiceDisplay(c);
+          return `<span class="quick-chip ${roleChipCls}" onclick="pickScriptChoiceToInput(${idx})">${disp}</span>`;
+        }).join('');
+      }
+
+      chipsHtml += `<span class="quick-chip replied-chip" onclick="pickRepliedChip()">已回复</span>`;
+      qrBar.innerHTML = chipsHtml;
 
       const editableKeys = myVisibleVars.map(([k]) => k);
       const silentBar = document.getElementById('silent-var-bar');
@@ -1058,7 +1061,6 @@
         silentBar.classList.add('hidden');
       }
 
-      // 剧情记录流（无缩进；正文灰色边条，女方回答粉红边条，男方回答蓝色边条）
       const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
       const feedEl = document.getElementById('story-feed');
       feedEl.innerHTML = logs.map(item => {
@@ -1069,90 +1071,30 @@
         return `<div class="msg-player ${boxCls}"><span class="${cls}">[${item.actor}]</span>${item.text}</div>`;
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
-
-      // 选项区（无缩进；按钮按当前角色性别赋予粉红或蓝色边条）
-      const node = activeScript.nodes ? activeScript.nodes[gameState.current_node_id] : null;
-      const choicesWrapper = document.getElementById('choices-wrapper');
-      const choicesEl = document.getElementById('choices-box');
-      choicesEl.innerHTML = '';
-
-      let hasRenderedControls = false;
-
-      if (node) {
-        const hasChoices = Array.isArray(node.choices) && node.choices.length > 0;
-        if (!hasChoices && node.next) {
-          hasRenderedControls = true;
-          const contBtn = document.createElement('button');
-          contBtn.className = 'btn-continue';
-          contBtn.textContent = node.continue_label || '继续剧情 ▾';
-          contBtn.onclick = async () => {
-            const nextVars = applyOptionalManualVar(normalizeVars(vars));
-            const nextNode = activeScript.nodes[node.next];
-            if (nextNode && Array.isArray(nextNode.unlock_vars)) {
-              nextNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
-            }
-            const newLogs = [...logs, ...nodeToLogEntries(nextNode)];
-            const { data } = await db.from('game_state').update({
-              current_node_id: node.next,
-              variables: nextVars,
-              story_log: newLogs,
-              updated_at: new Date().toISOString()
-            }).eq('id', 1).select().single();
-            if (data) { gameState = data; renderAll(); }
-          };
-          choicesEl.appendChild(contBtn);
-        } else if (hasChoices) {
-          hasRenderedControls = true;
-          const myChoices = node.choices.filter(c => !c.actor || c.actor === 'both' || c.actor === myRole);
-          if (!myChoices.length) {
-            choicesEl.innerHTML = `<div class="wait-tip">等待对方回应...</div>`;
-          } else {
-            myChoices.forEach(choice => {
-              const btn = document.createElement('button');
-              const genderChoiceClass = myRole === 'female' ? 'female-choice' : 'male-choice';
-              btn.className = `btn-choice ${genderChoiceClass}`;
-              btn.textContent = choice.label;
-              btn.onclick = async () => {
-                let nextVars = normalizeVars(vars);
-                if (choice.effects) {
-                  Object.entries(choice.effects).forEach(([k, d]) => {
-                    if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both', visible: true };
-                    nextVars[k].val = Math.max(0, Math.min(nextVars[k].max, nextVars[k].val + Number(d)));
-                  });
-                }
-                nextVars = applyOptionalManualVar(nextVars);
-
-                const nextNode = activeScript.nodes[choice.next];
-                if (nextNode && Array.isArray(nextNode.unlock_vars)) {
-                  nextNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
-                }
-
-                const newLogs = [...logs, { type: 'player', actor: myName, role: myRole, text: choice.label }, ...nodeToLogEntries(nextNode)];
-
-                const curAlert = gameState.remote_alert || {};
-                const payload = {
-                  current_node_id: choice.next,
-                  variables: nextVars,
-                  story_log: newLogs,
-                  updated_at: new Date().toISOString()
-                };
-                if (isRemoteSession) payload.remote_alert = { ...curAlert, text: choice.label, sender: myName };
-                const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
-                if (data) { gameState = data; renderAll(); }
-              };
-              choicesEl.appendChild(btn);
-            });
-          }
-        }
-      }
-
-      choicesWrapper.classList.toggle('hidden', !hasRenderedControls);
     }
 
-    window.fillQuickReply = function(phrase) {
+    window.pickScriptChoiceToInput = function(idx) {
+      const choice = currentNodeChoiceCache[idx];
+      if (!choice) return;
+      selectedScriptChoice = choice;
       const inp = document.getElementById('custom-msg-input');
-      inp.value = phrase;
+      inp.value = formatChoiceDisplay(choice);
       inp.focus();
+    };
+
+    window.pickRepliedChip = function() {
+      selectedScriptChoice = null;
+      const inp = document.getElementById('custom-msg-input');
+      inp.value = '已回复';
+      inp.focus();
+    };
+
+    window.onCustomInputTyped = function() {
+      if (!selectedScriptChoice) return;
+      const inp = document.getElementById('custom-msg-input');
+      if (inp.value.trim() !== formatChoiceDisplay(selectedScriptChoice)) {
+        selectedScriptChoice = null;
+      }
     };
 
     window.sendCustomMessage = async function() {
@@ -1161,37 +1103,36 @@
       if (!txt || !gameState) return;
       inp.value = '';
 
-      let nextVars = normalizeVars(gameState.variables);
-      const manualValInp = document.getElementById('silent-var-val');
-      if (manualValInp && manualValInp.value.trim() !== '') {
-        nextVars = applyOptionalManualVar(nextVars);
-      } else {
-        Object.values(nextVars).forEach(v => {
-          if (v.owner === 'both') v.val = Math.min(v.max, v.val + 8);
-        });
-      }
-
-      let nextNodeId = gameState.current_node_id;
-      const newLogs = [...(gameState.story_log || []), { type: 'player', actor: myName, role: myRole, text: txt }];
-
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
-      const currentNode = (activeScript && activeScript.nodes) ? activeScript.nodes[gameState.current_node_id] : null;
-      if (currentNode && Array.isArray(currentNode.triggers)) {
-        for (const trig of currentNode.triggers) {
-          const condList = Array.isArray(trig.conditions) ? trig.conditions : (trig.condition ? [trig.condition] : []);
-          if (evaluateConditions(condList, nextVars) && trig.next && activeScript.nodes[trig.next]) {
-            nextNodeId = trig.next;
-            const targetNode = activeScript.nodes[trig.next];
-            if (Array.isArray(targetNode.unlock_vars)) {
-              targetNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
-            }
-            if (trig.transition_text) {
-              newLogs.push({ type: 'sys', text: trig.transition_text });
-            }
-            newLogs.push(...nodeToLogEntries(targetNode));
-            break;
-          }
+      let nextVars = normalizeVars(gameState.variables);
+      const logs = Array.isArray(gameState.story_log) ? gameState.story_log : [];
+      const newLogs = [...logs, { type: 'player', actor: myName, role: myRole, text: txt }];
+      let nextNodeId = gameState.current_node_id;
+
+      if (selectedScriptChoice && txt === formatChoiceDisplay(selectedScriptChoice)) {
+        const choice = selectedScriptChoice;
+        selectedScriptChoice = null;
+
+        if (choice.effects) {
+          Object.entries(choice.effects).forEach(([k, d]) => {
+            if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both', visible: true };
+            nextVars[k].val = Math.max(0, Math.min(nextVars[k].max, nextVars[k].val + Number(d)));
+          });
         }
+        nextVars = applyOptionalManualVar(nextVars);
+
+        if (choice.next && activeScript && activeScript.nodes && activeScript.nodes[choice.next]) {
+          nextNodeId = choice.next;
+          const nextNode = activeScript.nodes[choice.next];
+          if (Array.isArray(nextNode.unlock_vars)) {
+            nextNode.unlock_vars.forEach(k => { if (nextVars[k]) nextVars[k].visible = true; });
+          }
+          newLogs.push(...nodeToLogEntries(nextNode));
+        }
+      } else {
+        selectedScriptChoice = null;
+        nextVars = applyOptionalManualVar(nextVars);
+        nextNodeId = checkNodeTriggers(activeScript, gameState.current_node_id, nextVars, newLogs);
       }
 
       const curAlert = gameState.remote_alert || {};
@@ -1199,10 +1140,31 @@
         current_node_id: nextNodeId,
         story_log: newLogs,
         variables: nextVars,
+        remote_alert: { ...curAlert, text: txt, sender: myName },
         updated_at: new Date().toISOString()
       };
-      if (isRemoteSession) payload.remote_alert = { ...curAlert, text: txt, sender: myName };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
+      if (data) { gameState = data; renderAll(); }
+    };
+
+    window.applyVarAdjustmentOnly = async function() {
+      if (!gameState) return;
+      const valEl = document.getElementById('silent-var-val');
+      if (!valEl || valEl.value.trim() === '') return alert('请先输入要设定的数值 (0-100)');
+
+      const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
+      let nextVars = normalizeVars(gameState.variables);
+      nextVars = applyOptionalManualVar(nextVars);
+
+      const newLogs = [...(gameState.story_log || [])];
+      const nextNodeId = checkNodeTriggers(activeScript, gameState.current_node_id, nextVars, newLogs);
+
+      const { data } = await db.from('game_state').update({
+        current_node_id: nextNodeId,
+        variables: nextVars,
+        story_log: newLogs,
+        updated_at: new Date().toISOString()
+      }).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
     };
 
@@ -1258,6 +1220,7 @@
 
     window.loadSnapshot = async function(snapshot) {
       if (!snapshot || !snapshot.script_id) return;
+      selectedScriptChoice = null;
       const { data } = await db.from('game_state').update({
         active_script_id: snapshot.script_id,
         current_node_id: snapshot.node_id || 'start',
@@ -1275,12 +1238,14 @@
       toggleLoadPanel(); toggleLoadPanel();
     };
 
-    // ==================== 侧边栏三框惩罚/指令器 & 计时器 ====================
+    // ==================== 侧边栏惩罚/挑逗指令器 & 计时器 ====================
     window.setField = function(id, val) {
       document.getElementById(id).value = val;
     };
 
     window.randomizeThreeFields = function() {
+      const dirSel = document.getElementById('punish-direction');
+      dirSel.selectedIndex = Math.random() < 0.5 ? 0 : 1;
       document.getElementById('punish-part').value = PRESET_PARTS[Math.floor(Math.random() * PRESET_PARTS.length)];
       document.getElementById('punish-action').value = PRESET_ACTIONS[Math.floor(Math.random() * PRESET_ACTIONS.length)];
       document.getElementById('punish-time').value = PRESET_TIMES[Math.floor(Math.random() * PRESET_TIMES.length)];
@@ -1296,14 +1261,21 @@
 
     window.dispatchThreeFieldTask = async function() {
       if (!gameState) return;
+      const dir = document.getElementById('punish-direction').value;
       const part = document.getElementById('punish-part').value.trim();
       const action = document.getElementById('punish-action').value.trim();
       const timeStr = document.getElementById('punish-time').value.trim();
       if (!part && !action) return alert('请至少填写或选择一个部位或动作');
 
+      const partner = getPartnerName();
       const durationSec = parseDurationSeconds(timeStr);
       const displayTime = timeStr || `${durationSec}秒`;
-      const label = `${part ? `对【${part}】` : ''}${action || '保持动作'}（${displayTime}）`;
+      const actionDesc = action || '轻柔挑逗';
+
+      // 明确主被动对象关系：对对方执行 vs 让对方对我执行
+      const label = dir === 'by_partner'
+        ? `【${myName} → ${partner}】让 ${partner} 对你的${part ? `【${part}】` : ''}${actionDesc}（${displayTime}）`
+        : `【${myName} → ${partner}】对 ${partner} 的${part ? `【${part}】` : ''}${actionDesc}（${displayTime}）`;
 
       const activeTask = {
         label,
@@ -1311,13 +1283,9 @@
         end_at: Date.now() + durationSec * 1000
       };
 
-      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `⚡ 【限时指令】${label}` }];
+      const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `⚡ ${label}` }];
       const curAlert = gameState.remote_alert || {};
-      const nextAlert = { ...curAlert, active_task: activeTask };
-      if (isRemoteSession) {
-        nextAlert.text = label;
-        nextAlert.sender = myName;
-      }
+      const nextAlert = { ...curAlert, active_task: activeTask, text: label, sender: myName };
 
       document.getElementById('task-settle-row').classList.add('hidden');
       const { data } = await db.from('game_state').update({
@@ -1357,14 +1325,15 @@
 
       if (gameState) {
         const curAlert = gameState.remote_alert || {};
+        const label = `【${myName}】限时挑逗（${sec}秒）`;
         const activeTask = {
-          label: `限时保持（${sec}秒）`,
+          label,
           duration_sec: sec,
           end_at: Date.now() + sec * 1000
         };
         document.getElementById('task-settle-row').classList.add('hidden');
         const { data } = await db.from('game_state').update({
-          remote_alert: { ...curAlert, active_task: activeTask },
+          remote_alert: { ...curAlert, active_task: activeTask, text: label, sender: myName },
           updated_at: new Date().toISOString()
         }).eq('id', 1).select().single();
         if (data) { gameState = data; renderAll(); }
@@ -1408,8 +1377,11 @@
       inp.value = '';
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `【指令】${txt}` }];
       const curAlert = gameState.remote_alert || {};
-      const payload = { story_log: newLogs, updated_at: new Date().toISOString() };
-      if (isRemoteSession) payload.remote_alert = { ...curAlert, text: txt, sender: myName };
+      const payload = {
+        story_log: newLogs,
+        remote_alert: { ...curAlert, text: txt, sender: myName },
+        updated_at: new Date().toISOString()
+      };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
       document.getElementById('side-drawer').classList.remove('open');
@@ -1420,8 +1392,11 @@
       const txt = '🛑 【红灯暂停】节奏暂缓，先拥抱彼此平复呼吸。';
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: txt }];
       const curAlert = gameState.remote_alert || {};
-      const payload = { story_log: newLogs, remote_alert: { ...curAlert, active_task: null }, updated_at: new Date().toISOString() };
-      if (isRemoteSession) { payload.remote_alert.text = txt; payload.remote_alert.sender = myName; }
+      const payload = {
+        story_log: newLogs,
+        remote_alert: { ...curAlert, active_task: null, text: txt, sender: myName },
+        updated_at: new Date().toISOString()
+      };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
       document.getElementById('side-drawer').classList.remove('open');
