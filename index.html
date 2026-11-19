@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Session</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10,18 +10,20 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #09090d; color: #e4e4e7; min-height: 100vh;
-      display: flex; justify-content: center; padding: 16px; overflow-x: hidden;
+      background: #09090d; color: #e4e4e7; min-height: 100dvh;
+      display: flex; justify-content: center;
+      padding: 14px 14px calc(38px + env(safe-area-inset-bottom)) 14px;
+      overflow-x: hidden;
     }
 
-    .app-shell { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 14px; }
+    .app-shell { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 12px; }
     @media (min-width: 840px) {
       body { padding: 28px; }
       .app-shell { max-width: 780px; }
       .story-feed { max-height: 55vh !important; }
     }
 
-    .card { background: #14141b; border: 1px solid #242432; border-radius: 14px; padding: 20px; }
+    .card { background: #14141b; border: 1px solid #242432; border-radius: 14px; padding: 18px; }
     .hidden { display: none !important; }
 
     select, input, textarea {
@@ -32,9 +34,10 @@
 
     button {
       padding: 10px 14px; border: none; border-radius: 9px; font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: opacity 0.15s;
+      cursor: pointer; transition: opacity 0.15s, transform 0.08s;
       white-space: nowrap; flex-shrink: 0;
     }
+    button:active { transform: scale(0.97); }
     .btn-accent { background: linear-gradient(135deg, #9333ea, #db2777); color: #fff; }
     .btn-ghost { background: #1c1c26; border: 1px solid #2c2c3c; color: #cbd5e1; }
     .btn-danger { background: rgba(225, 29, 72, 0.15); border: 1px solid #be123c; color: #fda4af; }
@@ -73,16 +76,17 @@
     .dot { width: 6px; height: 6px; border-radius: 50%; background: #52525b; }
     .pill.on .dot { background: #ec4899; box-shadow: 0 0 6px #ec4899; }
 
+    /* 仅展示工具区指令的顶部提示条 */
     .remote-banner {
       background: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(219, 39, 119, 0.25));
-      border: 1px solid #ec4899; border-radius: 12px; padding: 12px 15px;
+      border: 1px solid #ec4899; border-radius: 12px; padding: 11px 14px;
       display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
 
     /* 主屏幕活跃任务实时倒计时悬浮条 */
     .active-task-banner {
       background: linear-gradient(135deg, #24192e 0%, #1c1826 100%);
-      border: 1px solid #db2777; border-radius: 12px; padding: 13px 15px; margin-bottom: 12px;
+      border: 1px solid #db2777; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
       display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 16px rgba(219, 39, 119, 0.15);
     }
     .task-top-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
@@ -94,44 +98,61 @@
     /* 背景引入页 */
     .prologue-box {
       background: linear-gradient(180deg, #1b1624 0%, #14141b 100%);
-      border: 1px solid #362542; border-radius: 16px; padding: 28px 24px;
-      display: flex; flex-direction: column; gap: 18px;
+      border: 1px solid #362542; border-radius: 16px; padding: 26px 22px;
+      display: flex; flex-direction: column; gap: 16px;
     }
-    .prologue-title { font-size: 22px; font-weight: 800; color: #f472b6; letter-spacing: 1px; text-align: center; }
-    .prologue-text { font-size: 16px; line-height: 1.85; color: #e4e4e7; white-space: pre-line; }
+    .prologue-title { font-size: 21px; font-weight: 800; color: #f472b6; letter-spacing: 1px; text-align: center; }
+    .prologue-text { font-size: 15.5px; line-height: 1.85; color: #e4e4e7; white-space: pre-line; }
     .role-card {
       background: rgba(255, 255, 255, 0.03); border-left: 3px solid #9333ea;
-      padding: 14px 16px; border-radius: 8px; font-size: 15px; line-height: 1.75; color: #d8b4fe;
+      padding: 13px 15px; border-radius: 8px; font-size: 14.5px; line-height: 1.75; color: #d8b4fe;
     }
 
     /* 模糊阶段氛围刻度 */
-    .mood-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .mood-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
     .mood-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px; border-radius: 8px; font-size: 12.5px;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 9px; border-radius: 8px; font-size: 12px;
       background: #1b1824; border: 1px solid #2f2640; color: #e9d5ff;
     }
-    .mood-pill .stage-dot { width: 7px; height: 7px; border-radius: 50%; background: #ec4899; }
+    .mood-pill.owner-female { border-color: rgba(244, 114, 182, 0.45); }
+    .mood-pill.owner-male { border-color: rgba(129, 140, 248, 0.45); }
+    .mood-pill .stage-dot { width: 7px; height: 7px; border-radius: 50%; background: #c084fc; }
+    .mood-pill.owner-female .stage-dot { background: #f472b6; }
+    .mood-pill.owner-male .stage-dot { background: #818cf8; }
+    .mood-owner-tag { font-size: 11px; opacity: 0.75; }
 
-    /* 剧情流 */
-    .story-feed { display: flex; flex-direction: column; gap: 13px; max-height: 54vh; overflow-y: auto; padding-right: 4px; }
+    /* 剧情流容器 + 顶部可滚动渐变提示 */
+    .story-feed-wrap { position: relative; }
+    .story-top-fade {
+      position: absolute; top: 0; left: 0; right: 4px; height: 22px;
+      background: linear-gradient(180deg, rgba(20, 20, 27, 0.92) 0%, rgba(20, 20, 27, 0) 100%);
+      pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.2s;
+    }
+    .story-top-fade.visible { opacity: 1; }
+
+    .story-feed {
+      display: flex; flex-direction: column; gap: 12px;
+      max-height: 46dvh; overflow-y: auto; padding-right: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
 
     .msg-narrator {
       background: #1a1a22;
       border-left: 3.5px solid #64748b;
-      padding: 15px 18px;
+      padding: 14px 16px;
       border-radius: 10px;
-      font-size: 16px;
-      line-height: 1.85;
+      font-size: 15.5px;
+      line-height: 1.8;
       color: #f4f4f5;
     }
 
     .msg-player {
       background: #181922;
       border: 1px solid #282a3a;
-      padding: 11px 15px;
+      padding: 10px 14px;
       border-radius: 10px;
-      font-size: 15.5px;
+      font-size: 15px;
       line-height: 1.65;
       color: #e4e4e7;
     }
@@ -142,7 +163,7 @@
 
     .msg-sys {
       text-align: center;
-      font-size: 13px;
+      font-size: 12.5px;
       color: #c084fc;
       background: rgba(168, 85, 247, 0.08);
       padding: 6px 12px;
@@ -155,7 +176,7 @@
       background: #1b1a24; border: 1px solid #322e42; color: #e4e4e7;
       padding: 7px 13px; border-radius: 12px; font-size: 13.5px; font-weight: 500;
       cursor: pointer; transition: border-color 0.15s, background 0.15s; line-height: 1.45;
-      text-align: left;
+      text-align: left; user-select: none; -webkit-user-select: none;
     }
     .quick-chip.female-chip { border-left: 3px solid #f472b6; }
     .quick-chip.female-chip:hover { border-color: #f472b6; background: #291d29; }
@@ -164,11 +185,17 @@
     .quick-chip.replied-chip { border-left: 3px solid #a855f7; color: #d8b4fe; }
     .quick-chip.replied-chip:hover { border-color: #a855f7; background: #231b30; }
 
-    /* 隐蔽式数值微调栏 */
-    .silent-var-bar { display: flex; gap: 6px; align-items: center; margin-top: 10px; }
-    .silent-var-bar select { flex: 1.2; padding: 8px 10px; font-size: 13px; color: #a1a1aa; }
-    .silent-var-bar input { flex: 1; padding: 8px 10px; font-size: 13px; }
-    .btn-var-only { padding: 8px 12px; font-size: 13px; }
+    /* 一键步进数值微调栏 */
+    .silent-var-bar { display: flex; gap: 6px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+    .silent-var-bar select { flex: 1.2; min-width: 110px; padding: 8px 10px; font-size: 13px; color: #e4e4e7; }
+    .step-btn-group { display: flex; gap: 5px; flex: 1.8; }
+    .btn-step {
+      flex: 1; padding: 8px 8px; font-size: 12.5px; font-weight: 600;
+      background: #1c1c28; border: 1px solid #323246; color: #f4f4f5; border-radius: 8px;
+    }
+    .btn-step.warm { border-color: rgba(219, 39, 119, 0.5); color: #f9a8d4; }
+    .btn-step.hot { background: rgba(219, 39, 119, 0.18); border-color: #db2777; color: #fbcfe8; }
+    .btn-step.cool { border-color: rgba(129, 140, 248, 0.45); color: #c7d2fe; }
 
     /* 固定侧边栏触发器 */
     .drawer-tab {
@@ -179,7 +206,7 @@
     }
     .side-drawer {
       position: fixed; right: 0; top: 0; bottom: 0; width: 295px;
-      background: #13131a; border-left: 1px solid #2c2c3c; padding: 18px 15px;
+      background: #13131a; border-left: 1px solid #2c2c3c; padding: 18px 15px calc(24px + env(safe-area-inset-bottom)) 15px;
       z-index: 60; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
       transform: translateX(100%); transition: transform 0.22s ease;
     }
@@ -233,7 +260,7 @@
       </div>
     </div>
 
-    <!-- 实时同步提示条 -->
+    <!-- 仅展示工具区指令的顶部提示条 -->
     <div id="remote-banner" class="remote-banner hidden">
       <div id="remote-banner-text" style="font-size: 14.5px; color: #fff; line-height: 1.5;"></div>
       <button class="btn-accent" style="padding: 6px 12px; font-size: 12.5px;" onclick="ackRemoteAlert()">收到</button>
@@ -249,20 +276,12 @@
 
     <!-- 本地拖拽 / 选择文件上传剧本面板 -->
     <div id="upload-panel" class="card hidden" style="display: flex; flex-direction: column; gap: 10px;">
-      <div style="display: flex; gap: 8px;">
-        <input type="text" id="new-script-title" placeholder="剧本名称（选文件后自动填入，可修改）" style="flex: 2;" />
-        <select id="new-script-type" style="flex: 1;">
-          <option value="conquest">攻略</option>
-          <option value="edging">节奏</option>
-          <option value="domsub">支配</option>
-          <option value="story">剧情</option>
-        </select>
-      </div>
+      <input type="text" id="new-script-title" placeholder="剧本名称（选文件后自动填入，可修改）" />
 
       <input type="file" id="script-file-input" accept=".json,application/json" class="hidden" onchange="handleScriptFileSelect(this.files[0])" />
       <div id="script-drop-zone" class="drop-zone" onclick="document.getElementById('script-file-input').click()">
         <div class="drop-zone-title" id="drop-zone-title">📂 点击选择本地 .json 剧本文件，或直接拖拽至此</div>
-        <div class="drop-zone-sub" id="drop-zone-sub">支持标准多分支剧本 JSON 格式</div>
+        <div class="drop-zone-sub" id="drop-zone-sub">自动读取剧本中的数值与节点结构</div>
       </div>
 
       <button id="btn-save-uploaded-script" class="btn-accent" onclick="saveNewScript()" disabled style="opacity:0.45;">保存至云端</button>
@@ -287,7 +306,7 @@
 
       <div id="mood-badges" class="mood-badges hidden"></div>
 
-      <!-- 主屏幕常驻：带时间的任务实时倒计时 & 结束提交数值栏 -->
+      <!-- 主屏幕常驻：带时间的任务实时倒计时 & 结束一键步进结算栏 -->
       <div id="active-task-banner" class="active-task-banner hidden">
         <div class="task-top-row">
           <div style="flex: 1; min-width: 0;">
@@ -301,17 +320,21 @@
         </div>
 
         <div id="task-settle-row" class="task-settle-row hidden">
-          <select id="task-var-key" style="flex: 1.2; padding: 7px 9px; font-size: 12.5px;"></select>
-          <input type="number" id="task-var-val" min="0" max="100" placeholder="可选数值(0-100)" style="flex: 1; padding: 7px 9px; font-size: 12.5px;" />
-          <button class="btn-accent" style="padding: 7px 12px; font-size: 12.5px;" onclick="submitTaskCompletion()">提交结束</button>
+          <select id="task-var-key" style="flex: 1.1; min-width: 95px; padding: 7px 8px; font-size: 12.5px;"></select>
+          <button class="btn-step warm" style="padding: 7px 9px; font-size: 12px;" onclick="submitTaskCompletion(10)">升温 +10</button>
+          <button class="btn-step hot" style="padding: 7px 9px; font-size: 12px;" onclick="submitTaskCompletion(25)">大幅 +25</button>
+          <button class="btn-ghost" style="padding: 7px 10px; font-size: 12px;" onclick="submitTaskCompletion(0)">完成不调</button>
         </div>
       </div>
 
       <!-- 剧情记录流 -->
-      <div class="story-feed" id="story-feed"></div>
+      <div class="story-feed-wrap">
+        <div id="story-top-fade" class="story-top-fade"></div>
+        <div class="story-feed" id="story-feed" onscroll="updateStoryScrollFade()"></div>
+      </div>
 
-      <!-- 统一回复与操作区 -->
-      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #242432;">
+      <!-- 统一回复与操作区（点击快捷回复填入聊天框但不自动弹出软键盘，只有手动点击聊天框才弹出） -->
+      <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #242432;">
         <div style="display: flex; gap: 8px; align-items: center;">
           <input type="text" id="custom-msg-input" style="flex: 1; min-width: 0;" placeholder="输入回复、动作，或点下方剧本选项..." oninput="onCustomInputTyped()" onkeypress="if(event.key==='Enter') sendCustomMessage()" />
           <button class="btn-accent" style="padding: 11px 18px;" onclick="sendCustomMessage()">发送</button>
@@ -321,8 +344,11 @@
 
         <div id="silent-var-bar" class="silent-var-bar hidden">
           <select id="silent-var-key"></select>
-          <input type="number" id="silent-var-val" min="0" max="100" placeholder="可选：设定数值(0-100)" />
-          <button class="btn-ghost btn-var-only" onclick="applyVarAdjustmentOnly()">仅调数值</button>
+          <div class="step-btn-group">
+            <button class="btn-step warm" onclick="stepAdjustVar(10)">升温 +10</button>
+            <button class="btn-step hot" onclick="stepAdjustVar(25)">大幅 +25</button>
+            <button class="btn-step cool" onclick="stepAdjustVar(-15)">降温 -15</button>
+          </div>
         </div>
       </div>
     </div>
@@ -336,14 +362,12 @@
       <button class="btn-ghost" style="padding:5px 10px; font-size:12px;" onclick="document.getElementById('side-drawer').classList.remove('open')">收起</button>
     </div>
 
-    <!-- 惩罚 / 限时互动指令器（明确区分“对对方执行”或“让对方执行”，且无“不动”选项，改为挑逗类动作） -->
     <div class="tool-box">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:12px; color:#f472b6; font-weight:700;">小惩罚 / 限时挑逗指令</span>
         <button class="btn-ghost" style="padding:3px 8px; font-size:11.5px;" onclick="randomizeThreeFields()">🎲 随机填充</button>
       </div>
 
-      <!-- 执行对象方向选择 -->
       <select id="punish-direction" style="padding:7px 9px; font-size:12.5px; color:#f472b6;">
         <option value="to_partner">主动：我对对方执行</option>
         <option value="by_partner">命令：让对方对我执行</option>
@@ -448,6 +472,7 @@
     let userManuallyChangedSelect = false;
     let taskTickInterval = null;
     let lastRenderedTaskEndAt = 0;
+    let vibratedTaskEndAt = 0;
     let pendingParsedScriptJson = null;
 
     let selectedScriptChoice = null;
@@ -456,6 +481,21 @@
     const PRESET_PARTS = ['耳垂与颈侧', '锁骨窝', '掌心与指尖', '腰侧', '后颈'];
     const PRESET_ACTIONS = ['轻吻并低语挑逗', '用指腹打圈挑逗', '用指尖轻划挑逗', '贴近耳畔呼气低语', '轻抚并专注对视'];
     const PRESET_TIMES = ['30秒', '60秒', '90秒', '2分钟'];
+
+    function triggerGentleVibrate() {
+      try {
+        if (navigator && typeof navigator.vibrate === 'function') {
+          navigator.vibrate([250, 120, 250, 120, 350]);
+        }
+      } catch (e) {}
+    }
+
+    window.updateStoryScrollFade = function() {
+      const feed = document.getElementById('story-feed');
+      const fade = document.getElementById('story-top-fade');
+      if (!feed || !fade) return;
+      fade.classList.toggle('visible', feed.scrollTop > 12);
+    };
 
     const dropZone = document.getElementById('script-drop-zone');
     ['dragenter', 'dragover'].forEach(evtName => {
@@ -488,8 +528,9 @@
 
           pendingParsedScriptJson = parsed;
           const nodeCount = Object.keys(nodes).filter(k => k !== '_meta').length;
+          const varNames = Object.keys(parsed.initial_vars || {});
           document.getElementById('drop-zone-title').textContent = `✅ 已加载：${file.name}`;
-          document.getElementById('drop-zone-sub').textContent = `共解析到 ${nodeCount} 个剧情节点，点击下方保存即可`;
+          document.getElementById('drop-zone-sub').textContent = `共 ${nodeCount} 个节点 · 识别到指标：${varNames.length ? varNames.join(' / ') : '无'}`;
 
           const titleInp = document.getElementById('new-script-title');
           if (!titleInp.value.trim()) {
@@ -691,25 +732,19 @@
             val: Number(v.val ?? 0),
             max: Number(v.max ?? 100),
             owner: v.owner || 'both',
-            visible: v.visible !== undefined ? Boolean(v.visible) : true
+            visible: v.visible !== undefined ? Boolean(v.visible) : true,
+            trend: v.trend === 'down' ? 'down' : 'up'
           };
         } else {
-          res[k] = { val: Number(v ?? 0), max: 100, owner: 'both', visible: true };
+          res[k] = { val: Number(v ?? 0), max: 100, owner: 'both', visible: true, trend: 'up' };
         }
       });
       return res;
     }
 
-    function getFuzzyStageLabel(key, val, max) {
-      const ratio = (Number(val) || 0) / (Number(max) || 100);
-      if (key.includes('猜忌') || key.includes('戒备')) {
-        if (ratio < 0.25) return '消融 · 信任';
-        if (ratio < 0.50) return '疑虑 · 试探';
-        if (ratio < 0.75) return '戒备 · 暗涌';
-        return '危局 · 杀机';
-      }
-      const isDescending = key.includes('防线') || key.includes('克制') || key.includes('忍耐');
-      const intensity = isDescending ? (1 - ratio) : ratio;
+    function getFuzzyStageLabel(item) {
+      const ratio = Math.max(0, Math.min(1, (Number(item.val) || 0) / (Number(item.max) || 100)));
+      const intensity = item.trend === 'down' ? (1 - ratio) : ratio;
 
       if (intensity < 0.25) return '初起 · 微澜';
       if (intensity < 0.50) return '渐浓 · 升温';
@@ -717,17 +752,12 @@
       return '极致 · 临界';
     }
 
-    function applyOptionalManualVar(varsObj, keyInputId = 'silent-var-key', valInputId = 'silent-var-val') {
-      const keyEl = document.getElementById(keyInputId);
-      const valEl = document.getElementById(valInputId);
-      if (!keyEl || !valEl || valEl.value.trim() === '') return varsObj;
-      const k = keyEl.value;
-      const num = Number(valEl.value);
-      if (!isNaN(num)) {
-        if (!varsObj[k]) varsObj[k] = { val: 0, max: 100, owner: myRole, visible: true };
-        varsObj[k].val = Math.max(0, Math.min(varsObj[k].max, num));
-      }
-      valEl.value = '';
+    function applyStepDelta(varsObj, key, delta) {
+      if (!key || !delta) return varsObj;
+      if (!varsObj[key]) varsObj[key] = { val: 0, max: 100, owner: 'both', visible: true, trend: 'up' };
+      const item = varsObj[key];
+      const effectiveDelta = item.trend === 'down' ? -delta : delta;
+      item.val = Math.max(0, Math.min(item.max, item.val + effectiveDelta));
       return varsObj;
     }
 
@@ -849,7 +879,6 @@
 
     window.saveNewScript = async function() {
       const title = document.getElementById('new-script-title').value.trim();
-      const type = document.getElementById('new-script-type').value;
       if (!title || !pendingParsedScriptJson) return alert('请先拖入或选择有效的 JSON 剧本文件并填写名称');
       try {
         const parsed = pendingParsedScriptJson;
@@ -861,14 +890,14 @@
           female_role: parsed.female_role || '',
           male_role: parsed.male_role || ''
         };
-        const { error } = await db.from('scripts').insert([{ title, type, summary, initial_vars: initialVars, nodes }]);
+        const { error } = await db.from('scripts').insert([{ title, type: 'custom', summary, initial_vars: initialVars, nodes }]);
         if (error) throw error;
 
         pendingParsedScriptJson = null;
         document.getElementById('new-script-title').value = '';
         document.getElementById('script-file-input').value = '';
         document.getElementById('drop-zone-title').textContent = '📂 点击选择本地 .json 剧本文件，或直接拖拽至此';
-        document.getElementById('drop-zone-sub').textContent = '支持标准多分支剧本 JSON 格式';
+        document.getElementById('drop-zone-sub').textContent = '自动读取剧本中的数值与节点结构';
         const saveBtn = document.getElementById('btn-save-uploaded-script');
         saveBtn.disabled = true;
         saveBtn.style.opacity = '0.45';
@@ -876,6 +905,12 @@
         await loadScripts();
       } catch (e) { alert('保存失败：' + e.message); }
     };
+
+    function formatOwnerTag(owner) {
+      if (owner === 'female') return 'YC';
+      if (owner === 'male') return 'LY';
+      return '共有';
+    }
 
     function renderActiveTaskBanner(vars) {
       const alertObj = gameState.remote_alert || {};
@@ -893,19 +928,17 @@
       banner.classList.remove('hidden');
       document.getElementById('active-task-label').textContent = task.label;
 
-      const editableKeys = Object.entries(vars)
-        .filter(([_, item]) => item.visible && (item.owner === 'both' || item.owner === myRole))
-        .map(([k]) => k);
+      const unlockedKeys = Object.entries(vars)
+        .filter(([_, item]) => item.visible)
+        .map(([k, item]) => ({ key: k, owner: item.owner }));
       const taskKeySel = document.getElementById('task-var-key');
-      if (editableKeys.length > 0) {
+      if (unlockedKeys.length > 0) {
         const prev = taskKeySel.value;
-        taskKeySel.innerHTML = editableKeys.map(k => `<option value="${k}">指标：${k}</option>`).join('');
-        if (editableKeys.includes(prev)) taskKeySel.value = prev;
+        taskKeySel.innerHTML = unlockedKeys.map(o => `<option value="${o.key}">${o.key} (${formatOwnerTag(o.owner)})</option>`).join('');
+        if (unlockedKeys.some(o => o.key === prev)) taskKeySel.value = prev;
         taskKeySel.classList.remove('hidden');
-        document.getElementById('task-var-val').classList.remove('hidden');
       } else {
         taskKeySel.classList.add('hidden');
-        document.getElementById('task-var-val').classList.add('hidden');
       }
 
       if (lastRenderedTaskEndAt !== task.end_at) {
@@ -921,6 +954,10 @@
           if (remainSec <= 0) {
             clearInterval(taskTickInterval);
             settleRow.classList.remove('hidden');
+            if (vibratedTaskEndAt !== task.end_at) {
+              vibratedTaskEndAt = task.end_at;
+              triggerGentleVibrate();
+            }
           }
         };
         updateClock();
@@ -934,10 +971,13 @@
       document.getElementById('task-settle-row').classList.remove('hidden');
     };
 
-    window.submitTaskCompletion = async function() {
+    window.submitTaskCompletion = async function(stepDelta = 0) {
       if (!gameState) return;
       let nextVars = normalizeVars(gameState.variables);
-      nextVars = applyOptionalManualVar(nextVars, 'task-var-key', 'task-var-val');
+      const keyEl = document.getElementById('task-var-key');
+      if (stepDelta !== 0 && keyEl && keyEl.value) {
+        nextVars = applyStepDelta(nextVars, keyEl.value, stepDelta);
+      }
 
       const curAlert = gameState.remote_alert || {};
       const newLogs = [...(gameState.story_log || []), { type: 'sys', text: `✓ ${myName} 完成了限时指令` }];
@@ -1018,15 +1058,15 @@
       const vars = normalizeVars(gameState.variables);
       renderActiveTaskBanner(vars);
 
-      const myVisibleVars = Object.entries(vars).filter(([_, item]) =>
-        item.visible && (item.owner === 'both' || item.owner === myRole)
-      );
+      const allUnlockedVars = Object.entries(vars).filter(([_, item]) => item.visible);
       const moodBadgesEl = document.getElementById('mood-badges');
-      if (myVisibleVars.length > 0) {
+      if (allUnlockedVars.length > 0) {
         moodBadgesEl.classList.remove('hidden');
-        moodBadgesEl.innerHTML = myVisibleVars.map(([k, item]) => {
-          const stageText = getFuzzyStageLabel(k, item.val, item.max);
-          return `<span class="mood-pill"><span class="stage-dot"></span>${k}：${stageText}</span>`;
+        moodBadgesEl.innerHTML = allUnlockedVars.map(([k, item]) => {
+          const stageText = getFuzzyStageLabel(item);
+          const ownerCls = item.owner === 'female' ? 'owner-female' : (item.owner === 'male' ? 'owner-male' : '');
+          const ownerTag = item.owner === 'both' ? '' : `<span class="mood-owner-tag">[${formatOwnerTag(item.owner)}]</span>`;
+          return `<span class="mood-pill ${ownerCls}"><span class="stage-dot"></span>${ownerTag}${k}：${stageText}</span>`;
         }).join('');
       } else {
         moodBadgesEl.classList.add('hidden');
@@ -1049,14 +1089,15 @@
       chipsHtml += `<span class="quick-chip replied-chip" onclick="pickRepliedChip()">已回复</span>`;
       qrBar.innerHTML = chipsHtml;
 
-      const editableKeys = myVisibleVars.map(([k]) => k);
       const silentBar = document.getElementById('silent-var-bar');
       const silentKeySel = document.getElementById('silent-var-key');
-      if (editableKeys.length > 0) {
+      if (allUnlockedVars.length > 0) {
         silentBar.classList.remove('hidden');
         const prevVal = silentKeySel.value;
-        silentKeySel.innerHTML = editableKeys.map(k => `<option value="${k}">指标：${k}</option>`).join('');
-        if (editableKeys.includes(prevVal)) silentKeySel.value = prevVal;
+        silentKeySel.innerHTML = allUnlockedVars.map(([k, item]) =>
+          `<option value="${k}">${k} (${formatOwnerTag(item.owner)})</option>`
+        ).join('');
+        if (allUnlockedVars.some(([k]) => k === prevVal)) silentKeySel.value = prevVal;
       } else {
         silentBar.classList.add('hidden');
       }
@@ -1071,22 +1112,25 @@
         return `<div class="msg-player ${boxCls}"><span class="${cls}">[${item.actor}]</span>${item.text}</div>`;
       }).join('');
       feedEl.scrollTop = feedEl.scrollHeight;
+      updateStoryScrollFade();
     }
 
+    // 点选剧本原有选项胶囊：仅填入聊天框，不触发 inp.focus()，防止手机软键盘自动弹出
     window.pickScriptChoiceToInput = function(idx) {
       const choice = currentNodeChoiceCache[idx];
       if (!choice) return;
       selectedScriptChoice = choice;
       const inp = document.getElementById('custom-msg-input');
       inp.value = formatChoiceDisplay(choice);
-      inp.focus();
+      inp.blur();
     };
 
+    // 点选“已回复”胶囊：仅填入聊天框，不触发 inp.focus()，防止手机软键盘自动弹出
     window.pickRepliedChip = function() {
       selectedScriptChoice = null;
       const inp = document.getElementById('custom-msg-input');
       inp.value = '已回复';
-      inp.focus();
+      inp.blur();
     };
 
     window.onCustomInputTyped = function() {
@@ -1102,6 +1146,7 @@
       const txt = inp.value.trim();
       if (!txt || !gameState) return;
       inp.value = '';
+      inp.blur();
 
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
       let nextVars = normalizeVars(gameState.variables);
@@ -1115,11 +1160,10 @@
 
         if (choice.effects) {
           Object.entries(choice.effects).forEach(([k, d]) => {
-            if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both', visible: true };
+            if (!nextVars[k]) nextVars[k] = { val: 0, max: 100, owner: 'both', visible: true, trend: 'up' };
             nextVars[k].val = Math.max(0, Math.min(nextVars[k].max, nextVars[k].val + Number(d)));
           });
         }
-        nextVars = applyOptionalManualVar(nextVars);
 
         if (choice.next && activeScript && activeScript.nodes && activeScript.nodes[choice.next]) {
           nextNodeId = choice.next;
@@ -1131,30 +1175,27 @@
         }
       } else {
         selectedScriptChoice = null;
-        nextVars = applyOptionalManualVar(nextVars);
         nextNodeId = checkNodeTriggers(activeScript, gameState.current_node_id, nextVars, newLogs);
       }
 
-      const curAlert = gameState.remote_alert || {};
       const payload = {
         current_node_id: nextNodeId,
         story_log: newLogs,
         variables: nextVars,
-        remote_alert: { ...curAlert, text: txt, sender: myName },
         updated_at: new Date().toISOString()
       };
       const { data } = await db.from('game_state').update(payload).eq('id', 1).select().single();
       if (data) { gameState = data; renderAll(); }
     };
 
-    window.applyVarAdjustmentOnly = async function() {
+    window.stepAdjustVar = async function(delta) {
       if (!gameState) return;
-      const valEl = document.getElementById('silent-var-val');
-      if (!valEl || valEl.value.trim() === '') return alert('请先输入要设定的数值 (0-100)');
+      const keyEl = document.getElementById('silent-var-key');
+      if (!keyEl || !keyEl.value) return;
 
       const activeScript = allScripts.find(s => s.id === gameState.active_script_id);
       let nextVars = normalizeVars(gameState.variables);
-      nextVars = applyOptionalManualVar(nextVars);
+      nextVars = applyStepDelta(nextVars, keyEl.value, delta);
 
       const newLogs = [...(gameState.story_log || [])];
       const nextNodeId = checkNodeTriggers(activeScript, gameState.current_node_id, nextVars, newLogs);
@@ -1238,7 +1279,7 @@
       toggleLoadPanel(); toggleLoadPanel();
     };
 
-    // ==================== 侧边栏惩罚/挑逗指令器 & 计时器 ====================
+    // ==================== 侧边栏工具区指令（纯震动提醒，无提示音） ====================
     window.setField = function(id, val) {
       document.getElementById(id).value = val;
     };
@@ -1272,7 +1313,6 @@
       const displayTime = timeStr || `${durationSec}秒`;
       const actionDesc = action || '轻柔挑逗';
 
-      // 明确主被动对象关系：对对方执行 vs 让对方对我执行
       const label = dir === 'by_partner'
         ? `【${myName} → ${partner}】让 ${partner} 对你的${part ? `【${part}】` : ''}${actionDesc}（${displayTime}）`
         : `【${myName} → ${partner}】对 ${partner} 的${part ? `【${part}】` : ''}${actionDesc}（${displayTime}）`;
@@ -1317,7 +1357,10 @@
       let rem = sec;
       const tick = () => {
         disp.textContent = `${String(Math.floor(rem / 60)).padStart(2, '0')}:${String(rem % 60).padStart(2, '0')}`;
-        if (rem <= 0) clearInterval(standaloneTimerId);
+        if (rem <= 0) {
+          clearInterval(standaloneTimerId);
+          triggerGentleVibrate();
+        }
         rem--;
       };
       tick();
@@ -1341,27 +1384,22 @@
       }
     };
 
-    let audioCtx = null, beatId = null, beatOn = false, currentBpm = 60;
-    function thump() {
+    // 律动节拍器（纯视觉呼吸灯 + 轻柔震动反馈，无提示音）
+    let beatId = null, beatOn = false, currentBpm = 60;
+    function pulseBeat() {
+      const dot = document.getElementById('beat-dot');
+      if (dot) {
+        dot.classList.add('pulse');
+        setTimeout(() => dot.classList.remove('pulse'), 90);
+      }
       try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(110, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.12);
-        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.14);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+        if (navigator && typeof navigator.vibrate === 'function') navigator.vibrate(45);
       } catch (e) {}
     }
     function runBeat() {
       clearInterval(beatId);
       if (!beatOn) return;
-      const dot = document.getElementById('beat-dot');
-      beatId = setInterval(() => {
-        dot.classList.add('pulse'); thump();
-        setTimeout(() => dot.classList.remove('pulse'), 90);
-      }, Math.round(60000 / currentBpm));
+      beatId = setInterval(pulseBeat, Math.round(60000 / currentBpm));
     }
     window.changeBpm = function(v) { currentBpm = Number(v); document.getElementById('bpm-val').textContent = v; if (beatOn) runBeat(); };
     window.toggleBeat = function() {
